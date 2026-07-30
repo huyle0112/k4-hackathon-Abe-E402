@@ -2,5 +2,5 @@
 .env.*
 !.env.example
 vector-store/
-private-data/lessons/*
+# private-data/lessons/*
 !private-data/lessons/.gitkeep
