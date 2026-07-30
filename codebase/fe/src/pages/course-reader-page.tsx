@@ -37,8 +37,6 @@ function ReaderContent({
         onZoomOut={() => setZoom((z) => Math.max(ZOOM_MIN, z - ZOOM_STEP))}
         onZoomIn={() => setZoom((z) => Math.min(ZOOM_MAX, z + ZOOM_STEP))}
         onZoomReset={() => setZoom(1)}
-        downloadUrl={file.url}
-        downloadFileName={file.fileName}
       />
 
       <PdfPageList

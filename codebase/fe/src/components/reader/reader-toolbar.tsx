@@ -1,4 +1,4 @@
-import { Download, Minus, Plus } from "lucide-react"
+import { Minus, Plus } from "lucide-react"
 
 export function ReaderToolbar({
   currentPage,
@@ -7,8 +7,6 @@ export function ReaderToolbar({
   onZoomIn,
   onZoomOut,
   onZoomReset,
-  downloadUrl,
-  downloadFileName,
 }: {
   currentPage: number
   numPages: number | null
@@ -16,8 +14,6 @@ export function ReaderToolbar({
   onZoomIn: () => void
   onZoomOut: () => void
   onZoomReset: () => void
-  downloadUrl: string
-  downloadFileName: string
 }) {
   return (
     <div className="flex items-center justify-between gap-4 border-b border-line bg-white px-6 py-3">
@@ -50,15 +46,6 @@ export function ReaderToolbar({
           <Plus className="size-3.5" />
         </button>
       </div>
-
-      <a
-        href={downloadUrl}
-        download={downloadFileName}
-        className="flex items-center gap-1.5 rounded-[9px] border border-line px-3.5 py-2 text-[13px] font-semibold text-ink transition-colors hover:border-navy"
-      >
-        <Download className="size-3.5" />
-        Tải xuống
-      </a>
     </div>
   )
 }

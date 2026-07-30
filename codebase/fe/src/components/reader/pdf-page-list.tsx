@@ -30,22 +30,30 @@ export const PdfPageList = forwardRef<
   const scrollRef = useRef<HTMLDivElement>(null)
   const pageElsRef = useRef<Map<number, HTMLDivElement>>(new Map())
   const observerRef = useRef<IntersectionObserver | null>(null)
-  const rafRef = useRef<number | null>(null)
+  const currentPageObserverRef = useRef<IntersectionObserver | null>(null)
+  const visibleAreaRef = useRef<Map<number, number>>(new Map())
   const [visiblePages, setVisiblePages] = useState<Set<number>>(
     () => new Set([1])
   )
 
   useImperativeHandle(ref, () => ({
     goToPage: (page: number) => {
-      pageElsRef.current
-        .get(page)
-        ?.scrollIntoView({ behavior: "smooth", block: "start" })
+      const container = scrollRef.current
+      const pageElement = pageElsRef.current.get(page)
+      if (!container || !pageElement) return
+
+      const containerRect = container.getBoundingClientRect()
+      const pageRect = pageElement.getBoundingClientRect()
+      const top = container.scrollTop + pageRect.top - containerRect.top
+
+      container.scrollTo({ top, behavior: "smooth" })
     },
   }))
 
   useEffect(() => {
     setVisiblePages(new Set([1]))
     pageElsRef.current.clear()
+    visibleAreaRef.current.clear()
   }, [document])
 
   useEffect(() => {
@@ -80,48 +88,63 @@ export const PdfPageList = forwardRef<
     return () => observerRef.current?.disconnect()
   }, [document])
 
+  useEffect(() => {
+    const root = scrollRef.current
+    if (!root) return
+
+    currentPageObserverRef.current = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const page = Number((entry.target as HTMLElement).dataset.pageNumber)
+          visibleAreaRef.current.set(
+            page,
+            entry.isIntersecting ? entry.intersectionRect.height : 0
+          )
+        }
+
+        let currentPage = 1
+        let largestVisibleArea = 0
+        for (const [page, visibleArea] of visibleAreaRef.current) {
+          if (
+            visibleArea > largestVisibleArea ||
+            (visibleArea === largestVisibleArea && page < currentPage)
+          ) {
+            currentPage = page
+            largestVisibleArea = visibleArea
+          }
+        }
+        onCurrentPageChange(currentPage)
+      },
+      {
+        root,
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+      }
+    )
+
+    for (const el of pageElsRef.current.values()) {
+      currentPageObserverRef.current.observe(el)
+    }
+
+    return () => {
+      currentPageObserverRef.current?.disconnect()
+      currentPageObserverRef.current = null
+      visibleAreaRef.current.clear()
+    }
+  }, [document, onCurrentPageChange])
+
   const registerEl = useCallback(
     (n: number) => (el: HTMLDivElement | null) => {
       if (el) {
         pageElsRef.current.set(n, el)
         observerRef.current?.observe(el)
+        currentPageObserverRef.current?.observe(el)
       } else {
         pageElsRef.current.delete(n)
+        visibleAreaRef.current.delete(n)
       }
     },
     []
   )
-
-  const handleScroll = useCallback(() => {
-    if (rafRef.current !== null) return
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null
-      const container = scrollRef.current
-      if (!container) return
-      const containerRect = container.getBoundingClientRect()
-      const thresholdY = containerRect.top + containerRect.height * 0.35
-      let current = 1
-      let bestTop = -Infinity
-      for (const [n, el] of pageElsRef.current) {
-        const top = el.getBoundingClientRect().top
-        if (top <= thresholdY && top > bestTop) {
-          bestTop = top
-          current = n
-        }
-      }
-      onCurrentPageChange(current)
-    })
-  }, [onCurrentPageChange])
-
-  useEffect(() => {
-    const el = scrollRef.current
-    el?.addEventListener("scroll", handleScroll, { passive: true })
-    handleScroll()
-    return () => {
-      el?.removeEventListener("scroll", handleScroll)
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
-    }
-  }, [handleScroll, document])
 
   if (!document || !numPages) {
     return (
@@ -134,7 +157,7 @@ export const PdfPageList = forwardRef<
   return (
     <div
       ref={scrollRef}
-      className="flex-1 overflow-y-auto bg-[#F4F3EF] px-6 py-6"
+      className="min-h-0 flex-1 overflow-y-auto bg-[#F4F3EF] px-6 py-6"
     >
       {Array.from({ length: numPages }, (_, i) => i + 1).map((n) => (
         <PdfPage

@@ -12,7 +12,7 @@ export function ReaderPager({
   if (numPages <= 0) return null
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-5 flex justify-center">
+    <div className="pointer-events-none absolute inset-x-0 bottom-5 z-20 flex justify-center">
       <div className="pointer-events-auto flex items-center gap-3 rounded-full border border-line bg-white/95 px-2 py-1.5 shadow-[0_10px_26px_-10px_rgba(0,0,0,0.3)] backdrop-blur">
         <button
           type="button"
