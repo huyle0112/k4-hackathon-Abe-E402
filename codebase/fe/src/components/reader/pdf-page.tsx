@@ -44,7 +44,11 @@ export function PdfPage({
       const ctx = canvas.getContext("2d")
       if (!ctx) return
 
-      renderTask = page.render({ canvasContext: ctx, viewport: pixelViewport })
+      renderTask = page.render({
+        canvas,
+        canvasContext: ctx,
+        viewport: pixelViewport,
+      })
       renderTask.promise.catch((err: unknown) => {
         if (!(err instanceof Error && err.name === "RenderingCancelledException")) {
           throw err

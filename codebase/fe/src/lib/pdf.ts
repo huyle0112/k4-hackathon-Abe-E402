@@ -14,9 +14,13 @@ GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs"
 const documentCache = new Map<string, Promise<PDFDocumentProxy>>()
 
 export function loadPdfDocument(url: string): Promise<PDFDocumentProxy> {
+  if (!url) {
+    return Promise.reject(new Error("PDF URL is required"))
+  }
+
   let pending = documentCache.get(url)
   if (!pending) {
-    pending = getDocument(url).promise
+    pending = getDocument({ url }).promise
     documentCache.set(url, pending)
   }
   return pending
