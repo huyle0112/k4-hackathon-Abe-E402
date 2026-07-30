@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 
 import { PdfPageList, type PdfPageListHandle } from "@/components/reader/pdf-page-list"
+import { ReaderChatSidebar } from "@/components/reader/reader-chat-sidebar"
 import { ReaderPager } from "@/components/reader/reader-pager"
 import { ReaderSidebar } from "@/components/reader/reader-sidebar"
 import { ReaderToolbar } from "@/components/reader/reader-toolbar"
@@ -19,14 +20,21 @@ function ReaderContent({
   file,
   document,
   numPages,
+  onCurrentPageChange,
 }: {
   file: SlideFile
   document: PDFDocumentProxy | null
   numPages: number | null
+  onCurrentPageChange?: (page: number) => void
 }) {
   const [zoom, setZoom] = useState(1)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPageState] = useState(1)
   const pageListRef = useRef<PdfPageListHandle>(null)
+
+  const setCurrentPage = (page: number) => {
+    setCurrentPageState(page)
+    onCurrentPageChange?.(page)
+  }
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
@@ -69,6 +77,13 @@ export function CourseReaderPage() {
 
   const [pageCounts, setPageCounts] = useState<Record<string, number | undefined>>({})
   const { document, numPages } = usePdfDocument(file?.url)
+  const [chatPage, setChatPage] = useState(1)
+  const [chatPageFileId, setChatPageFileId] = useState(file?.id)
+
+  if (file?.id !== chatPageFileId) {
+    setChatPageFileId(file?.id)
+    setChatPage(1)
+  }
 
   useEffect(() => {
     if (!course) return
@@ -109,10 +124,18 @@ export function CourseReaderPage() {
           pageCounts={pageCounts}
         />
 
-        <ReaderContent key={file.id} file={file} document={document} numPages={numPages} />
+        <ReaderContent
+          key={file.id}
+          file={file}
+          document={document}
+          numPages={numPages}
+          onCurrentPageChange={setChatPage}
+        />
+
+        <ReaderChatSidebar currentPage={chatPage} />
       </div>
 
-      <SupportFab />
+      
     </div>
   )
 }
