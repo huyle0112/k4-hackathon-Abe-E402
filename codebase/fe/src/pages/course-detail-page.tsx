@@ -4,21 +4,33 @@ import { CheckCircle2 } from "lucide-react"
 import { DayCard } from "@/components/courses/day-card"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { SupportFab } from "@/components/dashboard/support-fab"
-import { COURSES } from "@/data/comp2010-slides"
+import { useCourseDetail } from "@/hooks/use-course-detail"
 
 const DEMO_EMAIL = "demo@vinuni.edu.vn"
 
 export function CourseDetailPage() {
   const { courseCode = "" } = useParams()
-  const course = COURSES[courseCode.toLowerCase()]
+  const { course, loading, error } = useCourseDetail(courseCode)
 
-  if (!course) {
+  if (loading) {
     return (
       <div className="min-h-svh bg-paper font-sans text-ink antialiased">
         <div className="h-1 bg-gradient-to-r from-navy to-maroon" />
         <DashboardHeader email={DEMO_EMAIL} />
         <main className="mx-auto max-w-[1320px] px-8 py-16 text-center text-ink-soft">
-          Không tìm thấy khóa học này.{" "}
+          Đang tải thông tin khóa học...
+        </main>
+      </div>
+    )
+  }
+
+  if (error || !course) {
+    return (
+      <div className="min-h-svh bg-paper font-sans text-ink antialiased">
+        <div className="h-1 bg-gradient-to-r from-navy to-maroon" />
+        <DashboardHeader email={DEMO_EMAIL} />
+        <main className="mx-auto max-w-[1320px] px-8 py-16 text-center text-ink-soft">
+          {error ? `Lỗi: ${error.message}` : "Không tìm thấy khóa học này."}{" "}
           <Link to="/courses" className="font-semibold text-maroon">
             Quay lại danh sách khóa học
           </Link>
@@ -28,7 +40,7 @@ export function CourseDetailPage() {
   }
 
   const readDays = 0
-  const readPercent = Math.round((readDays / course.days.length) * 100)
+  const readPercent = Math.round((readDays / course.days.length) * 100) || 0
   const firstFile = course.days.find((d) => d.files.length > 0)?.files[0]
 
   return (

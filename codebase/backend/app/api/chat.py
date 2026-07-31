@@ -11,11 +11,14 @@ router = APIRouter(prefix="/api", tags=["chat"])
 @router.post("/chat", response_model=ChatResponse)
 def chat(payload: ChatRequest, request: Request) -> ChatResponse:
     settings = get_settings()
+    session_ids = [payload.course_code] if payload.course_code else None
+    file_names = [payload.slide_id] if payload.slide_id else None
+
     hits = retrieve(
         payload.question,
         request.app.state.store,
         payload.top_k or settings.top_k,
-        payload.session_ids,
-        payload.file_names,
+        session_ids,
+        file_names,
     )
     return generate_answer(payload.question, hits, settings.confidence_threshold)

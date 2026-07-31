@@ -5,20 +5,13 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { PageHead } from "@/components/dashboard/page-head"
 import { SupportFab } from "@/components/dashboard/support-fab"
 
+import { useCourses } from "@/hooks/use-courses"
+
 const DEMO_EMAIL = "demo@vinuni.edu.vn"
 
-const COURSES = [
-  {
-    code: "COMP2010",
-    name: "Khoá 3 + 4 Phase 1",
-    description: "Khóa học Khoá 3 + 4 Phase 1",
-    readPercent: 0,
-    notebookHref: "#",
-    openHref: "/courses/comp2010",
-  },
-]
-
 export function CoursesPage() {
+  const { courses, loading, error } = useCourses()
+
   return (
     <div className="min-h-svh bg-paper font-sans text-ink antialiased">
       <div className="h-1 bg-gradient-to-r from-navy to-maroon" />
@@ -28,11 +21,37 @@ export function CoursesPage() {
         <PageHead
           title="Khóa học của tôi"
           description="Mỗi khóa học lưu trữ tài liệu, giáo án và phần ghi chú tương tác của riêng bạn."
-          pill={`${COURSES.length} khóa học đang theo học`}
+          pill={loading ? "Đang tải..." : `${courses.length} khóa học đang theo học`}
         />
 
-        {COURSES.map((course) => (
-          <CourseCard key={course.code} {...course} />
+        {loading && (
+          <div className="py-10 text-center text-ink-soft">
+            Đang tải danh sách khóa học...
+          </div>
+        )}
+
+        {error && (
+          <div className="py-10 text-center text-maroon">
+            Không thể tải danh sách khóa học: {error.message}
+          </div>
+        )}
+
+        {!loading && !error && courses.length === 0 && (
+          <div className="py-10 text-center text-ink-soft">
+            Chưa có khóa học nào.
+          </div>
+        )}
+
+        {!loading && !error && courses.map((course) => (
+          <CourseCard
+            key={course.code}
+            code={course.code}
+            name={course.name}
+            description={course.description}
+            readPercent={course.read_percent}
+            notebookHref="#"
+            openHref={`/courses/${course.code.toLowerCase()}`}
+          />
         ))}
 
         <a

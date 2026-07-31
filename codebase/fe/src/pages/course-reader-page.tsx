@@ -8,8 +8,9 @@ import { ReaderSidebar } from "@/components/reader/reader-sidebar"
 import { ReaderToolbar } from "@/components/reader/reader-toolbar"
 import { ReaderTopbar } from "@/components/reader/reader-topbar"
 import { SupportFab } from "@/components/dashboard/support-fab"
-import { COURSES, findSlideFile, type SlideFile } from "@/data/comp2010-slides"
+import { useCourseDetail } from "@/hooks/use-course-detail"
 import { usePdfDocument } from "@/hooks/use-pdf-document"
+import { type SlideFile } from "@/lib/api"
 import { loadPdfDocument, type PDFDocumentProxy } from "@/lib/pdf"
 
 const ZOOM_STEP = 0.2
@@ -70,8 +71,8 @@ export function CourseReaderPage() {
   const [searchParams] = useSearchParams()
   const slideId = searchParams.get("slide") ?? ""
 
-  const course = COURSES[courseCode.toLowerCase()]
-  const file = course ? findSlideFile(course, slideId) : undefined
+  const { course, loading, error } = useCourseDetail(courseCode)
+  const file = course?.days.flatMap(d => d.files).find(f => f.id === slideId)
 
   const [pageCounts, setPageCounts] = useState<Record<string, number | undefined>>({})
   const { document, numPages } = usePdfDocument(file?.url)
@@ -85,19 +86,29 @@ export function CourseReaderPage() {
 
   useEffect(() => {
     if (!course) return
+    let mounted = true
     for (const day of course.days) {
       for (const f of day.files) {
         loadPdfDocument(f.url).then((doc) => {
-          setPageCounts((prev) => ({ ...prev, [f.id]: doc.numPages }))
-        })
+          if (mounted) setPageCounts((prev) => ({ ...prev, [f.id]: doc.numPages }))
+        }).catch(err => console.error(err))
       }
     }
+    return () => { mounted = false }
   }, [course])
 
-  if (!course || !file) {
+  if (loading) {
+    return (
+      <div className="flex h-svh flex-col items-center justify-center bg-paper text-ink-soft">
+        Đang tải tài liệu...
+      </div>
+    )
+  }
+
+  if (error || !course || !file) {
     return (
       <div className="flex min-h-svh flex-col items-center justify-center gap-3 bg-paper text-center text-ink-soft">
-        <p>Không tìm thấy tài liệu này.</p>
+        <p>{error ? `Lỗi: ${error.message}` : "Không tìm thấy tài liệu này."}</p>
         <Link to={`/courses/${courseCode}`} className="font-semibold text-maroon">
           Quay lại khóa học
         </Link>
@@ -130,7 +141,11 @@ export function CourseReaderPage() {
           onCurrentPageChange={setChatPage}
         />
 
-        <ReaderChatSidebar currentPage={chatPage} />
+        <ReaderChatSidebar
+          currentPage={chatPage}
+          courseCode={courseCode}
+          slideId={file.id}
+        />
       </div>
 
       

@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.chat import router as chat_router
+from app.api.courses import router as courses_router
 from app.api.health import router as health_router
 from app.config import get_settings
 from app.rag.vector_store import JsonVectorStore
@@ -26,6 +27,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     application.include_router(health_router)
+    application.include_router(courses_router)
     application.include_router(chat_router)
 
     @application.get("/")

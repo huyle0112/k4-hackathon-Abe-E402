@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import { Bot, ChevronRight, History, Plus, Send } from "lucide-react"
 
+import { useChat } from "@/hooks/use-chat"
+import { type HistoryMessage } from "@/lib/api"
 import { cn } from "@/lib/utils"
 
 type ChatMessage = {
@@ -24,84 +26,64 @@ function seedMessages(): ChatMessage[] {
       page: 1,
       text: "Xin chào! Mình là VLearn Tutor. Bạn có thể bôi đen một đoạn trên slide để hỏi, hoặc gửi câu hỏi tự do bên dưới nhé!",
     },
-    {
-      id: nextId(),
-      role: "user",
-      page: 1,
-      text: "Slide này nói môn học sẽ làm gì vậy ạ?",
-    },
-    {
-      id: nextId(),
-      role: "assistant",
-      page: 1,
-      text: "Đây là buổi giới thiệu hackathon COMP2010 — slide nêu mục tiêu môn học, cách chia nhóm và các mốc nộp bài trong Phase 1. Bạn muốn mình liệt kê chi tiết từng mốc không?",
-    },
-    {
-      id: nextId(),
-      role: "user",
-      page: 1,
-      text: "\"Healthcare Product Value\" trong slide nghĩa là gì?",
-    },
-    {
-      id: nextId(),
-      role: "assistant",
-      page: 1,
-      text: "Đó là phần đề bài yêu cầu nhóm xây dựng sản phẩm tạo ra giá trị thực sự cho lĩnh vực y tế — ví dụ cải thiện trải nghiệm bệnh nhân, hỗ trợ bác sĩ chẩn đoán, hoặc tối ưu vận hành bệnh viện.",
-    },
   ]
 }
 
-const MOCK_REPLIES: Array<{ keywords: string[]; reply: string }> = [
-  {
-    keywords: ["healthcare", "y tế", "bệnh nhân"],
-    reply:
-      "Sản phẩm y tế tốt cần giải quyết một vấn đề thật của người dùng (bệnh nhân, bác sĩ, bệnh viện) và đo lường được giá trị mang lại, không chỉ dừng ở công nghệ.",
-  },
-  {
-    keywords: ["nhóm", "team", "hackathon"],
-    reply:
-      "Mỗi nhóm hackathon nên phân vai rõ ràng (research, dev, thuyết trình) và bám sát checklist nộp bài theo từng ngày để không bị dồn việc vào cuối kỳ.",
-  },
-  {
-    keywords: ["deadline", "nộp bài", "mốc"],
-    reply:
-      "Các mốc nộp bài thường nằm ở cuối mỗi ngày học — bạn nên xem lại phần lịch trình ở đầu slide Day tương ứng để nắm chính xác thời hạn.",
-  },
-]
-
-function mockReply(input: string): string {
-  const lower = input.toLowerCase()
-  const found = MOCK_REPLIES.find((entry) => entry.keywords.some((k) => lower.includes(k)))
-  if (found) return found.reply
-  return "AI hiện không thể trả lời câu hỏi này. Vui lòng thử diễn đạt khác hoặc thử lại sau ít phút."
-}
-
-export function ReaderChatSidebar({ currentPage }: { currentPage: number }) {
+export function ReaderChatSidebar({
+  currentPage,
+  courseCode,
+  slideId,
+}: {
+  currentPage: number
+  courseCode: string
+  slideId: string
+}) {
   const [open, setOpen] = useState(true)
   const [messages, setMessages] = useState<ChatMessage[]>(() => seedMessages())
   const [input, setInput] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  const { sendMessage: sendChatApi, loading: isTyping, error } = useChat()
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
   }, [messages, isTyping])
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     const text = input.trim()
-    if (!text) return
+    if (!text || isTyping) return
 
     setMessages((prev) => [...prev, { id: nextId(), role: "user", page: currentPage, text }])
     setInput("")
-    setIsTyping(true)
 
-    window.setTimeout(() => {
+    try {
+      const history: HistoryMessage[] = messages
+        .filter((m) => m.id !== messages[0].id) // bỏ câu chào
+        .map((m) => ({ role: m.role, text: m.text }))
+
+      const res = await sendChatApi({
+        question: text,
+        course_code: courseCode,
+        slide_id: slideId,
+        page: currentPage,
+        history,
+      })
+
       setMessages((prev) => [
         ...prev,
-        { id: nextId(), role: "assistant", page: currentPage, text: mockReply(text) },
+        { id: nextId(), role: "assistant", page: currentPage, text: res.answer },
       ])
-      setIsTyping(false)
-    }, 900)
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: nextId(),
+          role: "assistant",
+          page: currentPage,
+          text: `Đã có lỗi xảy ra: ${err instanceof Error ? err.message : String(err)}. Vui lòng thử lại.`,
+        },
+      ])
+    }
   }
 
   if (!open) {

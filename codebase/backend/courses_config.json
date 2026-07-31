@@ -1,0 +1,76 @@
+{
+  "courses": [
+    {
+      "code": "COMP2010",
+      "name": "COMP2010 – Khoá 3 + 4 Phase 1",
+      "description": "Khóa học Khoá 3 + 4 Phase 1",
+      "classmates": "1074 học viên cùng lớp",
+      "days": [
+        {
+          "day": 1,
+          "files": [
+            {
+              "id": "D01-S01",
+              "day": 1,
+              "file_name": "d1-slide-hackathon.pdf",
+              "url": "/slides/d1-slide-hackathon.pdf",
+              "label": "Giới thiệu môn học"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "files": [
+            {
+              "id": "D02-S01",
+              "day": 2,
+              "file_name": "d2-slide-hackathon.pdf",
+              "url": "/slides/d2-slide-hackathon.pdf",
+              "label": "Nội dung buổi học"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "files": [
+            {
+              "id": "D03-S01",
+              "day": 3,
+              "file_name": "day-03-slides.pdf",
+              "url": "/slides/day-03-slides.pdf",
+              "label": "Nội dung buổi học"
+            }
+          ]
+        },
+        {
+          "day": 4,
+          "files": [
+            {
+              "id": "D04-S01",
+              "day": 4,
+              "file_name": "day04-slides.pdf",
+              "url": "/slides/day04-slides.pdf",
+              "label": "Nội dung buổi học"
+            }
+          ]
+        },
+        {
+          "day": 5,
+          "files": [
+            {
+              "id": "D05-S01",
+              "day": 5,
+              "file_name": "day-05-slides.pdf",
+              "url": "/slides/day-05-slides.pdf",
+              "label": "Nội dung buổi học"
+            }
+          ]
+        },
+        {
+          "day": 6,
+          "files": []
+        }
+      ]
+    }
+  ]
+}
