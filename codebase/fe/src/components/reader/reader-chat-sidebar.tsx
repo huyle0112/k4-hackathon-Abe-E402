@@ -67,9 +67,8 @@ export function ReaderChatSidebar({
   const [open, setOpen] = useState(true)
   const [messages, setMessages] = useState<ChatMessage[]>(() => seedMessages())
   const [input, setInput] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
-
-  const { sendMessage: sendChatApi, loading: isTyping, error } = useChat()
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
@@ -77,7 +76,7 @@ export function ReaderChatSidebar({
 
   const sendMessage = async () => {
     const text = input.trim()
-    if (!text || isTyping) return
+    if (!text) return
 
     setMessages((prev) => [...prev, { id: nextId(), role: "user", page: currentPage, text }])
     setInput("")

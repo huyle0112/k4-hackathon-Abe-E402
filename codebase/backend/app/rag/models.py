@@ -228,51 +228,28 @@ class EvaluationReport(BaseModel):
     )
     cases: list[EvaluationCaseResult]
 
-# --- Frontend API Models ---
-
-class HistoryMessage(BaseModel):
-    role: Literal["user", "assistant"]
-    text: str
-
-class FEChatRequest(BaseModel):
-    question: str = Field(min_length=2, max_length=2000)
-    course_code: str
-    slide_id: str | None = None
-    page: int | None = None
-    history: list[HistoryMessage] | None = None
-    top_k: int | None = Field(default=None, ge=1, le=20)
-
-class FECitation(BaseModel):
-    slide_id: str
-    day: int
-    page: int
-    file_name: str
-    relevance_score: float
-
-class FEChatResponse(BaseModel):
-    answer: str
-    confidence: float
-    status: Literal["ok", "low_confidence", "out_of_scope", "error"]
-    sources: list[FECitation] = Field(default_factory=list)
 
 class SlideFile(BaseModel):
     id: str
     day: int
-    file_name: str
-    url: str
-    label: str
-    pdf_path: str = ""
+    fileName: str | None = None
+    file_name: str | None = None
+    url: str | None = None
+    label: str | None = None
+
 
 class CourseDay(BaseModel):
     day: int
-    files: list[SlideFile] = Field(default_factory=list)
+    files: list[SlideFile]
+
 
 class Course(BaseModel):
     code: str
     name: str
-    description: str = ""
-    classmates: str = ""
-    days: list[CourseDay] = Field(default_factory=list)
+    description: str | None = None
+    classmates: str | None = None
+    days: list[CourseDay]
+
 
 class CourseSummary(BaseModel):
     code: str

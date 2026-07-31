@@ -152,6 +152,11 @@ def chat(payload: ChatRequest, request: Request) -> ChatResponse:
         max_slide=payload.slide,
         top_k=settings.retrieval_top_k,
     )
+    
+    print("RAG status:", response.status)
+    print("RAG answer:", response.answer)
+    print("Retrieval hits:", response.retrieval_hits)
+    
     return response.model_copy(
         update={
             "important_keywords": _keywords(

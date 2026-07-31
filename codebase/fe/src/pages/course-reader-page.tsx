@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 
@@ -7,9 +8,9 @@ import { ReaderPager } from "@/components/reader/reader-pager"
 import { ReaderSidebar } from "@/components/reader/reader-sidebar"
 import { ReaderToolbar } from "@/components/reader/reader-toolbar"
 import { ReaderTopbar } from "@/components/reader/reader-topbar"
-import { COURSES, findSlideFile, type SlideFile } from "@/data/comp2010-slides"
+import { SupportFab } from "@/components/dashboard/support-fab"
+import { fetchCourse, findSlideFile, type Course, type SlideFile } from "@/lib/courses-api"
 import { usePdfDocument } from "@/hooks/use-pdf-document"
-import { type SlideFile } from "@/lib/api"
 import { loadPdfDocument, type PDFDocumentProxy } from "@/lib/pdf"
 
 const ZOOM_STEP = 0.2
@@ -74,8 +75,17 @@ export function CourseReaderPage() {
   const [searchParams] = useSearchParams()
   const slideId = searchParams.get("slide") ?? ""
 
-  const { course, loading, error } = useCourseDetail(courseCode)
-  const file = course?.days.flatMap(d => d.files).find(f => f.id === slideId)
+  const [course, setCourse] = useState<Course | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchCourse(courseCode)
+      .then(setCourse)
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [courseCode])
+
+  const file = course ? findSlideFile(course, slideId) : undefined
 
   const [pageCounts, setPageCounts] = useState<Record<string, number | undefined>>({})
   const { document, numPages } = usePdfDocument(file?.url)
@@ -89,29 +99,29 @@ export function CourseReaderPage() {
 
   useEffect(() => {
     if (!course) return
-    let mounted = true
     for (const day of course.days) {
       for (const f of day.files) {
         loadPdfDocument(f.url).then((doc) => {
-          if (mounted) setPageCounts((prev) => ({ ...prev, [f.id]: doc.numPages }))
-        }).catch(err => console.error(err))
+          setPageCounts((prev) => ({ ...prev, [f.id]: doc.numPages }))
+        })
       }
     }
-    return () => { mounted = false }
   }, [course])
 
   if (loading) {
     return (
-      <div className="flex h-svh flex-col items-center justify-center bg-paper text-ink-soft">
-        Đang tải tài liệu...
+      <div className="flex h-svh flex-col bg-paper text-ink antialiased">
+        <div className="flex flex-1 items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-navy" />
+        </div>
       </div>
     )
   }
 
-  if (error || !course || !file) {
+  if (!course || !file) {
     return (
       <div className="flex min-h-svh flex-col items-center justify-center gap-3 bg-paper text-center text-ink-soft">
-        <p>{error ? `Lỗi: ${error.message}` : "Không tìm thấy tài liệu này."}</p>
+        <p>Không tìm thấy tài liệu này.</p>
         <Link to={`/courses/${courseCode}`} className="font-semibold text-maroon">
           Quay lại khóa học
         </Link>
