@@ -1,10 +1,26 @@
-# Chat API
+# VLearn API
+
+## Nguyên tắc chung
+
+- Chat và mindmap là hai chức năng độc lập.
+- `POST /chat` không tự tạo hoặc trả về mindmap.
+- Mindmap chỉ được tạo khi người dùng chủ động gọi `POST /mindmaps`.
+- Mindmap được lưu trong SQLite sau khi tạo thành công.
+- Khi người dùng mở lại mindmap cũ, backend đọc từ SQLite và không gọi lại LLM.
+- Agent chỉ được dùng nội dung đến slide/trang hiện tại:
+
+```text
+source.slide <= request.slide
+source.page <= request.page
+```
+
+---
+
+# Chat
 
 ## `POST /chat`
 
-Nhận câu hỏi cùng slide và trang người dùng đang xem. Agent chỉ được sử dụng nội
-dung từ đầu tài liệu đến slide/trang hiện tại, không được truy xuất nội dung ở các
-slide phía sau.
+Gửi câu hỏi về nội dung người dùng đã xem.
 
 ## Request
 
@@ -16,8 +32,8 @@ Content-Type: application/json
 ```json
 {
   "question": "Attention hoạt động như thế nào?",
-  "slide": 12,
-  "page": 12
+  "slide": 15,
+  "page": 15
 }
 ```
 
@@ -25,45 +41,18 @@ Content-Type: application/json
 
 | Field | Kiểu | Bắt buộc | Mô tả |
 |---|---:|:---:|---|
-| `question` | `string` | Có | Câu hỏi của người dùng, từ 2 đến 2.000 ký tự. |
-| `slide` | `integer` | Có | Slide người dùng đang xem, bắt đầu từ 1. |
-| `page` | `integer` | Có | Trang PDF người dùng đang dừng, bắt đầu từ 1. |
+| `question` | `string` | Có | Câu hỏi, từ 2 đến 2.000 ký tự. |
+| `slide` | `integer` | Có | Slide hiện tại, bắt đầu từ 1. |
+| `page` | `integer` | Có | Trang PDF hiện tại, bắt đầu từ 1. |
 
-### Quy tắc giới hạn context
-
-Backend bắt buộc áp dụng đồng thời:
-
-```text
-source.slide <= request.slide
-source.page <= request.page
-```
-
-Agent không được:
-
-- Truy xuất nội dung từ slide lớn hơn `request.slide`.
-- Truy xuất nội dung từ trang lớn hơn `request.page`.
-- Dùng kiến thức từ các slide phía sau để bổ sung câu trả lời.
-- Trích dẫn nguồn vượt quá vị trí hiện tại của người dùng.
-- Tiết lộ trước nội dung người dùng chưa học tới.
-
-Ví dụ, nếu request có `slide: 12` và `page: 12`, Agent chỉ được sử dụng nội dung
-từ slide/trang 1–12. Slide hoặc trang 13 trở đi phải bị loại khỏi retrieval trước
-khi tạo câu trả lời.
-
-## Response thành công
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
+## Response
 
 ```json
 {
-  "answer": "**Attention** là cơ chế giúp mô hình xác định những phần thông tin quan trọng trong dữ liệu đầu vào. Cơ chế này giúp mô hình biểu diễn mối quan hệ giữa các **token** và hiểu **ngữ cảnh** tốt hơn.",
+  "answer": "**Attention** cho phép mỗi **token** xác định những token khác có liên quan trong cùng ngữ cảnh.",
   "important_keywords": [
     "Attention",
-    "token",
-    "ngữ cảnh"
+    "token"
   ],
   "confidence": 0.87,
   "status": "answered",
@@ -71,65 +60,12 @@ Content-Type: application/json
     {
       "source_id": "source-1",
       "file_name": "day-01-ai-llm-foundation.pdf",
-      "page": 10,
-      "slide": 10,
-      "excerpt": "Attention cho phép mô hình xác định mức độ liên quan giữa các token trong cùng một chuỗi.",
+      "page": 15,
+      "slide": 15,
+      "excerpt": "Attention cho phép mỗi token nhìn lại và chấm mức độ liên quan của các token trước đó.",
       "relevance_score": 0.87
-    },
-    {
-      "source_id": "source-2",
-      "file_name": "day-01-ai-llm-foundation.pdf",
-      "page": 12,
-      "slide": 12,
-      "excerpt": "Cơ chế attention hỗ trợ mô hình biểu diễn thông tin theo ngữ cảnh.",
-      "relevance_score": 0.81
     }
-  ],
-  "mindmap": {
-    "nodeData": {
-      "id": "attention-root",
-      "topic": "Attention",
-      "root": true,
-      "children": [
-        {
-          "id": "input",
-          "topic": "Dữ liệu đầu vào",
-          "direction": 0,
-          "children": [
-            {
-              "id": "token",
-              "topic": "Token"
-            }
-          ]
-        },
-        {
-          "id": "weight",
-          "topic": "Trọng số",
-          "direction": 1,
-          "children": [
-            {
-              "id": "relevance",
-              "topic": "Mức độ liên quan"
-            }
-          ]
-        },
-        {
-          "id": "result",
-          "topic": "Kết quả",
-          "direction": 1,
-          "children": [
-            {
-              "id": "context",
-              "topic": "Biểu diễn ngữ cảnh"
-            }
-          ]
-        }
-      ]
-    },
-    "arrows": [],
-    "summaries": [],
-    "direction": 2
-  }
+  ]
 }
 ```
 
@@ -137,116 +73,15 @@ Content-Type: application/json
 
 | Field | Kiểu | Mô tả |
 |---|---:|---|
-| `answer` | `string` | Câu trả lời ở định dạng Markdown. Các từ khóa quan trọng được bọc bằng `**`. |
-| `important_keywords` | `string[]` | Các từ hoặc cụm từ quan trọng trong câu trả lời. |
+| `answer` | `string` | Câu trả lời Markdown. Từ khóa quan trọng được bọc bằng `**`. |
+| `important_keywords` | `string[]` | Từ hoặc cụm từ quan trọng xuất hiện trong câu trả lời. |
 | `confidence` | `number` | Độ tin cậy từ `0.0` đến `1.0`. |
 | `status` | `string` | `answered`, `low_confidence` hoặc `no_context`. |
-| `sources` | `Source[]` | Nguồn Agent thực sự sử dụng. Mọi nguồn phải nằm trong phạm vi hiện tại. |
-| `mindmap` | `object` | Dữ liệu Mind Elixir hoặc object rỗng `{}`. |
+| `sources` | `Source[]` | Nguồn Agent thực sự sử dụng. |
 
-### Source object
+`/chat` không có field `mindmap`.
 
-| Field | Kiểu | Mô tả |
-|---|---:|---|
-| `source_id` | `string` | ID duy nhất của nguồn trong response. |
-| `file_name` | `string` | Tên file PDF chứa nguồn. |
-| `page` | `integer` | Trang chứa nguồn, phải nhỏ hơn hoặc bằng `request.page`. |
-| `slide` | `integer` | Slide chứa nguồn, phải nhỏ hơn hoặc bằng `request.slide`. |
-| `excerpt` | `string` | Đoạn nội dung Agent đã sử dụng. |
-| `relevance_score` | `number` | Mức độ liên quan từ `0.0` đến `1.0`. |
-
-### Mind Elixir object
-
-Khi có mindmap:
-
-```json
-{
-  "mindmap": {
-    "nodeData": {
-      "id": "root",
-      "topic": "Chủ đề",
-      "root": true,
-      "children": [
-        {
-          "id": "branch-1",
-          "topic": "Nhánh 1",
-          "direction": 0,
-          "children": []
-        },
-        {
-          "id": "branch-2",
-          "topic": "Nhánh 2",
-          "direction": 1,
-          "children": []
-        }
-      ]
-    },
-    "arrows": [],
-    "summaries": [],
-    "direction": 2
-  }
-}
-```
-
-Object trong `mindmap` phải có thể truyền trực tiếp vào Mind Elixir:
-
-```typescript
-mind.init(response.mindmap)
-```
-
-Quy tắc dữ liệu:
-
-- `nodeData` là node gốc và bắt buộc có `id`, `topic`, `root: true`.
-- Mỗi node con bắt buộc có `id` duy nhất và `topic`.
-- `children` chứa các node con; có thể là mảng rỗng.
-- `direction` của nhánh chính sử dụng `0` hoặc `1`.
-- `arrows` chứa các liên kết bổ sung giữa node; trả `[]` nếu không sử dụng.
-- `summaries` chứa dữ liệu tổng hợp nhiều node; trả `[]` nếu không sử dụng.
-- `direction` cấp mindmap xác định hướng bố cục; mặc định dùng `2`.
-- Backend chỉ trả dữ liệu, frontend chịu trách nhiệm render bằng Mind Elixir.
-
-Khi không có mindmap:
-
-```json
-{
-  "mindmap": {}
-}
-```
-
-`mindmap` luôn phải xuất hiện. Không trả về `null`, chuỗi rỗng hoặc bỏ field.
-
-## Quy tắc từ khóa quan trọng
-
-1. `important_keywords` chỉ chứa từ hoặc cụm từ liên quan trực tiếp đến câu trả lời.
-2. Mỗi từ khóa phải xuất hiện trong `answer`.
-3. Từ khóa trong `answer` phải được bôi đậm bằng Markdown: `**từ khóa**`.
-4. Không bôi đậm cả câu hoặc đoạn văn dài.
-5. Không lặp từ khóa trong `important_keywords`.
-6. Nếu không có từ khóa quan trọng, trả về `important_keywords: []`.
-
-## Không đủ độ tin cậy
-
-```json
-{
-  "answer": "Mình chưa tìm thấy căn cứ đủ chắc chắn trong phạm vi các slide bạn đã xem.",
-  "important_keywords": [],
-  "confidence": 0.08,
-  "status": "low_confidence",
-  "sources": [
-    {
-      "source_id": "source-1",
-      "file_name": "day-01-ai-llm-foundation.pdf",
-      "page": 4,
-      "slide": 4,
-      "excerpt": "Đoạn gần nhất được tìm thấy nhưng chưa đủ để trả lời chính xác câu hỏi.",
-      "relevance_score": 0.08
-    }
-  ],
-  "mindmap": {}
-}
-```
-
-## Không tìm thấy context phù hợp
+## Không tìm thấy context
 
 ```json
 {
@@ -254,64 +89,304 @@ Khi không có mindmap:
   "important_keywords": [],
   "confidence": 0,
   "status": "no_context",
-  "sources": [],
-  "mindmap": {}
+  "sources": []
 }
 ```
 
-Nếu câu hỏi chỉ có thể được trả lời bằng nội dung sau vị trí hiện tại:
+---
 
-```json
-{
-  "answer": "Nội dung cần thiết để trả lời câu hỏi này chưa xuất hiện trong phạm vi slide bạn đang xem.",
-  "important_keywords": [],
-  "confidence": 0,
-  "status": "no_context",
-  "sources": [],
-  "mindmap": {}
-}
+# Mindmap
+
+## Luồng hoạt động
+
+```text
+Người dùng bấm “Tạo mindmap”
+    ↓
+POST /mindmaps
+    ↓
+Backend kiểm tra mindmap trùng trong SQLite
+    ├── Đã tồn tại → trả bản ghi cũ, không gọi LLM
+    └── Chưa tồn tại → gọi LLM → lưu SQLite → trả bản ghi mới
+
+Người dùng mở lại mindmap
+    ↓
+GET /mindmaps/{mindmap_id}
+    ↓
+Đọc SQLite → trả dữ liệu Mind Elixir, không gọi LLM
 ```
 
-Backend không được tự động mở rộng phạm vi sang slide tiếp theo.
+## `POST /mindmaps`
 
-## Lỗi dữ liệu đầu vào
+Tạo mindmap theo phạm vi tài liệu người dùng đã xem.
+
+Endpoint này có tính idempotent theo tổ hợp:
+
+```text
+user_id + document_id + slide + page + normalized(title)
+```
+
+Nếu mindmap tương ứng đã tồn tại, backend trả lại bản ghi cũ với
+`generation_status: "cached"` và không gọi LLM.
+
+## Request
 
 ```http
-HTTP/1.1 422 Unprocessable Entity
+POST /mindmaps
+Content-Type: application/json
 ```
 
 ```json
 {
-  "detail": [
-    {
-      "loc": ["body", "question"],
-      "msg": "String should have at least 2 characters",
-      "type": "string_too_short"
-    }
-  ]
+  "title": "Tổng quan Attention",
+  "slide": 16,
+  "page": 16
 }
 ```
 
-## TypeScript types
+### Request fields
+
+| Field | Kiểu | Bắt buộc | Mô tả |
+|---|---:|:---:|---|
+| `title` | `string` | Có | Chủ đề hoặc tên mindmap, từ 2 đến 200 ký tự. |
+| `slide` | `integer` | Có | Slide cuối cùng được phép dùng. |
+| `page` | `integer` | Có | Trang cuối cùng được phép dùng. |
+
+`user_id` được lấy từ phiên đăng nhập. `document_id` được lấy từ tài liệu đang mở;
+hai giá trị này không được client tự truyền trong body.
+
+## Response khi tạo mới
+
+```http
+HTTP/1.1 201 Created
+```
+
+```json
+{
+  "mindmap_id": "mm_01JZ8D0M7CR6PVNQMT7A2H3B4C",
+  "title": "Tổng quan Attention",
+  "document_id": "doc_day_01",
+  "file_name": "day-01-ai-llm-foundation.pdf",
+  "context_boundary": {
+    "slide": 16,
+    "page": 16
+  },
+  "generation_status": "generated",
+  "mindmap": {
+    "nodeData": {
+      "id": "attention-root",
+      "topic": "Attention",
+      "root": true,
+      "children": [
+        {
+          "id": "attention-mechanism",
+          "topic": "Cơ chế",
+          "direction": 0,
+          "children": [
+            {
+              "id": "token-relevance",
+              "topic": "Mức độ liên quan giữa token"
+            }
+          ]
+        },
+        {
+          "id": "attention-context",
+          "topic": "Quản lý context",
+          "direction": 1,
+          "children": [
+            {
+              "id": "clean-context",
+              "topic": "Giữ context sạch"
+            },
+            {
+              "id": "rag-context",
+              "topic": "Lấy đúng đoạn bằng RAG"
+            }
+          ]
+        }
+      ]
+    },
+    "arrows": [],
+    "summaries": [],
+    "direction": 2
+  },
+  "sources": [
+    {
+      "source_id": "source-1",
+      "file_name": "day-01-ai-llm-foundation.pdf",
+      "page": 15,
+      "slide": 15,
+      "excerpt": "Attention cho phép mỗi token nhìn lại các token quan trọng khác."
+    },
+    {
+      "source_id": "source-2",
+      "file_name": "day-01-ai-llm-foundation.pdf",
+      "page": 16,
+      "slide": 16,
+      "excerpt": "Cách bày context quyết định model chú ý vào đâu."
+    }
+  ],
+  "created_at": "2026-07-31T10:30:00Z",
+  "updated_at": "2026-07-31T10:30:00Z"
+}
+```
+
+## Response khi mindmap đã tồn tại
+
+```http
+HTTP/1.1 200 OK
+```
+
+```json
+{
+  "mindmap_id": "mm_01JZ8D0M7CR6PVNQMT7A2H3B4C",
+  "title": "Tổng quan Attention",
+  "document_id": "doc_day_01",
+  "file_name": "day-01-ai-llm-foundation.pdf",
+  "context_boundary": {
+    "slide": 16,
+    "page": 16
+  },
+  "generation_status": "cached",
+  "mindmap": {
+    "nodeData": {
+      "id": "attention-root",
+      "topic": "Attention",
+      "root": true,
+      "children": []
+    },
+    "arrows": [],
+    "summaries": [],
+    "direction": 2
+  },
+  "sources": [],
+  "created_at": "2026-07-31T10:30:00Z",
+  "updated_at": "2026-07-31T10:30:00Z"
+}
+```
+
+`generation_status: "cached"` bảo đảm response được lấy từ SQLite. Backend không
+được gọi LLM trong nhánh này.
+
+---
+
+## `GET /mindmaps`
+
+Lấy danh sách mindmap đã lưu của người dùng hiện tại. Endpoint chỉ đọc SQLite.
+
+### Request
+
+```http
+GET /mindmaps?document_id=doc_day_01&limit=20&cursor=mm_01JZ8D0M
+```
+
+### Query parameters
+
+| Field | Kiểu | Bắt buộc | Mô tả |
+|---|---:|:---:|---|
+| `document_id` | `string` | Không | Chỉ lấy mindmap của một tài liệu. |
+| `limit` | `integer` | Không | Số bản ghi, từ 1 đến 100; mặc định 20. |
+| `cursor` | `string` | Không | Cursor phân trang từ response trước. |
+
+### Response
+
+```json
+{
+  "items": [
+    {
+      "mindmap_id": "mm_01JZ8D0M7CR6PVNQMT7A2H3B4C",
+      "title": "Tổng quan Attention",
+      "document_id": "doc_day_01",
+      "file_name": "day-01-ai-llm-foundation.pdf",
+      "context_boundary": {
+        "slide": 16,
+        "page": 16
+      },
+      "created_at": "2026-07-31T10:30:00Z",
+      "updated_at": "2026-07-31T10:30:00Z"
+    }
+  ],
+  "next_cursor": null
+}
+```
+
+Danh sách không cần trả toàn bộ cây mindmap để giảm kích thước response.
+
+---
+
+## `GET /mindmaps/{mindmap_id}`
+
+Mở lại một mindmap đã lưu. Endpoint đọc dữ liệu trực tiếp từ SQLite và tuyệt đối
+không gọi LLM.
+
+### Request
+
+```http
+GET /mindmaps/mm_01JZ8D0M7CR6PVNQMT7A2H3B4C
+```
+
+### Response
+
+```http
+HTTP/1.1 200 OK
+```
+
+```json
+{
+  "mindmap_id": "mm_01JZ8D0M7CR6PVNQMT7A2H3B4C",
+  "title": "Tổng quan Attention",
+  "document_id": "doc_day_01",
+  "file_name": "day-01-ai-llm-foundation.pdf",
+  "context_boundary": {
+    "slide": 16,
+    "page": 16
+  },
+  "generation_status": "cached",
+  "mindmap": {
+    "nodeData": {
+      "id": "attention-root",
+      "topic": "Attention",
+      "root": true,
+      "children": []
+    },
+    "arrows": [],
+    "summaries": [],
+    "direction": 2
+  },
+  "sources": [],
+  "created_at": "2026-07-31T10:30:00Z",
+  "updated_at": "2026-07-31T10:30:00Z"
+}
+```
+
+Frontend truyền trực tiếp `mindmap` vào Mind Elixir:
 
 ```typescript
-interface ChatRequest {
-  question: string
-  slide: number
-  page: number
+mind.init(response.mindmap)
+```
+
+### Không tìm thấy
+
+```http
+HTTP/1.1 404 Not Found
+```
+
+```json
+{
+  "error": {
+    "code": "MINDMAP_NOT_FOUND",
+    "message": "Không tìm thấy mindmap."
+  }
 }
+```
 
-type ChatStatus = "answered" | "low_confidence" | "no_context"
+Backend phải kiểm tra mindmap thuộc người dùng hiện tại; không được trả mindmap của
+người dùng khác.
 
-interface ChatSource {
-  source_id: string
-  file_name: string
-  page: number
-  slide: number
-  excerpt: string
-  relevance_score: number
-}
+---
 
+# Cấu trúc Mind Elixir
+
+```typescript
 interface MindElixirNode {
   id: string
   topic: string
@@ -333,14 +408,8 @@ interface MindElixirArrow {
   label: string
   from: string
   to: string
-  delta1?: {
-    x: number
-    y: number
-  }
-  delta2?: {
-    x: number
-    y: number
-  }
+  delta1?: { x: number; y: number }
+  delta2?: { x: number; y: number }
 }
 
 interface MindElixirSummary {
@@ -357,13 +426,121 @@ interface MindElixirData {
   summaries: MindElixirSummary[]
   direction: number
 }
+```
+
+## Quy tắc dữ liệu
+
+- `nodeData` là node gốc, bắt buộc có `id`, `topic` và `root: true`.
+- Mỗi node phải có `id` duy nhất trong mindmap.
+- `children` chứa node con và có thể là mảng rỗng.
+- `arrows` và `summaries` phải là mảng, kể cả khi không có dữ liệu.
+- Không lưu HTML không tin cậy trong `dangerouslySetInnerHTML`.
+- JSON Mind Elixir phải được kiểm tra schema trước khi ghi SQLite.
+
+---
+
+# Dữ liệu SQLite
+
+## Bảng `mindmaps`
+
+| Cột | Kiểu SQLite | Ràng buộc | Mô tả |
+|---|---|---|---|
+| `id` | `TEXT` | Primary key | ID mindmap. |
+| `user_id` | `TEXT` | Not null | Chủ sở hữu. |
+| `document_id` | `TEXT` | Not null | Tài liệu nguồn. |
+| `file_name` | `TEXT` | Not null | Tên file tại thời điểm tạo. |
+| `title` | `TEXT` | Not null | Tiêu đề mindmap. |
+| `normalized_title` | `TEXT` | Not null | Tiêu đề chuẩn hóa để chống tạo trùng. |
+| `slide` | `INTEGER` | Not null | Slide tối đa đã dùng. |
+| `page` | `INTEGER` | Not null | Trang tối đa đã dùng. |
+| `mindmap_json` | `TEXT` | Not null | JSON Mind Elixir. |
+| `sources_json` | `TEXT` | Not null | JSON danh sách nguồn. |
+| `created_at` | `TEXT` | Not null | Thời điểm tạo theo ISO 8601 UTC. |
+| `updated_at` | `TEXT` | Not null | Thời điểm cập nhật theo ISO 8601 UTC. |
+
+Unique index:
+
+```sql
+UNIQUE(user_id, document_id, slide, page, normalized_title)
+```
+
+Quy tắc gọi LLM:
+
+| Endpoint | Được gọi LLM? |
+|---|:---:|
+| `POST /chat` | Có |
+| `POST /mindmaps` khi chưa có bản ghi | Có |
+| `POST /mindmaps` khi đã có bản ghi | Không |
+| `GET /mindmaps` | Không |
+| `GET /mindmaps/{mindmap_id}` | Không |
+
+---
+
+# TypeScript API types
+
+```typescript
+interface ChatRequest {
+  question: string
+  slide: number
+  page: number
+}
+
+type ChatStatus = "answered" | "low_confidence" | "no_context"
+
+interface Source {
+  source_id: string
+  file_name: string
+  page: number
+  slide: number
+  excerpt: string
+  relevance_score?: number
+}
 
 interface ChatResponse {
   answer: string
   important_keywords: string[]
   confidence: number
   status: ChatStatus
-  sources: ChatSource[]
-  mindmap: MindElixirData | Record<string, never>
+  sources: Source[]
+}
+
+interface CreateMindmapRequest {
+  title: string
+  slide: number
+  page: number
+}
+
+interface MindmapResponse {
+  mindmap_id: string
+  title: string
+  document_id: string
+  file_name: string
+  context_boundary: {
+    slide: number
+    page: number
+  }
+  generation_status: "generated" | "cached"
+  mindmap: MindElixirData
+  sources: Source[]
+  created_at: string
+  updated_at: string
+}
+
+interface MindmapListItem {
+  mindmap_id: string
+  title: string
+  document_id: string
+  file_name: string
+  context_boundary: {
+    slide: number
+    page: number
+  }
+  created_at: string
+  updated_at: string
+}
+
+interface MindmapListResponse {
+  items: MindmapListItem[]
+  next_cursor: string | null
 }
 ```
