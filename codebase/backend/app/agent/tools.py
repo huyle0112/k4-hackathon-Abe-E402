@@ -28,10 +28,27 @@ class GetSavedMindmapArgs(StrictToolArgs):
 
 class CreateMindmapArgs(StrictToolArgs):
     document_ids: list[str] = Field(min_length=1, max_length=20)
-    prompt: str = Field(min_length=2, max_length=2000)
+    prompt: str = Field(max_length=2000)
+
+
+class LoadLessonContextArgs(StrictToolArgs):
+    document_id: str = Field(min_length=1)
+    scope: str = Field(
+        pattern=r"^(current_lesson|previous_lessons|through_current)$"
+    )
 
 
 TOOL_DEFINITIONS: list[dict[str, Any]] = [
+    {
+        "type": "function",
+        "name": "load_lesson_context",
+        "description": (
+            "Nạp tuần tự toàn bộ nội dung để tóm tắt, không semantic search. "
+            "Phạm vi: bài hiện tại, các bài trước, hoặc từ đầu qua bài hiện tại."
+        ),
+        "strict": True,
+        "parameters": LoadLessonContextArgs.model_json_schema(),
+    },
     {
         "type": "function",
         "name": "search_slide_evidence",
@@ -95,6 +112,11 @@ class AgentTools:
                 arguments
             )
             return self.search_slide_evidence(args)
+        if name == "load_lesson_context":
+            args = TypeAdapter(LoadLessonContextArgs).validate_python(
+                arguments
+            )
+            return self.load_lesson_context(args)
         if name == "get_saved_mindmap":
             args = TypeAdapter(GetSavedMindmapArgs).validate_python(arguments)
             return self.get_saved_mindmap(args, user_id=user_id)
@@ -102,6 +124,41 @@ class AgentTools:
             args = TypeAdapter(CreateMindmapArgs).validate_python(arguments)
             return self.create_mindmap(args, user_id=user_id)
         raise ValueError(f"Unknown agent tool: {name}")
+
+    def load_lesson_context(
+        self, args: LoadLessonContextArgs
+    ) -> dict[str, Any]:
+        current = self.vector_store.get_chunks(
+            where={"document_id": args.document_id}
+        )
+        if not current:
+            return {
+                "scope": args.scope,
+                "document_id": args.document_id,
+                "chunks": [],
+            }
+        session = current[0].session_number
+        if args.scope == "previous_lessons":
+            where = {"session_number": {"$lt": session}}
+        elif args.scope == "through_current":
+            where = {"session_number": {"$lte": session}}
+        else:
+            where = {"document_id": args.document_id}
+        chunks = self.vector_store.get_chunks(where=where)
+        return {
+            "scope": args.scope,
+            "document_id": args.document_id,
+            "chunks": [
+                {
+                    "chunk_id": chunk.chunk_id,
+                    "document_id": chunk.document_id,
+                    "session_number": chunk.session_number,
+                    "slide": chunk.slide_number,
+                    "text": chunk.text,
+                }
+                for chunk in chunks
+            ],
+        }
 
     def search_slide_evidence(
         self, args: SearchSlideEvidenceArgs

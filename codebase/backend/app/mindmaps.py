@@ -13,11 +13,10 @@ from uuid import uuid4
 from pydantic import BaseModel, Field, field_validator
 
 from app.config import Settings
-from app.rag.embeddings import EmbeddingProvider
 from app.rag.generation.prompt import build_evidence_context
+from app.rag.ingestion.chunker import SlideChunker
+from app.rag.ingestion.pdf_loader import PDFLoader
 from app.rag.models import Citation, SearchHit
-from app.rag.retrieval.reranker import BaselineReranker
-from app.rag.vector_store import ChromaVectorStore
 
 
 class MindmapNode(BaseModel):
@@ -37,7 +36,7 @@ class MindmapData(BaseModel):
 
 class CreateMindmapRequest(BaseModel):
     document_ids: list[str] = Field(min_length=1, max_length=20)
-    prompt: str = Field(min_length=2, max_length=2000)
+    prompt: str = Field(default="", max_length=2000)
 
     @field_validator("document_ids")
     @classmethod
@@ -97,6 +96,56 @@ class MindmapGenerationProvider(Protocol):
     def generate(
         self, prompt: str, evidence_context: str
     ) -> GeneratedMindmap: ...
+
+
+class MindmapContextProvider(Protocol):
+    def load(self, document_ids: list[str]) -> list[SearchHit]: ...
+
+
+class PDFMindmapContextProvider:
+    """Load complete mindmap context directly from source PDFs."""
+
+    def __init__(
+        self,
+        lessons_dir: Path,
+        *,
+        loader: PDFLoader,
+        chunker: SlideChunker,
+    ) -> None:
+        self.lessons_dir = lessons_dir.resolve()
+        self.loader = loader
+        self.chunker = chunker
+
+    def load(self, document_ids: list[str]) -> list[SearchHit]:
+        available = {
+            path.stem: path
+            for path in self.lessons_dir.glob("*.pdf")
+            if path.is_file()
+        }
+        chunks = []
+        for document_id in document_ids:
+            path = available.get(document_id)
+            if path is None:
+                continue
+            loaded = self.loader.load(path, document_id=document_id)
+            chunks.extend(self.chunker.chunk_document(loaded))
+        chunks.sort(
+            key=lambda item: (
+                item.session_number,
+                item.slide_number,
+                item.chunk_index,
+            )
+        )
+        return [
+            SearchHit(
+                chunk=chunk,
+                score=1.0,
+                vector_score=1.0,
+                lexical_score=1.0,
+                rank=index,
+            )
+            for index, chunk in enumerate(chunks, start=1)
+        ]
 
 
 class OpenAIMindmapProvider:
@@ -267,18 +316,12 @@ class MindmapService:
         self,
         *,
         repository: MindmapRepository,
-        embedding_provider: EmbeddingProvider,
-        vector_store: ChromaVectorStore,
-        reranker: BaselineReranker,
+        context_provider: MindmapContextProvider,
         generation_provider: MindmapGenerationProvider | None,
-        candidate_k: int = 20,
     ) -> None:
         self.repository = repository
-        self.embedding_provider = embedding_provider
-        self.vector_store = vector_store
-        self.reranker = reranker
+        self.context_provider = context_provider
         self.generation_provider = generation_provider
-        self.candidate_k = candidate_k
 
     def create(
         self,
@@ -286,6 +329,15 @@ class MindmapService:
         *,
         user_id: str = "anonymous",
     ) -> MindmapResponse:
+        if not request.prompt.strip():
+            request = request.model_copy(
+                update={
+                    "prompt": (
+                        "Tạo mindmap tổng quan, có cấu trúc rõ ràng cho toàn "
+                        "bộ nội dung của các tài liệu đã chọn."
+                    )
+                }
+            )
         policy = _mindmap_policy(request.prompt)
         if policy == "medical":
             return self._empty_response(
@@ -332,22 +384,7 @@ class MindmapService:
                 message="Cần làm rõ yêu cầu trước khi tạo mindmap.",
             )
 
-        embedding = self.embedding_provider.embed_query(request.prompt)
-        where: dict[str, Any]
-        if len(request.document_ids) == 1:
-            where = {"document_id": request.document_ids[0]}
-        else:
-            where = {"document_id": {"$in": request.document_ids}}
-        candidates = self.vector_store.query(
-            embedding, n_results=self.candidate_k, where=where
-        )
-        hits = self.reranker.rerank(
-            request.prompt,
-            candidates,
-            top_k=8,
-            score_threshold=0.12,
-            preserve_cross_document_duplicates=True,
-        )
+        hits = self.context_provider.load(request.document_ids)
         if not hits:
             return self._empty_response(
                 request,
@@ -361,9 +398,19 @@ class MindmapService:
         if self.generation_provider is None:
             generated = _extractive_mindmap(request.prompt, hits)
         else:
-            generated = self.generation_provider.generate(
-                request.prompt, build_evidence_context(hits)
-            )
+            try:
+                generated = self.generation_provider.generate(
+                    request.prompt, build_evidence_context(hits)
+                )
+            except Exception:
+                return self._empty_response(
+                    request,
+                    status="no_context",
+                    message=(
+                        "Không thể tạo mindmap từ model ở thời điểm hiện tại. "
+                        "Vui lòng thử lại hoặc chọn ít tài liệu hơn."
+                    ),
+                )
         valid_ids = {hit.chunk.chunk_id for hit in hits}
         cited_ids = [
             item for item in dict.fromkeys(generated.cited_chunk_ids)
@@ -375,14 +422,13 @@ class MindmapService:
                 status="no_context",
                 message="Không thể tạo mindmap có nguồn hợp lệ.",
             )
-        sources = _sources(hits, cited_ids)
         row = self.repository.save(
             user_id=user_id,
             document_ids=request.document_ids,
             prompt=request.prompt,
             title=generated.title,
             mindmap=generated.mindmap,
-            sources=sources,
+            sources=[],
         )
         return self._from_row(row, status="created")
 
@@ -424,7 +470,7 @@ class MindmapService:
                 else "Đã tải mindmap đã lưu."
             ),
             mindmap=json.loads(row["mindmap_json"]),
-            sources=json.loads(row["sources_json"]),
+            sources=[],
             created_at=row["created_at"],
         )
 

@@ -3,7 +3,7 @@ import { Bot, ChevronRight, Plus, Send } from "lucide-react"
 
 import {
   findChatDocumentContext,
-  sendChatMessageMock,
+  sendChatMessage,
   type Source,
 } from "@/lib/chat-api"
 import { cn } from "@/lib/utils"
@@ -28,7 +28,7 @@ function seedMessages(): ChatMessage[] {
       id: nextId(),
       role: "assistant",
       page: 1,
-      text: "Xin chào! Mình là VLearn Tutor. Bạn có thể bôi đen một đoạn trên slide để hỏi, hoặc gửi câu hỏi tự do bên dưới nhé!",
+      text: "Xin chào, mình là VLearn Tutor!",
     },
   ]
 }
@@ -59,22 +59,43 @@ export function ReaderChatSidebar({
     setIsTyping(true)
 
     const context = findChatDocumentContext(slideFileId)
-    const response = await sendChatMessageMock(
-      { question: text, slide: currentPage, page: currentPage },
-      context ?? { document_id: slideFileId, file_name: slideFileId }
-    )
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: nextId(),
-        role: "assistant",
-        page: currentPage,
-        text: response.clarification_question ?? response.answer,
-        sources: response.sources,
-      },
-    ])
-    setIsTyping(false)
+    try {
+      const response = await sendChatMessage(
+        {
+          question: text,
+          document_id:
+            context?.document_id ?? slideFileId,
+          slide: currentPage,
+          page: currentPage,
+        },
+        context ?? { document_id: slideFileId, file_name: slideFileId }
+      )
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: nextId(),
+          role: "assistant",
+          page: currentPage,
+          text: response.clarification_question ?? response.answer,
+          sources: response.sources,
+        },
+      ])
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: nextId(),
+          role: "assistant",
+          page: currentPage,
+          text:
+            error instanceof Error
+              ? error.message
+              : "Không thể nhận phản hồi từ máy chủ.",
+        },
+      ])
+    } finally {
+      setIsTyping(false)
+    }
   }
 
   if (!open) {

@@ -1,6 +1,6 @@
 {
   "golden_set": "VLearn Tutor Golden Set",
-  "run_at": "2026-07-31T04:44:13.126032+00:00",
+  "run_at": "2026-07-31T05:16:48.085260+00:00",
   "passed": 22,
   "failed": 0,
   "total": 22,
@@ -14,7 +14,7 @@
       "actual_status": "answered",
       "status_code": 200,
       "response": {
-        "answer": "Đoạn bôi đen nói về cơ chế attention trong mô hình ngôn ngữ, cho phép mỗi từ (token) \"quay đầu\" và nhìn lại các từ quan trọng khác trong câu. Thay vì đọc theo trình tự từng chữ, cơ chế này giúp mỗi token tự đánh giá mức độ liên quan của các token khác đối với nghĩa của mình. Điều này giúp xác định nghĩa của từ theo ngữ cảnh, ví dụ như từ \"nó\" có thể ám chỉ quyển sách hay cái túi tùy thuộc vào từ nào được chú ý. Đây chính là khía cạnh quan trọng trong mô hình GPT, giúp nó hiểu ngữ cảnh một cách hiệu quả hơn so với các thế hệ trước.",
+        "answer": "Đoạn bôi đen trên Trang 15 mô tả về cơ chế \"attention\" trong mô hình ngôn ngữ. Theo đó, mỗi từ (token) không chỉ được đọc theo thứ tự mà còn có khả năng \"quay đầu\" để tham chiếu đến những từ quan trọng khác trong câu. Điều này cho phép model đánh giá mức độ liên quan của từng từ đối với nghĩa của nó, từ đó xác định nghĩa ngữ cảnh chính xác hơn. Ví dụ, một đại từ như \"nó\" có thể ám chỉ đến nhiều đối tượng khác nhau tùy thuộc vào từ mà nó chú ý đến. Đây chính là đặc điểm nổi bật giúp mô hình hiểu ngữ cảnh tốt hơn so với các thế hệ trước. \n\nLý do cho sự cải thiện này là việc sử dụng tính năng \"attention\" giúp liên kết các từ trong cách hiểu của model, đảm bảo rằng thông tin được phân tích một cách chính xác trong bối cảnh.",
         "confidence": 0.482,
         "abstained": false,
         "citations": [
@@ -32,13 +32,13 @@
           "mode": "openai",
           "provider": "openai",
           "model": "gpt-4o-mini",
-          "latency_ms": 2873.8544000079855,
+          "latency_ms": 4730.868499958888,
           "response_status": "completed",
-          "request_id": "req_2212319b40f9466b92bacd91fad0f8c9",
+          "request_id": "req_ec3fc89e8bf5401ba3f2b901720d7f69",
           "usage": {
             "input_tokens": 2075,
-            "output_tokens": 187,
-            "total_tokens": 2262
+            "output_tokens": 239,
+            "total_tokens": 2314
           },
           "error_type": null
         },
@@ -64,9 +64,9 @@
               "content_hash": "951be84574c13dbd6faa4d0b3193a9f627e37693f2879dc14ed6ecda94f86105",
               "token_count": 125
             },
-            "score": 0.5330895990133285,
+            "score": 0.5330830514431,
             "rank": 1,
-            "vector_score": 0.5509070754051208,
+            "vector_score": 0.5508970022201538,
             "lexical_score": 0.5
           },
           {
@@ -83,9 +83,9 @@
               "content_hash": "34dc45342148b4b9ab5bc028513d89d4ed4db0ad4221760514b54d5bf65a5bff",
               "token_count": 175
             },
-            "score": 0.32644575238227846,
+            "score": 0.32641940712928774,
             "rank": 2,
-            "vector_score": 0.384435772895813,
+            "vector_score": 0.3843952417373657,
             "lexical_score": 0.21875
           },
           {
@@ -102,9 +102,9 @@
               "content_hash": "0d6d8afddc009e94770c75c1a132248af40778970be707c3658ac5c3f8e64d65",
               "token_count": 161
             },
-            "score": 0.31002455711364746,
+            "score": 0.31001618862152097,
             "rank": 3,
-            "vector_score": 0.3726339340209961,
+            "vector_score": 0.3726210594177246,
             "lexical_score": 0.19374999999999998
           },
           {
@@ -121,9 +121,9 @@
               "content_hash": "0394251f6e058d71d97dbd5be3f5a54de147c4c3f0b2682bf17ea19dcab9380c",
               "token_count": 204
             },
-            "score": 0.29336779594421386,
+            "score": 0.29335535943508145,
             "rank": 4,
-            "vector_score": 0.3571043014526367,
+            "vector_score": 0.3570851683616638,
             "lexical_score": 0.175
           },
           {
@@ -140,9 +140,9 @@
               "content_hash": "2a6f76193d2e470cbac797b2b1eec59deca605442d5f738cb30e03278bed3c04",
               "token_count": 59
             },
-            "score": 0.2859049224853516,
+            "score": 0.28593382477760315,
             "rank": 5,
-            "vector_score": 0.39273834228515625,
+            "vector_score": 0.3927828073501587,
             "lexical_score": 0.0875
           }
         ]
@@ -156,8 +156,8 @@
       "actual_status": "answered",
       "status_code": 200,
       "response": {
-        "answer": "Slide 3 trình bày cấu trúc của AI từ khái niệm rộng đến cụ thể:  \n- **Artificial Intelligence (AI)** là khái niệm bao trùm lớn nhất, bao gồm mọi hệ thống có yếu tố \"thông minh\".  \n- **Machine Learning (ML)** là một nhánh của AI, cho phép máy học từ dữ liệu mà không cần phải lập trình cụ thể.  \n- **Deep Learning** là phần mở rộng của ML, sử dụng mạng nơ-ron sâu để tự động học các đặc trưng.  \n- **Generative AI** tạo ra nội dung mới như văn bản, hình ảnh và mã code.  \n- **LLM (Large Language Model)**, như GPT và Claude, là một loại mô hình ngôn ngữ quan trọng trong AI hiện nay, nhưng không phải là toàn bộ AI.",
-        "confidence": 0.5138,
+        "answer": "Slide này trình bày các khái niệm cơ bản về AI và các thành phần liên quan. Đầu tiên là Artificial Intelligence (AI), được coi là ô lớn nhất bao gồm mọi hệ thống có yếu tố thông minh. Machine Learning (ML) là một phần của AI, cho phép máy học từ dữ liệu thay vì phải lập luật tay. Deep Learning là một nhánh của ML, sử dụng mạng nơ-ron nhiều tầng để tự học đặc trưng. Generative AI có khả năng sinh nội dung mới như văn bản, ảnh và code. Cuối cùng, LLM (Large Language Model) là mô hình ngôn ngữ lớn, đóng vai trò quan trọng trong các trải nghiệm AI hiện nay. Mặc dù LLM không phải là toàn bộ AI, nhưng nó là nền tảng của hầu hết các ứng dụng AI hiện tại.",
+        "confidence": 0.5139,
         "abstained": false,
         "citations": [
           {
@@ -174,13 +174,13 @@
           "mode": "openai",
           "provider": "openai",
           "model": "gpt-4o-mini",
-          "latency_ms": 3604.018699959852,
+          "latency_ms": 3494.298700010404,
           "response_status": "completed",
-          "request_id": "req_6c908f3040484221a3ae92ead693e074",
+          "request_id": "req_a398da6f9dff4cc6983a8bce8d4de5c1",
           "usage": {
             "input_tokens": 1890,
-            "output_tokens": 225,
-            "total_tokens": 2115
+            "output_tokens": 214,
+            "total_tokens": 2104
           },
           "error_type": null
         },
@@ -208,9 +208,9 @@
               "content_hash": "6cc94c1b9756ff24a7be5a2d89e935da14f1e10b2d84a4e4700ceee8d41f4fee",
               "token_count": 165
             },
-            "score": 0.5774317951997121,
+            "score": 0.5774589927991232,
             "rank": 1,
-            "vector_score": 0.6909207105636597,
+            "vector_score": 0.690962553024292,
             "lexical_score": 0.3666666666666667
           },
           {
@@ -227,9 +227,9 @@
               "content_hash": "25a833ed2a7552194ab1fd9867f2f2930053a20bcf9c8088f1aed801c821c41b",
               "token_count": 91
             },
-            "score": 0.4265428694089254,
+            "score": 0.42655991633733115,
             "rank": 2,
-            "vector_score": 0.5933992862701416,
+            "vector_score": 0.5934255123138428,
             "lexical_score": 0.11666666666666665
           },
           {
@@ -246,9 +246,9 @@
               "content_hash": "03b7b5b4fd6406b893c08b08ffe9908938801563e9d645948326d634153c7c8b",
               "token_count": 32
             },
-            "score": 0.3888589040438334,
+            "score": 0.3888841257492701,
             "rank": 3,
-            "vector_score": 0.5668342113494873,
+            "vector_score": 0.5668730139732361,
             "lexical_score": 0.05833333333333333
           },
           {
@@ -265,9 +265,9 @@
               "content_hash": "8af5bdca1c52e6c9be08e89b05c946bd6fb1356066e288efe08b9e8a8c59431d",
               "token_count": 29
             },
-            "score": 0.3145611196756363,
+            "score": 0.314599746465683,
             "rank": 4,
-            "vector_score": 0.4839401841163635,
+            "vector_score": 0.4839996099472046,
             "lexical_score": 0.0
           },
           {
@@ -284,9 +284,9 @@
               "content_hash": "078535d7ff454652124eefdf3d23498cfe04bb4bdcfcdb606a6b8a3280850657",
               "token_count": 215
             },
-            "score": 0.31157616376876834,
+            "score": 0.31160347759723667,
             "rank": 5,
-            "vector_score": 0.47934794425964355,
+            "vector_score": 0.4793899655342102,
             "lexical_score": 0.0
           }
         ]
@@ -300,7 +300,7 @@
       "actual_status": "answered",
       "status_code": 200,
       "response": {
-        "answer": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường sử dụng kiến trúc Transformer, được huấn luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh. Nó được coi là một \"bộ não nền\", phục vụ cho nhiều ứng dụng khác nhau, không chỉ riêng cho chatbot. Chatbot chỉ là một sản phẩm được phát triển dựa trên LLM.",
+        "answer": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường dựa trên kiến trúc Transformer. Nó được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh. LLM không phải là một chatbot, mà là một bộ não ngôn ngữ dùng chung cho nhiều nhiệm vụ khác nhau, trong khi chatbot chỉ là sản phẩm được xây dựng trên nền tảng đó.",
         "confidence": 0.6175,
         "abstained": false,
         "citations": [
@@ -326,9 +326,9 @@
           "mode": "openai",
           "provider": "openai",
           "model": "gpt-4o-mini",
-          "latency_ms": 2420.842800056562,
+          "latency_ms": 3532.7245000516996,
           "response_status": "completed",
-          "request_id": "req_4b2e02d6bf014e5da503972ea70a2f5a",
+          "request_id": "req_9db6fb74bbee4f3f8fbb278fdc20ca4c",
           "usage": {
             "input_tokens": 2035,
             "output_tokens": 149,
@@ -357,9 +357,9 @@
               "content_hash": "cc27db72e51e9705169100640c98a10cfc569741f481d9fca7ebff7a71aa6b61",
               "token_count": 210
             },
-            "score": 0.715143451907418,
+            "score": 0.7151330687782982,
             "rank": 1,
-            "vector_score": 0.7575633525848389,
+            "vector_score": 0.7575473785400391,
             "lexical_score": 0.6363636363636364
           },
           {
@@ -376,9 +376,9 @@
               "content_hash": "6cc94c1b9756ff24a7be5a2d89e935da14f1e10b2d84a4e4700ceee8d41f4fee",
               "token_count": 165
             },
-            "score": 0.5141449233618649,
+            "score": 0.5141341915455732,
             "rank": 2,
-            "vector_score": 0.6049782037734985,
+            "vector_score": 0.6049616932868958,
             "lexical_score": 0.34545454545454546
           },
           {
@@ -395,9 +395,9 @@
               "content_hash": "b9efa97e080b5a6d2aadbd030f99ade5c98cde5365aaf66261c3c7e744501abe",
               "token_count": 138
             },
-            "score": 0.37833327688954094,
+            "score": 0.37831611373207785,
             "rank": 3,
-            "vector_score": 0.5477854609489441,
+            "vector_score": 0.5477590560913086,
             "lexical_score": 0.06363636363636363
           },
           {
@@ -414,9 +414,9 @@
               "content_hash": "25a833ed2a7552194ab1fd9867f2f2930053a20bcf9c8088f1aed801c821c41b",
               "token_count": 91
             },
-            "score": 0.366616521044211,
+            "score": 0.36662113146348435,
             "rank": 4,
-            "vector_score": 0.49549394845962524,
+            "vector_score": 0.4955010414123535,
             "lexical_score": 0.12727272727272726
           },
           {
@@ -433,9 +433,9 @@
               "content_hash": "d941ac639c76c873167da2a7627138cf215e5b38a9643904d3fb230feb83802d",
               "token_count": 69
             },
-            "score": 0.34212382847612555,
+            "score": 0.3420948874408548,
             "rank": 5,
-            "vector_score": 0.4235471487045288,
+            "vector_score": 0.4235026240348816,
             "lexical_score": 0.1909090909090909
           }
         ]
@@ -449,7 +449,7 @@
       "actual_status": "answered",
       "status_code": 200,
       "response": {
-        "answer": "Mô hình không đọc từ nguyên vẹn mà cắt văn bản thành các phần nhỏ gọi là token. Ví dụ, trong câu \"Hello world\", cái này sẽ được xem như khoảng 2 token. Đối với câu \"Xin chào\", có thể nó sẽ được chia thành 3-4 token tùy thuộc vào cách mà các từ và dấu câu được xử lý. Điều này có nghĩa là mọi thành phần của văn bản, từ các từ chính đến dấu câu, đều được coi là các đơn vị nhỏ giúp mô hình hiểu và xử lý văn bản tốt hơn.",
+        "answer": "Mô hình không đọc từ như con người mà phân tích văn bản thành các mảnh nhỏ gọi là token. Mỗi mảnh này có thể là một từ nguyên vẹn, một phần của từ, dấu câu, hoặc khoảng trắng. \n\nVí dụ: Câu \"Hello world\" sẽ được chia thành khoảng 2 token, trong khi câu \"Xin chào\" có thể tạo ra từ 3 đến 4 token. Điều này có nghĩa là mô hình xử lý văn bản bằng cách phân tách để dễ dàng hiểu và xử lý hơn, thay vì nhìn nhận nó như một tổng thể duy nhất.",
         "confidence": 0.4381,
         "abstained": false,
         "citations": [
@@ -467,13 +467,13 @@
           "mode": "openai",
           "provider": "openai",
           "model": "gpt-4o-mini",
-          "latency_ms": 2695.5553999869153,
+          "latency_ms": 6279.947399976663,
           "response_status": "completed",
-          "request_id": "req_ec92d933027d48b4b28a9e5b6110e92a",
+          "request_id": "req_3ac02c4f77b1439990ea01a4e22e8c7f",
           "usage": {
             "input_tokens": 2052,
-            "output_tokens": 155,
-            "total_tokens": 2207
+            "output_tokens": 164,
+            "total_tokens": 2216
           },
           "error_type": null
         },
@@ -589,7 +589,7 @@
       "actual_status": "answered",
       "status_code": 200,
       "response": {
-        "answer": "LLM (Large Language Model) và Agent khác nhau ở chỗ LLM là một mô hình ngôn ngữ lớn, không có năng lực hành động, trong khi Agent là LLM được đặt vào một môi trường làm việc có mục tiêu cụ thể và có khả năng tự động thực hiện các hành động để đạt được mục tiêu đó. Nói cách khác, Agent không phải là một loại mô hình khác mà là một ứng dụng của LLM trong bối cảnh thực hiện hành động có chủ đích.",
+        "answer": "LLM (Large Language Model) và Agent khác nhau ở chức năng và cách hoạt động. LLM là một mô hình ngôn ngữ lớn, còn Agent là LLM được đặt vào một vòng làm việc có mục tiêu và hành động. Trong khi LLM chỉ là một bộ não nền, Agent có khả năng thực hiện nhiều bước tự động hóa để đạt được mục tiêu nhất định. Do đó, Agent không phải là \"một loại model khác\" mà là cách sử dụng LLM trong các trọng trách thực tiễn.",
         "confidence": 0.5435,
         "abstained": false,
         "citations": [
@@ -608,14 +608,6 @@
             "slide_number": 10,
             "chunk_id": "day-01-ai-llm-foundation-slide-10-chunk-01",
             "excerpt": "LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo…"
-          },
-          {
-            "source_file": "day-01-ai-llm-foundation.pdf",
-            "document_id": "day-01-ai-llm-foundation",
-            "document_title": "Day 01 Ai Llm Foundation",
-            "slide_number": 4,
-            "chunk_id": "day-01-ai-llm-foundation-slide-04-chunk-01",
-            "excerpt": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động Discriminative AI Agentic AI Generative AI Giỏi phân loại, dự đoán: lọc spam, phát Nhận mục tiêu rồi tự làm nhiều bước: Sinh ra thứ mới: văn bản, ảnh, code. hiện gian lận, nhận diện…"
           }
         ],
         "reason": null,
@@ -623,13 +615,13 @@
           "mode": "openai",
           "provider": "openai",
           "model": "gpt-4o-mini",
-          "latency_ms": 3527.841000002809,
+          "latency_ms": 2964.3912999890745,
           "response_status": "completed",
-          "request_id": "req_2da343ec42204e4fa5bf147812394ef8",
+          "request_id": "req_4a0e3639e4254e2e9e2f7b18b40e2186",
           "usage": {
             "input_tokens": 2479,
-            "output_tokens": 176,
-            "total_tokens": 2655
+            "output_tokens": 163,
+            "total_tokens": 2642
           },
           "error_type": null
         },
@@ -815,13 +807,13 @@
           "mode": "openai",
           "provider": "openai",
           "model": "gpt-4o-mini",
-          "latency_ms": 1614.3627000274137,
+          "latency_ms": 1805.8819000143558,
           "response_status": "completed",
-          "request_id": "req_ff2a8234cf6e489a9e0539750a0bc078",
+          "request_id": "req_f5c54f8739cb417aafad743d6b4c56aa",
           "usage": {
             "input_tokens": 1826,
-            "output_tokens": 96,
-            "total_tokens": 1922
+            "output_tokens": 85,
+            "total_tokens": 1911
           },
           "error_type": null
         },
@@ -845,9 +837,9 @@
               "content_hash": "6cc94c1b9756ff24a7be5a2d89e935da14f1e10b2d84a4e4700ceee8d41f4fee",
               "token_count": 165
             },
-            "score": 0.4569566443692083,
+            "score": 0.45694331677063654,
             "rank": 1,
-            "vector_score": 0.5086958408355713,
+            "vector_score": 0.5086753368377686,
             "lexical_score": 0.36086956521739133
           },
           {
@@ -864,9 +856,9 @@
               "content_hash": "25a833ed2a7552194ab1fd9867f2f2930053a20bcf9c8088f1aed801c821c41b",
               "token_count": 91
             },
-            "score": 0.2895073917637701,
+            "score": 0.28949561388596246,
             "rank": 2,
-            "vector_score": 0.41262006759643555,
+            "vector_score": 0.41260194778442383,
             "lexical_score": 0.0608695652173913
           },
           {
@@ -883,9 +875,9 @@
               "content_hash": "03b7b5b4fd6406b893c08b08ffe9908938801563e9d645948326d634153c7c8b",
               "token_count": 32
             },
-            "score": 0.25743829607963564,
+            "score": 0.25742396116256716,
             "rank": 3,
-            "vector_score": 0.39605891704559326,
+            "vector_score": 0.39603686332702637,
             "lexical_score": 0.0
           },
           {
@@ -902,9 +894,9 @@
               "content_hash": "25a810be62a00abd81318733d486904d505d390c0747d1ab77facccd3e01089b",
               "token_count": 187
             },
-            "score": 0.25098447076652364,
+            "score": 0.2509862916884215,
             "rank": 4,
-            "vector_score": 0.31355470418930054,
+            "vector_score": 0.313557505607605,
             "lexical_score": 0.13478260869565217
           },
           {
@@ -921,9 +913,9 @@
               "content_hash": "8af5bdca1c52e6c9be08e89b05c946bd6fb1356066e288efe08b9e8a8c59431d",
               "token_count": 29
             },
-            "score": 0.2499281300669131,
+            "score": 0.24993142322353695,
             "rank": 5,
-            "vector_score": 0.3681168556213379,
+            "vector_score": 0.3681219220161438,
             "lexical_score": 0.03043478260869565
           }
         ]
@@ -1001,18 +993,18 @@
         "confidence": 0.4165,
         "abstained": true,
         "citations": [],
-        "reason": "Giá API cụ thể không được cung cấp trong EVIDENCE.",
+        "reason": "Thông tin giá cụ thể không có trong EVIDENCE cung cấp.",
         "generation": {
           "mode": "openai",
           "provider": "openai",
           "model": "gpt-4o-mini",
-          "latency_ms": 1949.1502000018954,
+          "latency_ms": 7403.295599971898,
           "response_status": "completed",
-          "request_id": "req_c65f69a8327d4fc5bb1310d234fbcce3",
+          "request_id": "req_87e133f14934475d9a3bc399584eb7bc",
           "usage": {
             "input_tokens": 2342,
-            "output_tokens": 109,
-            "total_tokens": 2451
+            "output_tokens": 120,
+            "total_tokens": 2462
           },
           "error_type": null
         },
@@ -1147,8 +1139,8 @@
       "status_code": 200,
       "response": {
         "status": "created",
-        "mindmap_id": "mm_d5a2d871fc01408ab677646dc2b5582a",
-        "title": "So Sánh LLM, Workflow và Agent",
+        "mindmap_id": "mm_b4e430fa94424132b10c05a1b806d8ee",
+        "title": "So sánh LLM, Workflow và Agent",
         "prompt": "Tạo mindmap so sánh LLM, Workflow và Agent, kèm trường hợp nên dùng từng loại.",
         "document_ids": [
           "day-01-ai-llm-foundation",
@@ -1159,53 +1151,67 @@
         "mindmap": {
           "nodeData": {
             "id": "root",
-            "topic": "So Sánh LLM, Workflow và Agent",
+            "topic": "So sánh LLM, Workflow và Agent",
             "root": true,
             "direction": 0,
             "children": [
               {
                 "id": "llm",
-                "topic": "LLM (Large Language Model)",
+                "topic": "LLM",
                 "root": false,
                 "direction": 1,
                 "children": [
                   {
-                    "id": "llm-definition",
-                    "topic": "Mô Tả",
+                    "id": "llm_def",
+                    "topic": "Định nghĩa",
                     "root": false,
-                    "direction": 0,
+                    "direction": 1,
                     "children": []
                   },
                   {
-                    "id": "llm-usage",
-                    "topic": "Trường Hợp Dùng",
+                    "id": "llm_use_cases",
+                    "topic": "Trường hợp sử dụng",
                     "root": false,
-                    "direction": 0,
+                    "direction": 1,
                     "children": [
                       {
-                        "id": "llm-use-case-1",
-                        "topic": "Viết văn bản",
+                        "id": "llm_use_1",
+                        "topic": "Chatbot",
                         "root": false,
                         "direction": 1,
                         "children": []
                       },
                       {
-                        "id": "llm-use-case-2",
-                        "topic": "Dịch thuật",
+                        "id": "llm_use_2",
+                        "topic": "Tóm tắt tài liệu",
                         "root": false,
                         "direction": 1,
                         "children": []
                       },
                       {
-                        "id": "llm-use-case-3",
-                        "topic": "Tóm tắt thông tin",
+                        "id": "llm_use_3",
+                        "topic": "Viết code",
                         "root": false,
                         "direction": 1,
                         "children": []
                       },
                       {
-                        "id": "llm-use-case-4",
-                        "topic": "Trả lời câu hỏi",
+                        "id": "llm_use_4",
+                        "topic": "Dịch & phân tích",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "llm_working",
+                        "topic": "Hoạt động",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "llm_complexity",
+                        "topic": "Phức tạp thấp",
                         "root": false,
                         "direction": 1,
                         "children": []
@@ -1221,35 +1227,35 @@
                 "direction": 1,
                 "children": [
                   {
-                    "id": "workflow-definition",
-                    "topic": "Mô Tả",
+                    "id": "workflow_def",
+                    "topic": "Định nghĩa",
                     "root": false,
-                    "direction": 0,
+                    "direction": 1,
                     "children": []
                   },
                   {
-                    "id": "workflow-usage",
-                    "topic": "Trường Hợp Dùng",
+                    "id": "workflow_use_cases",
+                    "topic": "Trường hợp sử dụng",
                     "root": false,
-                    "direction": 0,
+                    "direction": 1,
                     "children": [
                       {
-                        "id": "workflow-use-case-1",
-                        "topic": "Quy trình hồi đáp",
+                        "id": "workflow_use_1",
+                        "topic": "Tóm tắt email",
                         "root": false,
                         "direction": 1,
                         "children": []
                       },
                       {
-                        "id": "workflow-use-case-2",
-                        "topic": "Hỗ trợ khách hàng",
+                        "id": "workflow_use_2",
+                        "topic": "Chatbot FAQ",
                         "root": false,
                         "direction": 1,
                         "children": []
                       },
                       {
-                        "id": "workflow-use-case-3",
-                        "topic": "Quản lý ticket",
+                        "id": "workflow_use_3",
+                        "topic": "Phân loại ticket hỗ trợ",
                         "root": false,
                         "direction": 1,
                         "children": []
@@ -1265,38 +1271,114 @@
                 "direction": 1,
                 "children": [
                   {
-                    "id": "agent-definition",
-                    "topic": "Mô Tả",
+                    "id": "agent_def",
+                    "topic": "Định nghĩa",
                     "root": false,
-                    "direction": 0,
+                    "direction": 1,
                     "children": []
                   },
                   {
-                    "id": "agent-usage",
-                    "topic": "Trường Hợp Dùng",
+                    "id": "agent_use_cases",
+                    "topic": "Trường hợp sử dụng",
                     "root": false,
-                    "direction": 0,
+                    "direction": 1,
                     "children": [
                       {
-                        "id": "agent-use-case-1",
+                        "id": "agent_use_1",
                         "topic": "Nghiên cứu thị trường",
                         "root": false,
                         "direction": 1,
                         "children": []
                       },
                       {
-                        "id": "agent-use-case-2",
-                        "topic": "Tự động hóa quy trình phức tạp",
+                        "id": "agent_use_2",
+                        "topic": "Coding agent sửa nhiều file",
                         "root": false,
                         "direction": 1,
                         "children": []
                       },
                       {
-                        "id": "agent-use-case-3",
-                        "topic": "Sửa chữa mã nguồn",
+                        "id": "agent_working",
+                        "topic": "Hoạt động",
                         "root": false,
                         "direction": 1,
-                        "children": []
+                        "children": [
+                          {
+                            "id": "agent_loop",
+                            "topic": "Vòng lặp (Goal + Reasoning + Tools + Memory + Action)",
+                            "root": false,
+                            "direction": 1,
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "comparison",
+                "topic": "So sánh",
+                "root": false,
+                "direction": 1,
+                "children": [
+                  {
+                    "id": "comparison_level",
+                    "topic": "Cấp độ",
+                    "root": false,
+                    "direction": 1,
+                    "children": []
+                  },
+                  {
+                    "id": "comparison_when_to_use",
+                    "topic": "Khi nào nên dùng",
+                    "root": false,
+                    "direction": 1,
+                    "children": [
+                      {
+                        "id": "when_llm",
+                        "topic": "LLM",
+                        "root": false,
+                        "direction": 1,
+                        "children": [
+                          {
+                            "id": "when_llm_simple",
+                            "topic": "Bài toán đơn giản",
+                            "root": false,
+                            "direction": 1,
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "when_workflow",
+                        "topic": "Workflow",
+                        "root": false,
+                        "direction": 1,
+                        "children": [
+                          {
+                            "id": "when_workflow_complex",
+                            "topic": "Bài toán trung bình",
+                            "root": false,
+                            "direction": 1,
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "when_agent",
+                        "topic": "Agent",
+                        "root": false,
+                        "direction": 1,
+                        "children": [
+                          {
+                            "id": "when_agent_complex",
+                            "topic": "Bài toán phức tạp",
+                            "root": false,
+                            "direction": 1,
+                            "children": []
+                          }
+                        ]
                       }
                     ]
                   }
@@ -1319,14 +1401,6 @@
           },
           {
             "source_id": "source-2",
-            "document_id": "day-01-ai-llm-foundation",
-            "file_name": "day-01-ai-llm-foundation.pdf",
-            "page": 23,
-            "slide": 23,
-            "excerpt": "Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực\n\nmức tự chủ & tác động thật tăng dần →\n\nLEVEL 3\nĐội agent phối hợp\n\nLEVEL 2\nBiết lập kế hoạch\n\n+ nhiều agent chuyên biệt chia\nviệc như một đội ngũ (multi-\nagent)\n\nLEVEL 1\nCó kết nối\n\n"
-          },
-          {
-            "source_id": "source-3",
             "document_id": "day-02-xac-dinh-bai-toan-ai",
             "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
             "page": 18,
@@ -1334,7 +1408,7 @@
             "excerpt": "Ba mức giải pháp: Rule / Workflow / Agent\n— Rule/Workflow/Agent là cấp độ KỸ THUẬT — còn Automate/Augment (PAIR) là cấp độ VAI TRÒ của con người trong hệ thống\n\nC ẤP Đ Ộ 1\nRule / Script\n\nC ẤP Đ Ộ 2\nLLM Feature / Workflow\n\nC ẤP Đ Ộ 3\nAgent\n\n"
           },
           {
-            "source_id": "source-4",
+            "source_id": "source-3",
             "document_id": "day-02-xac-dinh-bai-toan-ai",
             "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
             "page": 19,
@@ -1342,7 +1416,31 @@
             "excerpt": "Một tình huống, ba cấp độ giải pháp\n— Ưu tiên giải pháp đơn giản nhất có thể giải quyết bài toán và mang lại cải tiến đo lường được\n\nC ẤP Đ Ộ 1 — R U L E ( L U ẬT T Ĩ N H )\n\nC ẤP Đ Ộ 2 — W O R K F L O W ( Q U Y T R Ì N H )\n\nC ẤP Đ Ộ 3 — AG "
           },
           {
+            "source_id": "source-4",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 24,
+            "slide": 24,
+            "excerpt": "Giải phẫu một agent: 5 bộ phận là một vòng lặp\n\n① Goal\nmục tiêu cần đạt\n\nghi / đọc\n\nMemory\nsổ tay ghi nhớ các bước\n\n② Reasoning\nbộ não LLM chia bước\n\nvòng lặp\n\nagent\n\nquan sát kết quả → lặp lại\n\n③ Tools\nsearch · API · database ·\n\ncode\n④ Act"
+          },
+          {
             "source_id": "source-5",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 23,
+            "slide": 23,
+            "excerpt": "Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực\n\nmức tự chủ & tác động thật tăng dần →\n\nLEVEL 3\nĐội agent phối hợp\n\nLEVEL 2\nBiết lập kế hoạch\n\n+ nhiều agent chuyên biệt chia\nviệc như một đội ngũ (multi-\nagent)\n\nLEVEL 1\nCó kết nối\n\n"
+          },
+          {
+            "source_id": "source-6",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 21,
+            "slide": 21,
+            "excerpt": "Cây quyết định: Lựa chọn cấp độ giải pháp\n— Từ bài toán cốt lõi đến lựa chọn Rule, Workflow hay Agent\n\nAI IN ACTION - HACKATHON\n\nĐi từ trên xuống — mỗi nhánh \"KHÔNG\" là một lần tránh được độ phức tạp không cần thiết.\n\nNGUỒN Anthropic — Buil"
+          },
+          {
+            "source_id": "source-7",
             "document_id": "day-02-xac-dinh-bai-toan-ai",
             "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
             "page": 20,
@@ -1350,7 +1448,7 @@
             "excerpt": "Workflow patterns — đủ cho hầu hết bài toán\n— Ba mô hình cơ bản theo Anthropic · Building Effective Agents (2024)\n\n1. Prompt Chaining\n\n2. Routing\n\nLLM Call 1\n\nIn\n→\nLLM Call 1\n→\nGate\n→\nLLM Call 2\n→\nLLM Call 3\n→\nOut\n\nIn\n→\nRouter\n→\n\nLLM Call 2"
           }
         ],
-        "created_at": "2026-07-31T04:44:01.439755+00:00"
+        "created_at": "2026-07-31T05:16:37.134517+00:00"
       }
     },
     {
@@ -1362,8 +1460,8 @@
       "status_code": 200,
       "response": {
         "status": "created",
-        "mindmap_id": "mm_f46dd5ef5efc46f3a001b6309f6a6d3e",
-        "title": "Tóm tắt AI, ML, Deep Learning, Generative AI và LLM",
+        "mindmap_id": "mm_1c363839397e4ce5b249d0be767326e3",
+        "title": "Mindmap về AI, ML, Deep Learning, Generative AI và LLM",
         "prompt": "mindmap tóm tắt AI, ML, Deep Learning, Generative AI và LLM từ rộng đến hẹp",
         "document_ids": [
           "day-01-ai-llm-foundation"
@@ -1375,119 +1473,42 @@
             "id": "root",
             "topic": "AI, ML, Deep Learning, Generative AI và LLM",
             "root": true,
-            "direction": null,
+            "direction": 0,
             "children": [
               {
-                "id": "ai",
+                "id": "node-01",
                 "topic": "Artificial Intelligence (AI)",
                 "root": false,
                 "direction": 1,
-                "children": [
-                  {
-                    "id": "ml",
-                    "topic": "Machine Learning (ML)",
-                    "root": false,
-                    "direction": 1,
-                    "children": [
-                      {
-                        "id": "dl",
-                        "topic": "Deep Learning",
-                        "root": false,
-                        "direction": 1,
-                        "children": [
-                          {
-                            "id": "genai",
-                            "topic": "Generative AI",
-                            "root": false,
-                            "direction": 1,
-                            "children": [
-                              {
-                                "id": "llm",
-                                "topic": "Large Language Model (LLM)",
-                                "root": false,
-                                "direction": 1,
-                                "children": []
-                              },
-                              {
-                                "id": "examples-genai",
-                                "topic": "Ví dụ Generative AI",
-                                "root": false,
-                                "direction": 0,
-                                "children": []
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                "children": []
               },
               {
-                "id": "ai-applications",
-                "topic": "Các ứng dụng của AI",
+                "id": "node-02",
+                "topic": "Machine Learning (ML)",
                 "root": false,
                 "direction": 1,
-                "children": [
-                  {
-                    "id": "classification",
-                    "topic": "AI Phân loại",
-                    "root": false,
-                    "direction": 1,
-                    "children": []
-                  },
-                  {
-                    "id": "generative",
-                    "topic": "Generative AI",
-                    "root": false,
-                    "direction": 1,
-                    "children": []
-                  },
-                  {
-                    "id": "agentic",
-                    "topic": "Agentic AI",
-                    "root": false,
-                    "direction": 1,
-                    "children": []
-                  }
-                ]
+                "children": []
               },
               {
-                "id": "llm-info",
-                "topic": "Thông tin về LLM",
+                "id": "node-03",
+                "topic": "Deep Learning",
                 "root": false,
                 "direction": 1,
-                "children": [
-                  {
-                    "id": "llm-features",
-                    "topic": "Đặc điểm của LLM",
-                    "root": false,
-                    "direction": 1,
-                    "children": []
-                  },
-                  {
-                    "id": "llm-training",
-                    "topic": "Cách luyện LLM",
-                    "root": false,
-                    "direction": 1,
-                    "children": []
-                  }
-                ]
+                "children": []
               },
               {
-                "id": "llm-agents",
-                "topic": "Nâng cao từ LLM đến Agents",
+                "id": "node-04",
+                "topic": "Generative AI",
                 "root": false,
                 "direction": 1,
-                "children": [
-                  {
-                    "id": "llm-levels",
-                    "topic": "Bốn mức độ của Agent",
-                    "root": false,
-                    "direction": 1,
-                    "children": []
-                  }
-                ]
+                "children": []
+              },
+              {
+                "id": "node-05",
+                "topic": "Large Language Model (LLM)",
+                "root": false,
+                "direction": 1,
+                "children": []
               }
             ]
           },
@@ -1516,20 +1537,12 @@
             "source_id": "source-3",
             "document_id": "day-01-ai-llm-foundation",
             "file_name": "day-01-ai-llm-foundation.pdf",
-            "page": 18,
-            "slide": 18,
-            "excerpt": "LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề\n\n① Pre-training — \"đọc cả thư viện\": học tiếng nói và kiến thức từ hàng nghìn tỷ token. ② SFT — \"được chỉ cách trả\n\nlời\": học theo ví dụ mẫu để ra dáng trợ lý. ③ RLH"
+            "page": 4,
+            "slide": 4,
+            "excerpt": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động\n\nDiscriminative AI\n\nAgentic AI\n\nGenerative AI\n\nGiỏi phân loại, dự đoán: lọc spam, phát\n\nNhận mục tiêu rồi tự làm nhiều bước:\n\nSinh ra thứ mới: văn bản, ảnh, code.\n\nhiện gian lận, nhận "
           },
           {
             "source_id": "source-4",
-            "document_id": "day-01-ai-llm-foundation",
-            "file_name": "day-01-ai-llm-foundation.pdf",
-            "page": 21,
-            "slide": 21,
-            "excerpt": "Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt\n\n1\nPhân loại spam\n\n2 Câu chủ quan vs khách quan\n\n3 Suy luận ngôn ngữ (MNLI)\n\nModel thực chất đã học:\n\nModel thực chất đã học:\n\nModel thực chất đã học:\n\n“đếm số hyperlink trong email”\n\n“câu"
-          },
-          {
-            "source_id": "source-5",
             "document_id": "day-01-ai-llm-foundation",
             "file_name": "day-01-ai-llm-foundation.pdf",
             "page": 26,
@@ -1537,7 +1550,7 @@
             "excerpt": "Chọn model theo TẦNG, không chọn theo tên\n\nVIỆC CỦA BẠN\nTẦNG MODEL\n\nViệc đơn giản, khối lượng lớn\nphân loại · trích xuất · tóm tắt ngắn\n\nTẦNG 1 — FRONTIER ĐÓNG\nFable 5 · GPT-5.6 Sol · Opus 4.8\nđắt nhất — chỉ trả cho việc thật sự khó\n\n★ MẶC "
           }
         ],
-        "created_at": "2026-07-31T04:44:07.161959+00:00"
+        "created_at": "2026-07-31T05:16:43.280632+00:00"
       }
     },
     {
@@ -1549,7 +1562,7 @@
       "status_code": 200,
       "response": {
         "status": "created",
-        "mindmap_id": "mm_a8f978dc8c7d4841b1037983bc97759b",
+        "mindmap_id": "mm_fd342e1284274741a80dd7734cdd7da9",
         "title": "Quick Problem Card Mindmap",
         "prompt": "Tạo mindmap Quick Problem Card để tôi ôn bài",
         "document_ids": [
@@ -1562,47 +1575,47 @@
             "id": "root",
             "topic": "Quick Problem Card",
             "root": true,
-            "direction": null,
+            "direction": 0,
             "children": [
               {
                 "id": "problem",
                 "topic": "Problem (Bài toán)",
-                "root": null,
+                "root": false,
                 "direction": 0,
                 "children": []
               },
               {
                 "id": "actor",
                 "topic": "Actor (Đối tượng ảnh hưởng)",
-                "root": null,
+                "root": false,
                 "direction": 0,
                 "children": []
               },
               {
                 "id": "workflow",
                 "topic": "Workflow (Quy trình hiện tại)",
-                "root": null,
+                "root": false,
                 "direction": 0,
                 "children": []
               },
               {
                 "id": "bottleneck",
                 "topic": "Bottleneck + Impact (Nút thắt & Tác động)",
-                "root": null,
+                "root": false,
                 "direction": 0,
                 "children": []
               },
               {
                 "id": "success_metric",
                 "topic": "Success Metric (Chỉ số đo thành công)",
-                "root": null,
+                "root": false,
                 "direction": 0,
                 "children": []
               },
               {
                 "id": "direction",
                 "topic": "Direction (Định hướng giải pháp)",
-                "root": null,
+                "root": false,
                 "direction": 0,
                 "children": []
               }
@@ -1633,44 +1646,12 @@
             "source_id": "source-3",
             "document_id": "day-02-xac-dinh-bai-toan-ai",
             "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
-            "page": 3,
-            "slide": 3,
-            "excerpt": "Tìm đúng vấn đề trước khi tìm giải pháp\n— Mô hình Double Diamond — Don Norman / British Design Council (2005)\n\nD I A M O N D 1 — T Ì M Đ Ú N G VẤN Đ Ề\n\nDiscover: Mở rộng — khảo sát vấn đề căn bản.\n\nDefine: Thu hẹp — xác định đúng bài toán g"
-          },
-          {
-            "source_id": "source-4",
-            "document_id": "day-02-xac-dinh-bai-toan-ai",
-            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
-            "page": 4,
-            "slide": 4,
-            "excerpt": "Diamond 1 — Tìm đúng vấn đề\n— Phân kỳ để thấu hiểu sâu sắc, hội tụ để lựa chọn chính xác\n\nD I S C OV E R · P H Â N K Ỳ\n\nD E F I N E · H ỘI T Ụ\n\nKhám phá / mở rộng góc nhìn\n\nĐịnh nghĩa / chọn lọc dựa vào dữ liệu\n\n· Quan sát thực tế (Observat"
-          },
-          {
-            "source_id": "source-5",
-            "document_id": "day-02-xac-dinh-bai-toan-ai",
-            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
-            "page": 10,
-            "slide": 10,
-            "excerpt": "BỘ THẺ CÂU HỎI #3 — CẤU TRÚC PS\n\nCâu hỏi khai thác bài toán\n— Bộ câu hỏi định hình vấn đề dành cho các bên liên quan hoặc chính mình\n\n0 1\nQuy trình hiện tại như thế nào?\n\n0 2\nNút thắt nằm ở đâu?\n\nCông cụ, các bước, cơ chế bàn giao thông tin"
-          },
-          {
-            "source_id": "source-6",
-            "document_id": "day-02-xac-dinh-bai-toan-ai",
-            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
-            "page": 27,
-            "slide": 27,
-            "excerpt": "Problem Statement cho hệ thống AI\n\n— 6 yếu tố bài toán cốt lõi và 3 yếu tố quyết định AI\n\n6 Y ẾU TỐ B À I TOÁ N C ỐT L Õ I\n\nActor\nđối tượng ảnh hưởng\nĐối tượng trực tiếp chịu ảnh hưởng bởi vấn đề.\n\nWorkflow\nquy trình hiện tại\nQuy trình vận "
-          },
-          {
-            "source_id": "source-7",
-            "document_id": "day-02-xac-dinh-bai-toan-ai",
-            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
             "page": 26,
             "slide": 26,
             "excerpt": "Từ Problem Statement đến Eval Plan\n— Problem Statement rõ ràng giúp định hình cụ thể các tiêu chí kiểm thử\n\n0 1 · I N P U T\n\n0 2 · T E S T C A S E S\n\n0 3 · S U C C E S S\n\nProblem Statement\n\nKịch bản kiểm thử\n\nChỉ số hiệu năng\n\n9 trường đã h"
           }
         ],
-        "created_at": "2026-07-31T04:44:13.069946+00:00"
+        "created_at": "2026-07-31T05:16:48.024537+00:00"
       }
     },
     {

@@ -57,6 +57,7 @@ class Chunk(BaseModel):
 
 class RetrievalRequest(BaseModel):
     query: str = Field(min_length=1)
+    document_id: str | None = Field(default=None, min_length=1)
     session_numbers: list[int] | None = None
     max_slide: int | None = Field(default=None, ge=1)
     top_k: int = Field(default=5, ge=1, le=50)

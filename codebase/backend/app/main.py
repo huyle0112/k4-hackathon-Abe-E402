@@ -14,13 +14,13 @@ from app.mindmaps import (
     MindmapRepository,
     MindmapService,
     OpenAIMindmapProvider,
+    PDFMindmapContextProvider,
 )
+from app.rag.ingestion.chunker import SlideChunker
+from app.rag.ingestion.pdf_loader import PDFLoader
 from app.rag.runtime import (
     create_rag_service,
-    create_vector_store,
 )
-from app.rag.embeddings import create_embedding_provider
-from app.rag.retrieval.reranker import BaselineReranker
 
 load_dotenv()
 
@@ -37,7 +37,6 @@ def _cors_origins() -> list[str]:
 async def lifespan(app: FastAPI):
     settings = get_settings()
     app.state.rag_service = create_rag_service(settings)
-    embedding_provider = create_embedding_provider(settings)
     mindmap_provider = (
         OpenAIMindmapProvider(settings)
         if settings.llm_provider and settings.llm_model
@@ -45,11 +44,15 @@ async def lifespan(app: FastAPI):
     )
     app.state.mindmap_service = MindmapService(
         repository=MindmapRepository(settings.database_path),
-        embedding_provider=embedding_provider,
-        vector_store=create_vector_store(settings, embedding_provider),
-        reranker=BaselineReranker(),
+        context_provider=PDFMindmapContextProvider(
+            settings.lessons_dir,
+            loader=PDFLoader(ocr_enabled=settings.ocr_enabled),
+            chunker=SlideChunker(
+                max_tokens=settings.chunk_max_tokens,
+                overlap_tokens=settings.chunk_overlap_tokens,
+            ),
+        ),
         generation_provider=mindmap_provider,
-        candidate_k=settings.retrieval_candidate_k,
     )
     app.state.agent_tools = AgentTools(
         embedding_provider=app.state.rag_service.retriever.embedding_provider,

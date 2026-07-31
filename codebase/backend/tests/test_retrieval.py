@@ -101,6 +101,24 @@ def test_retrieval_filters_sessions(tmp_path: Path) -> None:
     assert all(hit.chunk.session_number == 2 for hit in hits)
 
 
+def test_retrieval_filters_document_and_current_slide(tmp_path: Path) -> None:
+    retriever, _ = _build_retriever(tmp_path)
+
+    hits = retriever.retrieve(
+        RetrievalRequest(
+            query="AI context attention reward",
+            document_id="day-01",
+            max_slide=1,
+            top_k=5,
+        )
+    )
+
+    assert hits
+    assert all(hit.chunk.document_id == "day-01" for hit in hits)
+    assert all(hit.chunk.slide_number <= 1 for hit in hits)
+    assert not any(hit.chunk.document_id == "day-02" for hit in hits)
+
+
 def test_cross_session_retrieval_preserves_each_requested_session(
     tmp_path: Path,
 ) -> None:

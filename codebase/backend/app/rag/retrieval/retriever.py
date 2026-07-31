@@ -37,6 +37,13 @@ class Retriever:
                 query_embedding,
             )
         where = build_session_filter(request.session_numbers)
+        if request.document_id is not None:
+            document_filter = {"document_id": request.document_id}
+            where = (
+                {"$and": [where, document_filter]}
+                if where is not None
+                else document_filter
+            )
         if request.max_slide is not None:
             slide_filter = {"slide_number": {"$lte": request.max_slide}}
             where = (

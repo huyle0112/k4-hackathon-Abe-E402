@@ -5,7 +5,7 @@ import { AlertTriangle, FileText, History, Info, Loader2, Sparkles } from "lucid
 import { MindElixirCanvas } from "@/components/mindmap/mind-elixir-canvas"
 import { cn } from "@/lib/utils"
 import {
-  createMindmapMock,
+  createMindmap,
   DOCUMENTS,
   getMindmapHistory,
   type MindmapResponse,
@@ -16,6 +16,7 @@ export function MindmapCreatePanel() {
   const [prompt, setPrompt] = useState("")
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<MindmapResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [history, setHistory] = useState<MindmapResponse[]>(() =>
     getMindmapHistory()
   )
@@ -23,7 +24,6 @@ export function MindmapCreatePanel() {
   const trimmedPrompt = prompt.trim()
   const canSubmit =
     selectedIds.length > 0 &&
-    trimmedPrompt.length >= 2 &&
     trimmedPrompt.length <= 2000 &&
     !loading
 
@@ -36,15 +36,22 @@ export function MindmapCreatePanel() {
   async function handleSubmit() {
     if (!canSubmit) return
     setLoading(true)
+    setError(null)
     try {
-      const response = await createMindmapMock({
+      const response = await createMindmap({
         document_ids: selectedIds,
         prompt: trimmedPrompt,
       })
       setResult(response)
-      if (response.status === "created") {
+      if (response.status === "created" || response.status === "cached") {
         setHistory(getMindmapHistory())
       }
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Không thể tạo mindmap từ máy chủ."
+      )
     } finally {
       setLoading(false)
     }
@@ -109,12 +116,12 @@ export function MindmapCreatePanel() {
 
         <div>
           <h3 className="mb-1 text-[13.5px] font-bold text-ink">
-            2. Nhập prompt
+            2. Nhập prompt (tùy chọn)
           </h3>
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="VD: So sánh LLM, workflow và agent; nêu trường hợp sử dụng."
+            placeholder="Để trống để tạo mindmap tổng quan cho toàn bộ tài liệu đã chọn."
             rows={4}
             className="w-full resize-none rounded-[10px] border border-line px-3 py-2.5 text-[13px] text-ink outline-none focus:border-navy"
           />
@@ -133,6 +140,12 @@ export function MindmapCreatePanel() {
           )}
           {loading ? "Đang tạo mindmap…" : "Tạo mindmap"}
         </button>
+
+        {error && (
+          <p className="rounded-[9px] border border-maroon/25 bg-maroon/5 px-3 py-2.5 text-[12px] text-maroon">
+            {error}
+          </p>
+        )}
 
         {history.length > 0 && (
           <div>
