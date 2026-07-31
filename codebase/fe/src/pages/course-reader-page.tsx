@@ -7,8 +7,7 @@ import { ReaderPager } from "@/components/reader/reader-pager"
 import { ReaderSidebar } from "@/components/reader/reader-sidebar"
 import { ReaderToolbar } from "@/components/reader/reader-toolbar"
 import { ReaderTopbar } from "@/components/reader/reader-topbar"
-import { SupportFab } from "@/components/dashboard/support-fab"
-import { useCourseDetail } from "@/hooks/use-course-detail"
+import { COURSES, findSlideFile, type SlideFile } from "@/data/comp2010-slides"
 import { usePdfDocument } from "@/hooks/use-pdf-document"
 import { type SlideFile } from "@/lib/api"
 import { loadPdfDocument, type PDFDocumentProxy } from "@/lib/pdf"
@@ -16,19 +15,22 @@ import { loadPdfDocument, type PDFDocumentProxy } from "@/lib/pdf"
 const ZOOM_STEP = 0.2
 const ZOOM_MIN = 0.6
 const ZOOM_MAX = 2.4
+const ZOOM_DEFAULT = 0.8
 
 function ReaderContent({
   file,
+  courseCode,
   document,
   numPages,
   onCurrentPageChange,
 }: {
   file: SlideFile
+  courseCode: string
   document: PDFDocumentProxy | null
   numPages: number | null
   onCurrentPageChange?: (page: number) => void
 }) {
-  const [zoom, setZoom] = useState(1)
+  const [zoom, setZoom] = useState(ZOOM_DEFAULT)
   const [currentPage, setCurrentPageState] = useState(1)
   const pageListRef = useRef<PdfPageListHandle>(null)
 
@@ -38,14 +40,15 @@ function ReaderContent({
   }
 
   return (
-    <div className="relative flex min-h-0 flex-1 flex-col">
+    <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
       <ReaderToolbar
         currentPage={currentPage}
         numPages={numPages}
         zoom={zoom}
         onZoomOut={() => setZoom((z) => Math.max(ZOOM_MIN, z - ZOOM_STEP))}
         onZoomIn={() => setZoom((z) => Math.min(ZOOM_MAX, z + ZOOM_STEP))}
-        onZoomReset={() => setZoom(1)}
+        onZoomReset={() => setZoom(ZOOM_DEFAULT)}
+        mindmapHref={`/courses/${courseCode}/mindmap?slide=${file.id}`}
       />
 
       <PdfPageList
@@ -136,16 +139,13 @@ export function CourseReaderPage() {
         <ReaderContent
           key={file.id}
           file={file}
+          courseCode={courseCode}
           document={document}
           numPages={numPages}
           onCurrentPageChange={setChatPage}
         />
 
-        <ReaderChatSidebar
-          currentPage={chatPage}
-          courseCode={courseCode}
-          slideId={file.id}
-        />
+        <ReaderChatSidebar currentPage={chatPage} slideFileId={file.id} />
       </div>
 
       

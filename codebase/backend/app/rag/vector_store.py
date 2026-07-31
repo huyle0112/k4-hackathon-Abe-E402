@@ -252,6 +252,32 @@ class ChromaVectorStore:
             )
         return hits
 
+    def get_chunks(
+        self, *, where: dict[str, Any] | None = None
+    ) -> list[Chunk]:
+        result = self._collection.get(
+            where=where,
+            include=["documents", "metadatas"],
+        )
+        chunks = [
+            self._metadata_to_chunk(chunk_id, text, metadata)
+            for chunk_id, text, metadata in zip(
+                result.get("ids") or [],
+                result.get("documents") or [],
+                result.get("metadatas") or [],
+                strict=False,
+            )
+            if text is not None and metadata is not None
+        ]
+        return sorted(
+            chunks,
+            key=lambda item: (
+                item.session_number,
+                item.slide_number,
+                item.chunk_index,
+            ),
+        )
+
     def reset(self) -> None:
         self._client.delete_collection(self.collection_name)
         self._collection = self._get_or_create_collection()

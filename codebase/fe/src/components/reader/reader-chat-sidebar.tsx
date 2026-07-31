@@ -1,15 +1,20 @@
 import { useEffect, useRef, useState } from "react"
-import { Bot, ChevronRight, History, Plus, Send } from "lucide-react"
+import { Bot, ChevronRight, Plus, Send } from "lucide-react"
 
-import { useChat } from "@/hooks/use-chat"
-import { type HistoryMessage } from "@/lib/api"
+import {
+  findChatDocumentContext,
+  sendChatMessage,
+  type Source,
+} from "@/lib/chat-api"
 import { cn } from "@/lib/utils"
 
 type ChatMessage = {
   id: string
   role: "assistant" | "user"
-  page: number
+  page?: number
   text: string
+  importantKeywords?: string[]
+  sources?: Source[]
 }
 
 let messageSeq = 0
@@ -23,20 +28,41 @@ function seedMessages(): ChatMessage[] {
     {
       id: nextId(),
       role: "assistant",
-      page: 1,
-      text: "Xin chào! Mình là VLearn Tutor. Bạn có thể bôi đen một đoạn trên slide để hỏi, hoặc gửi câu hỏi tự do bên dưới nhé!",
+      text: "Xin chào, mình là VLearn Tutor!",
     },
   ]
 }
 
+function highlightedText(text: string, keywords: string[] = []) {
+  const normalizedKeywords = [...new Set(keywords.map((item) => item.trim()))]
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length)
+  if (normalizedKeywords.length === 0) return text
+
+  const escaped = normalizedKeywords.map((keyword) =>
+    keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  )
+  const pattern = new RegExp(`(${escaped.join("|")})`, "gi")
+
+  return text.split(pattern).map((part, index) =>
+    normalizedKeywords.some(
+      (keyword) => keyword.toLocaleLowerCase() === part.toLocaleLowerCase()
+    ) ? (
+      <strong key={`${part}-${index}`} className="font-bold text-ink">
+        {part}
+      </strong>
+    ) : (
+      part
+    )
+  )
+}
+
 export function ReaderChatSidebar({
   currentPage,
-  courseCode,
-  slideId,
+  slideFileId,
 }: {
   currentPage: number
-  courseCode: string
-  slideId: string
+  slideFileId: string
 }) {
   const [open, setOpen] = useState(true)
   const [messages, setMessages] = useState<ChatMessage[]>(() => seedMessages())
@@ -55,34 +81,46 @@ export function ReaderChatSidebar({
 
     setMessages((prev) => [...prev, { id: nextId(), role: "user", page: currentPage, text }])
     setInput("")
+    setIsTyping(true)
 
+    const context = findChatDocumentContext(slideFileId)
     try {
-      const history: HistoryMessage[] = messages
-        .filter((m) => m.id !== messages[0].id) // bỏ câu chào
-        .map((m) => ({ role: m.role, text: m.text }))
-
-      const res = await sendChatApi({
-        question: text,
-        course_code: courseCode,
-        slide_id: slideId,
-        page: currentPage,
-        history,
-      })
-
-      setMessages((prev) => [
-        ...prev,
-        { id: nextId(), role: "assistant", page: currentPage, text: res.answer },
-      ])
-    } catch (err) {
+      const response = await sendChatMessage(
+        {
+          question: text,
+          document_id:
+            context?.document_id ?? slideFileId,
+          slide: currentPage,
+          page: currentPage,
+        },
+        context ?? { document_id: slideFileId, file_name: slideFileId }
+      )
       setMessages((prev) => [
         ...prev,
         {
           id: nextId(),
           role: "assistant",
           page: currentPage,
-          text: `Đã có lỗi xảy ra: ${err instanceof Error ? err.message : String(err)}. Vui lòng thử lại.`,
+          text: response.clarification_question ?? response.answer,
+          importantKeywords: response.important_keywords,
+          sources: response.sources,
         },
       ])
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: nextId(),
+          role: "assistant",
+          page: currentPage,
+          text:
+            error instanceof Error
+              ? error.message
+              : "Không thể nhận phản hồi từ máy chủ.",
+        },
+      ])
+    } finally {
+      setIsTyping(false)
     }
   }
 
@@ -121,13 +159,7 @@ export function ReaderChatSidebar({
             Trợ lý học theo ngữ cảnh
           </p>
         </div>
-        <button
-          type="button"
-          aria-label="Lịch sử hội thoại"
-          className="flex size-7 shrink-0 items-center justify-center rounded-[7px] text-ink-soft transition-colors hover:text-ink"
-        >
-          <History className="size-3.5" />
-        </button>
+
         <button
           type="button"
           onClick={() => setMessages([])}
@@ -144,11 +176,24 @@ export function ReaderChatSidebar({
       <div ref={scrollRef} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
         {messages.map((msg) => (
           <div key={msg.id} className={cn("flex flex-col gap-1", msg.role === "user" && "items-end")}>
-            <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
-              Ngữ cảnh: Slide trang {msg.page}
-            </span>
             {msg.role === "assistant" ? (
-              <p className="max-w-[92%] text-[13.5px] leading-relaxed text-ink">{msg.text}</p>
+              <div className="max-w-[92%]">
+                <p className="whitespace-pre-wrap text-[13.5px] leading-relaxed text-ink">
+                  {highlightedText(msg.text, msg.importantKeywords)}
+                </p>
+                {msg.sources && msg.sources.length > 0 && (
+                  <ul className="mt-1.5 flex flex-col gap-0.5">
+                    {msg.sources.map((source) => (
+                      <li
+                        key={source.source_id}
+                        className="text-[11px] text-ink-soft/80"
+                      >
+                        Nguồn: {source.file_name} · trang {source.page}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             ) : (
               <p className="max-w-[85%] rounded-xl rounded-tr-[4px] bg-navy px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white">
                 {msg.text}
@@ -159,9 +204,6 @@ export function ReaderChatSidebar({
 
         {isTyping && (
           <div className="flex flex-col gap-1">
-            <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
-              Ngữ cảnh: Slide trang {currentPage}
-            </span>
             <div className="flex w-fit gap-1 rounded-xl rounded-tl-[4px] bg-[#F1F0EC] px-3.5 py-3" aria-hidden="true">
               {[0, 0.2, 0.4].map((delay) => (
                 <span

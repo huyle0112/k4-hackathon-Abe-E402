@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.config import Settings
+from app.agent.router import LLMTaskRouter
 from app.rag.embeddings import (
     EmbeddingProvider,
     create_embedding_provider,
@@ -52,6 +53,21 @@ def create_rag_service(
         settings,
         client=llm_client,
     )
+    task_router = (
+        LLMTaskRouter(
+            api_key=settings.llm_api_key or "",
+            model=settings.llm_model or "",
+            base_url=settings.llm_base_url,
+            timeout=settings.llm_timeout_seconds,
+            max_retries=settings.llm_max_retries,
+            client=llm_client,
+        )
+        if settings.llm_provider == "openai"
+        and settings.llm_api_key
+        and settings.llm_model
+        and llm_client is None
+        else None
+    )
     generator = AnswerGenerator(
         provider=text_generation_provider,
         abstention_threshold=settings.retrieval_score_threshold,
@@ -63,4 +79,8 @@ def create_rag_service(
             settings.retrieval_min_session_evidence
         ),
     )
-    return RAGService(retriever=retriever, generator=generator)
+    return RAGService(
+        retriever=retriever,
+        generator=generator,
+        task_router=task_router,
+    )

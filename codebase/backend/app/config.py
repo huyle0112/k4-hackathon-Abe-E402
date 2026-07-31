@@ -25,6 +25,7 @@ def get_settings() -> Settings:
 
 import os
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -67,8 +68,7 @@ class Settings:
     repo_root: Path
     lessons_dir: Path
     vector_store_dir: Path
-    app_name: str = "VLearn Cross-session Tutor"
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    database_path: Path = Path("data/vlearn.sqlite3")
     collection_name: str = "ai_in_action_lessons"
     embedding_provider: str = "hash"
     embedding_model: str = ""
@@ -117,11 +117,18 @@ class Settings:
                 str(repo_root / "vector-store" / "chroma"),
             )
         ).resolve()
+        database_path = Path(
+            _env_text(
+                "DATABASE_PATH",
+                str(backend_root / "data" / "vlearn.sqlite3"),
+            )
+        ).resolve()
 
         return cls(
             repo_root=repo_root,
             lessons_dir=lessons_dir,
             vector_store_dir=vector_store_dir,
+            database_path=database_path,
             collection_name=_env_text(
                 "COLLECTION_NAME", "ai_in_action_lessons"
             ),
@@ -179,12 +186,8 @@ class Settings:
             ocr_dpi=_env_int("OCR_DPI", 240),
         )
 
-    @property
-    def allowed_origins(self) -> list[str]:
-        return [item.strip() for item in self.cors_origins.split(",") if item.strip()]
 
-from functools import lru_cache
-
-@lru_cache
+@lru_cache(maxsize=1)
 def get_settings() -> Settings:
+    """Return one immutable settings instance for the application process."""
     return Settings.from_env()
