@@ -1,7 +1,7 @@
 .env
 .env.*
 !.env.example
-vector-store/
+# vector-store/
 # private-data/lessons/*
 !private-data/lessons/.gitkeep
 
