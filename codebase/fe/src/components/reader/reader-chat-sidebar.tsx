@@ -13,6 +13,7 @@ type ChatMessage = {
   role: "assistant" | "user"
   page?: number
   text: string
+  importantKeywords?: string[]
   sources?: Source[]
 }
 
@@ -30,6 +31,30 @@ function seedMessages(): ChatMessage[] {
       text: "Xin chào, mình là VLearn Tutor!",
     },
   ]
+}
+
+function highlightedText(text: string, keywords: string[] = []) {
+  const normalizedKeywords = [...new Set(keywords.map((item) => item.trim()))]
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length)
+  if (normalizedKeywords.length === 0) return text
+
+  const escaped = normalizedKeywords.map((keyword) =>
+    keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  )
+  const pattern = new RegExp(`(${escaped.join("|")})`, "gi")
+
+  return text.split(pattern).map((part, index) =>
+    normalizedKeywords.some(
+      (keyword) => keyword.toLocaleLowerCase() === part.toLocaleLowerCase()
+    ) ? (
+      <strong key={`${part}-${index}`} className="font-bold text-ink">
+        {part}
+      </strong>
+    ) : (
+      part
+    )
+  )
 }
 
 export function ReaderChatSidebar({
@@ -76,6 +101,7 @@ export function ReaderChatSidebar({
           role: "assistant",
           page: currentPage,
           text: response.clarification_question ?? response.answer,
+          importantKeywords: response.important_keywords,
           sources: response.sources,
         },
       ])
@@ -149,14 +175,11 @@ export function ReaderChatSidebar({
       <div ref={scrollRef} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
         {messages.map((msg) => (
           <div key={msg.id} className={cn("flex flex-col gap-1", msg.role === "user" && "items-end")}>
-            {msg.page !== undefined && (
-              <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
-                Ngữ cảnh: Slide trang {msg.page}
-              </span>
-            )}
             {msg.role === "assistant" ? (
               <div className="max-w-[92%]">
-                <p className="text-[13.5px] leading-relaxed text-ink">{msg.text}</p>
+                <p className="whitespace-pre-wrap text-[13.5px] leading-relaxed text-ink">
+                  {highlightedText(msg.text, msg.importantKeywords)}
+                </p>
                 {msg.sources && msg.sources.length > 0 && (
                   <ul className="mt-1.5 flex flex-col gap-0.5">
                     {msg.sources.map((source) => (
@@ -180,9 +203,6 @@ export function ReaderChatSidebar({
 
         {isTyping && (
           <div className="flex flex-col gap-1">
-            <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
-              Ngữ cảnh: Slide trang {currentPage}
-            </span>
             <div className="flex w-fit gap-1 rounded-xl rounded-tl-[4px] bg-[#F1F0EC] px-3.5 py-3" aria-hidden="true">
               {[0, 0.2, 0.4].map((delay) => (
                 <span
