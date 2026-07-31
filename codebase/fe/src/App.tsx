@@ -8,6 +8,7 @@ import { LoginPage } from "@/pages/login-page"
 import { WelcomePage } from "@/pages/welcome-page"
 
 const CourseReaderPage = lazy(() => import("@/pages/course-reader-page"))
+const CourseMindmapPage = lazy(() => import("@/pages/course-mindmap-page"))
 
 export function App() {
   return (
@@ -22,6 +23,14 @@ export function App() {
         element={
           <Suspense fallback={null}>
             <CourseReaderPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/courses/:courseCode/mindmap"
+        element={
+          <Suspense fallback={null}>
+            <CourseMindmapPage />
           </Suspense>
         }
       />

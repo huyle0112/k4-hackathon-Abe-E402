@@ -19,11 +19,13 @@ const ZOOM_DEFAULT = 0.8
 
 function ReaderContent({
   file,
+  courseCode,
   document,
   numPages,
   onCurrentPageChange,
 }: {
   file: SlideFile
+  courseCode: string
   document: PDFDocumentProxy | null
   numPages: number | null
   onCurrentPageChange?: (page: number) => void
@@ -46,6 +48,7 @@ function ReaderContent({
         onZoomOut={() => setZoom((z) => Math.max(ZOOM_MIN, z - ZOOM_STEP))}
         onZoomIn={() => setZoom((z) => Math.min(ZOOM_MAX, z + ZOOM_STEP))}
         onZoomReset={() => setZoom(ZOOM_DEFAULT)}
+        mindmapHref={`/courses/${courseCode}/mindmap?slide=${file.id}`}
       />
 
       <PdfPageList
@@ -126,6 +129,7 @@ export function CourseReaderPage() {
         <ReaderContent
           key={file.id}
           file={file}
+          courseCode={courseCode}
           document={document}
           numPages={numPages}
           onCurrentPageChange={setChatPage}
