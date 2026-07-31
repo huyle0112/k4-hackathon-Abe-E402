@@ -2,14 +2,16 @@ import type { MindElixirData, NodeObj } from "mind-elixir"
 import { SIDE } from "mind-elixir"
 
 let uid = 0
-function node(topic: string, children?: NodeObj[]): NodeObj {
+export function node(topic: string, children?: NodeObj[]): NodeObj {
   uid += 1
   return { id: `n${uid}`, topic, children }
 }
 
 function mindmap(rootTopic: string, children: NodeObj[]): MindElixirData {
   return {
-    nodeData: node(rootTopic, children),
+    nodeData: { ...node(rootTopic, children), root: true } as NodeObj,
+    arrows: [],
+    summaries: [],
     direction: SIDE,
   }
 }
