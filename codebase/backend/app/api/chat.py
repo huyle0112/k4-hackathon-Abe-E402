@@ -12,6 +12,7 @@ router = APIRouter(tags=["chat"])
 
 class ChatRequest(BaseModel):
     question: str = Field(min_length=2, max_length=2000)
+    document_id: str = Field(min_length=1, max_length=200)
     slide: int = Field(ge=1)
     page: int = Field(ge=1)
 
@@ -147,6 +148,7 @@ def chat(payload: ChatRequest, request: Request) -> ChatResponse:
     settings = get_settings()
     response = request.app.state.rag_service.ask(
         payload.question,
+        document_id=payload.document_id,
         max_slide=payload.slide,
         top_k=settings.retrieval_top_k,
     )

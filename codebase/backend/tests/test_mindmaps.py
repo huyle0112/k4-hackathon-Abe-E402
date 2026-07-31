@@ -15,8 +15,12 @@ from app.rag.models import Chunk, SearchHit
 
 
 class FakeEmbedding:
+    def __init__(self) -> None:
+        self.calls = 0
+
     def embed_query(self, text: str) -> list[float]:
         del text
+        self.calls += 1
         return [1.0, 0.0]
 
 
@@ -25,9 +29,18 @@ class FakeStore:
         self.hits = hits
         self.last_where = None
 
-    def query(self, embedding, *, n_results, where=None):
-        del embedding, n_results
+    def get_chunks(self, *, where=None):
         self.last_where = where
+        return [hit.chunk for hit in self.hits]
+
+
+class FakeContextProvider:
+    def __init__(self, hits: list[SearchHit]) -> None:
+        self.hits = hits
+        self.document_ids = None
+
+    def load(self, document_ids: list[str]) -> list[SearchHit]:
+        self.document_ids = document_ids
         return self.hits
 
 
@@ -62,6 +75,12 @@ class FakeGenerator:
         )
 
 
+class FailingGenerator:
+    def generate(self, prompt: str, evidence_context: str):
+        del prompt, evidence_context
+        raise RuntimeError("provider failed")
+
+
 def _hit() -> SearchHit:
     text = "Attention giúp mỗi token xác định phần ngữ cảnh liên quan."
     chunk = Chunk(
@@ -94,9 +113,7 @@ def _service(
 ) -> MindmapService:
     return MindmapService(
         repository=MindmapRepository(tmp_path / "mindmaps.sqlite3"),
-        embedding_provider=FakeEmbedding(),
-        vector_store=FakeStore(hits),
-        reranker=FakeReranker(),
+        context_provider=FakeContextProvider(hits),
         generation_provider=generator,
     )
 
@@ -115,7 +132,7 @@ def test_create_mindmap_persists_and_reuses_cache(tmp_path: Path) -> None:
 
     assert created.status == "created"
     assert created.mindmap_id
-    assert created.sources[0].slide == 15
+    assert created.sources == []
     assert cached.status == "cached"
     assert cached.mindmap_id == created.mindmap_id
     assert generator.calls == 1
@@ -164,12 +181,10 @@ def test_document_filter_contains_only_selected_documents(
     tmp_path: Path,
 ) -> None:
     hit = _hit()
-    store = FakeStore([hit])
+    context_provider = FakeContextProvider([hit])
     service = MindmapService(
         repository=MindmapRepository(tmp_path / "mindmaps.sqlite3"),
-        embedding_provider=FakeEmbedding(),
-        vector_store=store,
-        reranker=FakeReranker(),
+        context_provider=context_provider,
         generation_provider=FakeGenerator(hit.chunk.chunk_id),
     )
 
@@ -180,6 +195,47 @@ def test_document_filter_contains_only_selected_documents(
         )
     )
 
-    assert store.last_where == {
-        "document_id": {"$in": ["doc_day_01", "doc_day_02"]}
-    }
+    assert context_provider.document_ids == ["doc_day_01", "doc_day_02"]
+
+
+def test_blank_prompt_uses_all_selected_document_context(
+    tmp_path: Path,
+) -> None:
+    hit = _hit()
+    context_provider = FakeContextProvider([hit])
+    generator = FakeGenerator(hit.chunk.chunk_id)
+    service = MindmapService(
+        repository=MindmapRepository(tmp_path / "mindmaps.sqlite3"),
+        context_provider=context_provider,
+        generation_provider=generator,
+    )
+
+    response = service.create(
+        CreateMindmapRequest(document_ids=["doc_day_01"], prompt="")
+    )
+
+    assert response.status == "created"
+    assert response.prompt.startswith("Tạo mindmap tổng quan")
+    assert context_provider.document_ids == ["doc_day_01"]
+
+
+def test_provider_failure_returns_structured_response(
+    tmp_path: Path,
+) -> None:
+    service = _service(
+        tmp_path,
+        hits=[_hit()],
+        generator=FailingGenerator(),
+    )
+
+    response = service.create(
+        CreateMindmapRequest(
+            document_ids=["doc_day_01"],
+            prompt="Tạo mindmap về Attention",
+        )
+    )
+
+    assert response.status == "no_context"
+    assert response.mindmap == {}
+    assert response.mindmap_id is None
+    assert response.sources == []

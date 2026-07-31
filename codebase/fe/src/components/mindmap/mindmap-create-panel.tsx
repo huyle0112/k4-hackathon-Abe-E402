@@ -3,26 +3,75 @@ import { AlertTriangle, FileText, History, Info, Loader2, Sparkles } from "lucid
 import { MindElixirCanvas } from "@/components/mindmap/mind-elixir-canvas"
 import { useMindmapCreate } from "@/hooks/use-mindmap-create"
 import { cn } from "@/lib/utils"
-import { DOCUMENTS } from "@/lib/mindmap-api"
+import {
+  createMindmap,
+  DOCUMENTS,
+  getMindmapHistory,
+  type MindmapResponse,
+} from "@/lib/mindmap-api"
 
-export function MindmapCreatePanel({
-  initialMindmapId,
-}: {
-  initialMindmapId?: string
-}) {
-  const {
-    selectedIds,
-    toggleDoc,
-    prompt,
-    setPrompt,
-    loading,
-    result,
-    history,
-    canSubmit,
-    handleSubmit,
-    loadFromHistory,
-    mindmapView,
-  } = useMindmapCreate([], initialMindmapId)
+export function MindmapCreatePanel() {
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [prompt, setPrompt] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<MindmapResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [history, setHistory] = useState<MindmapResponse[]>(() =>
+    getMindmapHistory()
+  )
+
+  const trimmedPrompt = prompt.trim()
+  const canSubmit =
+    selectedIds.length > 0 &&
+    trimmedPrompt.length <= 2000 &&
+    !loading
+
+  function toggleDoc(id: string) {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    )
+  }
+
+  async function handleSubmit() {
+    if (!canSubmit) return
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await createMindmap({
+        document_ids: selectedIds,
+        prompt: trimmedPrompt,
+      })
+      setResult(response)
+      if (response.status === "created" || response.status === "cached") {
+        setHistory(getMindmapHistory())
+      }
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Không thể tạo mindmap từ máy chủ."
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function loadFromHistory(entry: MindmapResponse) {
+    setResult(entry)
+    setSelectedIds(entry.document_ids)
+    setPrompt(entry.prompt)
+  }
+
+  const mindmapView =
+    result &&
+    (result.status === "created" || result.status === "cached") &&
+    "nodeData" in result.mindmap
+      ? {
+          id: result.mindmap_id,
+          data: result.mindmap as MindElixirData,
+          sources: result.sources,
+        }
+      : null
 
   return (
     <div className="flex h-full min-h-0">
@@ -66,12 +115,12 @@ export function MindmapCreatePanel({
 
         <div>
           <h3 className="mb-1 text-[13.5px] font-bold text-ink">
-            2. Nhập prompt
+            2. Nhập prompt (tùy chọn)
           </h3>
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="VD: So sánh LLM, workflow và agent; nêu trường hợp sử dụng."
+            placeholder="Để trống để tạo mindmap tổng quan cho toàn bộ tài liệu đã chọn."
             rows={4}
             className="w-full resize-none rounded-[10px] border border-line px-3 py-2.5 text-[13px] text-ink outline-none focus:border-navy"
           />
@@ -90,6 +139,12 @@ export function MindmapCreatePanel({
           )}
           {loading ? "Đang tạo mindmap…" : "Tạo mindmap"}
         </button>
+
+        {error && (
+          <p className="rounded-[9px] border border-maroon/25 bg-maroon/5 px-3 py-2.5 text-[12px] text-maroon">
+            {error}
+          </p>
+        )}
 
         {history.length > 0 && (
           <div>

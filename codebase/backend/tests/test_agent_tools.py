@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.agent.tools import (
     AgentTools,
     GetSavedMindmapArgs,
+    LoadLessonContextArgs,
     SearchSlideEvidenceArgs,
     TOOL_DEFINITIONS,
 )
@@ -15,11 +16,18 @@ class FakeEmbedding:
 
 
 class FakeStore:
+    def __init__(self):
+        self.chunks = []
+
     def query(self, embedding, *, n_results, where):
         self.embedding = embedding
         self.n_results = n_results
         self.where = where
         return []
+
+    def get_chunks(self, *, where=None):
+        self.where = where
+        return self.chunks
 
 
 class FakeReranker:
@@ -52,11 +60,24 @@ def _tools():
 
 def test_tool_definitions_are_strict_openai_functions() -> None:
     assert {item["name"] for item in TOOL_DEFINITIONS} == {
+        "load_lesson_context",
         "search_slide_evidence",
         "get_saved_mindmap",
         "create_mindmap",
     }
     assert all(item["strict"] for item in TOOL_DEFINITIONS)
+
+
+def test_empty_summary_context_does_not_call_embedding() -> None:
+    tools = _tools()
+    result = tools.load_lesson_context(
+        LoadLessonContextArgs(
+            document_id="doc-1", scope="current_lesson"
+        )
+    )
+
+    assert result["chunks"] == []
+    assert not hasattr(tools.embedding_provider, "query")
 
 
 def test_search_never_uses_slides_after_current_context() -> None:

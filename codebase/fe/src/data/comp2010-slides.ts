@@ -42,19 +42,6 @@ export const COURSES: Record<string, Course> = {
         day: 2,
         files: [slideFile(2, "d2-slide-hackathon.pdf", "Nội dung buổi học")],
       },
-      {
-        day: 3,
-        files: [slideFile(3, "day-03-slides.pdf", "Nội dung buổi học")],
-      },
-      {
-        day: 4,
-        files: [slideFile(4, "day04-slides.pdf", "Nội dung buổi học")],
-      },
-      {
-        day: 5,
-        files: [slideFile(5, "day-05-slides.pdf", "Nội dung buổi học")],
-      },
-      { day: 6, files: [] },
     ],
   },
 }

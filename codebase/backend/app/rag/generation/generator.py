@@ -397,6 +397,7 @@ class AnswerGenerator:
         hits: list[SearchHit],
         *,
         required_session_numbers: list[int] | None = None,
+        trusted_context: bool = False,
     ) -> GenerationResult:
         if not hits:
             return self._abstain("Không tìm thấy nguồn liên quan.")
@@ -411,14 +412,14 @@ class AnswerGenerator:
                 "Thiếu evidence phù hợp từ ít nhất một buổi được yêu cầu.",
                 confidence=confidence,
             )
-        if hits[0].score < self.abstention_threshold:
+        if not trusted_context and hits[0].score < self.abstention_threshold:
             return self._abstain(
                 "Nguồn tìm được chưa đạt ngưỡng liên quan.",
                 confidence=confidence,
             )
         top_lexical = hits[0].lexical_score or 0.0
         top_vector = hits[0].vector_score or 0.0
-        if (
+        if not trusted_context and (
             top_lexical < self.minimum_lexical_coverage
             and top_vector < self.minimum_vector_score
         ):
@@ -427,9 +428,13 @@ class AnswerGenerator:
                 confidence=confidence,
             )
 
-        context_hits = self._select_context_hits(
-            hits,
-            required_sessions=required_sessions,
+        context_hits = (
+            hits
+            if trusted_context
+            else self._select_context_hits(
+                hits,
+                required_sessions=required_sessions,
+            )
         )
         if not context_hits:
             return self._abstain(

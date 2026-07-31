@@ -4,7 +4,7 @@ import { Bot, ChevronRight, MessageCircle, Plus, Send, Sparkles, X } from "lucid
 import { MindmapCreateSidebarPanel } from "@/components/mindmap/mindmap-create-sidebar-panel"
 import {
   findChatDocumentContext,
-  sendChatMessageMock,
+  sendChatMessage,
   type Source,
 } from "@/lib/chat-api"
 import { DOCUMENTS } from "@/lib/mindmap-api"
@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 type ChatMessage = {
   id: string
   role: "assistant" | "user"
-  page: number
+  page?: number
   text: string
   sources?: Source[]
   quote?: string
@@ -39,8 +39,7 @@ function seedMessages(): ChatMessage[] {
     {
       id: nextId(),
       role: "assistant",
-      page: 1,
-      text: "Xin chào! Mình là VLearn Tutor. Bạn có thể bôi đen một đoạn trên slide để hỏi, hoặc gửi câu hỏi tự do bên dưới nhé!",
+      text: "Xin chào, mình là VLearn Tutor!",
     },
   ]
 }

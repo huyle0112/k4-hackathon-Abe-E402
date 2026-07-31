@@ -215,6 +215,12 @@ def _map_request(
     case: dict[str, Any], aliases: dict[str, str]
 ) -> dict[str, Any]:
     payload = dict(case["input"])
+    if case.get("endpoint") == "POST /chat":
+        active_document = case.get("active_document_id")
+        if active_document:
+            payload["document_id"] = aliases.get(
+                active_document, active_document
+            )
     if "document_ids" in payload:
         payload["document_ids"] = [
             aliases.get(item, item) for item in payload["document_ids"]
