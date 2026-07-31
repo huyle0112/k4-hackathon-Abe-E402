@@ -1,3 +1,4 @@
+from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 
@@ -21,8 +22,6 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-
-from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
@@ -68,6 +67,8 @@ class Settings:
     repo_root: Path
     lessons_dir: Path
     vector_store_dir: Path
+    app_name: str = "VLearn Cross-session Tutor"
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     collection_name: str = "ai_in_action_lessons"
     embedding_provider: str = "hash"
     embedding_model: str = ""
@@ -177,3 +178,13 @@ class Settings:
             ocr_languages=_env_text("OCR_LANGUAGES", "vie+eng"),
             ocr_dpi=_env_int("OCR_DPI", 240),
         )
+
+    @property
+    def allowed_origins(self) -> list[str]:
+        return [item.strip() for item in self.cors_origins.split(",") if item.strip()]
+
+from functools import lru_cache
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings.from_env()

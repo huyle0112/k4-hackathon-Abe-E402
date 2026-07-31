@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 Courses API.
 
@@ -5,7 +6,6 @@ Endpoints:
   GET  /courses                         — Danh sách khóa học
   GET  /courses/{course_code}           — Chi tiết khóa học (days + slides)
 """
-from __future__ import annotations
 
 import json
 import logging

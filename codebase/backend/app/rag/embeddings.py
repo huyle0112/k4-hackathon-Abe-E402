@@ -1,3 +1,4 @@
+from __future__ import annotations
 import math
 import re
 import unicodedata
@@ -24,7 +25,6 @@ def cosine_similarity(left: dict[str, float], right: dict[str, float]) -> float:
         left, right = right, left
     return max(0.0, min(1.0, sum(value * right.get(token, 0.0) for token, value in left.items())))
 
-from __future__ import annotations
 
 import hashlib
 import math

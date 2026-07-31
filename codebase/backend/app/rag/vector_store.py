@@ -1,3 +1,4 @@
+from __future__ import annotations
 import json
 from pathlib import Path
 from threading import RLock
@@ -56,7 +57,6 @@ class JsonVectorStore:
     def count(self) -> int:
         return len(self._chunks)
 
-from __future__ import annotations
 
 from collections.abc import Sequence
 from pathlib import Path
