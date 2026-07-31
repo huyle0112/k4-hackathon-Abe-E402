@@ -5,7 +5,7 @@ import math
 import re
 import unicodedata
 from collections.abc import Sequence
-from typing import Protocol
+from typing import Protocol, Any
 
 from app.config import Settings
 
@@ -16,6 +16,9 @@ _WORD = re.compile(r"\w+", re.UNICODE)
 class EmbeddingProvider(Protocol):
     @property
     def name(self) -> str: ...
+
+    @property
+    def model(self) -> str: ...
 
     @property
     def dimension(self) -> int: ...
@@ -36,6 +39,10 @@ class HashEmbeddingProvider:
     @property
     def name(self) -> str:
         return f"hash-ngram-{self._dimension}"
+
+    @property
+    def model(self) -> str:
+        return "hash"
 
     @property
     def dimension(self) -> int:
@@ -105,6 +112,10 @@ class SentenceTransformerEmbeddingProvider:
         return f"sentence-transformers:{self._model_name}"
 
     @property
+    def model(self) -> str:
+        return self._model_name
+
+    @property
     def dimension(self) -> int:
         return self._dimension
 
@@ -120,6 +131,80 @@ class SentenceTransformerEmbeddingProvider:
         return self.embed_documents([text])[0]
 
 
+class OpenAIEmbeddingProvider:
+    """Uses OpenAI API to generate semantic embeddings."""
+
+    def __init__(
+        self,
+        api_key: str,
+        model: str,
+        dimension: int,
+        base_url: str | None = None,
+        batch_size: int = 64,
+        timeout: int = 60,
+        max_retries: int = 3,
+        client_factory: Any = None,
+    ) -> None:
+        if not api_key or not api_key.strip():
+            raise ValueError("OpenAI API key is required but missing or empty. Please set EMBEDDING_API_KEY.")
+        if not model or not model.strip():
+            raise ValueError("OpenAI embedding model name is required but missing or empty. Please set EMBEDDING_MODEL.")
+        
+        try:
+            import openai
+        except ImportError as error:
+            raise RuntimeError(
+                "Install openai package to use OpenAIEmbeddingProvider (e.g. pip install openai)"
+            ) from error
+
+        self._model = model.strip()
+        self._dimension = dimension
+        self._batch_size = max(1, batch_size)
+        
+        if client_factory:
+            self._client = client_factory()
+        else:
+            base_url_val = base_url.strip() if base_url and base_url.strip() else None
+            self._client = openai.Client(
+                api_key=api_key.strip(),
+                base_url=base_url_val,
+                timeout=timeout,
+                max_retries=max_retries,
+            )
+
+    @property
+    def name(self) -> str:
+        return "openai"
+
+    @property
+    def model(self) -> str:
+        return self._model
+
+    @property
+    def dimension(self) -> int:
+        return self._dimension
+
+    def embed_documents(self, texts: Sequence[str]) -> list[list[float]]:
+        texts = list(texts)
+        if not texts:
+            return []
+            
+        all_embeddings = []
+        for start in range(0, len(texts), self._batch_size):
+            batch = texts[start : start + self._batch_size]
+            response = self._client.embeddings.create(
+                input=batch,
+                model=self._model,
+                dimensions=self._dimension
+            )
+            for data in response.data:
+                all_embeddings.append(data.embedding)
+        return all_embeddings
+
+    def embed_query(self, text: str) -> list[float]:
+        return self.embed_documents([text])[0]
+
+
 def create_embedding_provider(settings: Settings) -> EmbeddingProvider:
     provider = settings.embedding_provider.strip().lower()
     if provider == "hash":
@@ -127,5 +212,15 @@ def create_embedding_provider(settings: Settings) -> EmbeddingProvider:
     if provider in {"sentence-transformers", "sentence_transformers", "local"}:
         return SentenceTransformerEmbeddingProvider(
             settings.local_embedding_model
+        )
+    if provider == "openai":
+        return OpenAIEmbeddingProvider(
+            api_key=settings.embedding_api_key,
+            model=settings.embedding_model,
+            dimension=settings.embedding_dimension,
+            base_url=settings.embedding_base_url,
+            batch_size=settings.embedding_batch_size,
+            timeout=settings.embedding_timeout_seconds,
+            max_retries=settings.embedding_max_retries,
         )
     raise ValueError(f"Unsupported embedding provider: {provider}")

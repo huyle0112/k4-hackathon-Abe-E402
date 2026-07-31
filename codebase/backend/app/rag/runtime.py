@@ -20,6 +20,7 @@ def create_vector_store(
         path=settings.vector_store_dir,
         collection_name=settings.collection_name,
         embedding_provider_name=embedding_provider.name,
+        embedding_model_name=embedding_provider.model,
         embedding_dimension=embedding_provider.dimension,
     )
 

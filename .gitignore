@@ -6,6 +6,7 @@ vector-store/
 !private-data/lessons/.gitkeep
 
 .venv/
+venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/

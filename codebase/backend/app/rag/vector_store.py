@@ -18,6 +18,7 @@ class ChromaVectorStore:
         path: str | Path,
         collection_name: str,
         embedding_provider_name: str,
+        embedding_model_name: str,
         embedding_dimension: int,
     ) -> None:
         try:
@@ -31,6 +32,7 @@ class ChromaVectorStore:
         self.path.mkdir(parents=True, exist_ok=True)
         self.collection_name = collection_name
         self.embedding_provider_name = embedding_provider_name
+        self.embedding_model_name = embedding_model_name
         self.embedding_dimension = embedding_dimension
         self._client = chromadb.PersistentClient(path=str(self.path))
         self._collection = self._get_or_create_collection()
@@ -43,6 +45,7 @@ class ChromaVectorStore:
             metadata={
                 "hnsw:space": "cosine",
                 "embedding_provider": self.embedding_provider_name,
+                "embedding_model": self.embedding_model_name,
                 "embedding_dimension": self.embedding_dimension,
             },
         )
@@ -51,6 +54,7 @@ class ChromaVectorStore:
         metadata = self._collection.metadata or {}
         existing_dimension = metadata.get("embedding_dimension")
         existing_provider = metadata.get("embedding_provider")
+        existing_model = metadata.get("embedding_model")
         if self._collection.count() == 0:
             return
         if existing_dimension and int(existing_dimension) != self.embedding_dimension:
@@ -61,6 +65,11 @@ class ChromaVectorStore:
         if existing_provider and existing_provider != self.embedding_provider_name:
             raise VectorStoreError(
                 "Embedding provider differs from the existing collection. "
+                "Use a new collection or rebuild the local vector store."
+            )
+        if existing_model and existing_model != self.embedding_model_name:
+            raise VectorStoreError(
+                "Embedding model differs from the existing collection. "
                 "Use a new collection or rebuild the local vector store."
             )
 

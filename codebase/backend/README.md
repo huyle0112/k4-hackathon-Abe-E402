@@ -124,6 +124,21 @@ EMBEDDING_PROVIDER=sentence-transformers
 LOCAL_EMBEDDING_MODEL=<multilingual-model-name>
 ```
 
+Để dùng OpenAI API, cập nhật `.env`:
+
+```dotenv
+EMBEDDING_PROVIDER=openai
+EMBEDDING_MODEL=text-embedding-3-large
+EMBEDDING_DIMENSION=3072
+EMBEDDING_API_KEY=sk-...
+```
+
+**Lưu ý quan trọng**: Khi thay đổi Provider, Model hoặc Dimension (ví dụ từ Hash sang OpenAI), bạn **bắt buộc phải xóa index cũ và tạo lại** vì các vector khác dimension/model không thể lưu chung. Hãy chạy lệnh sau:
+
+```powershell
+python scripts/ingest.py --rebuild
+```
+
 Không đưa model cache, API key hoặc `.env` vào Git.
 
 ## Hạn chế hiện tại

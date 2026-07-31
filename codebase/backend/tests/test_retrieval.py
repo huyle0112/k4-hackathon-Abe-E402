@@ -58,6 +58,7 @@ def _build_retriever(tmp_path: Path) -> tuple[Retriever, ChromaVectorStore]:
         path=tmp_path / "chroma",
         collection_name="test_retrieval",
         embedding_provider_name=embedding.name,
+        embedding_model_name=embedding.model,
         embedding_dimension=embedding.dimension,
     )
     store.upsert(

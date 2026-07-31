@@ -20,7 +20,13 @@ class Settings:
     vector_store_dir: Path
     collection_name: str = "ai_in_action_lessons"
     embedding_provider: str = "hash"
+    embedding_model: str = ""
+    embedding_api_key: str = ""
+    embedding_base_url: str = ""
     embedding_dimension: int = 384
+    embedding_batch_size: int = 64
+    embedding_timeout_seconds: int = 60
+    embedding_max_retries: int = 3
     local_embedding_model: str = ""
     chunk_max_tokens: int = 700
     chunk_overlap_tokens: int = 80
@@ -55,7 +61,13 @@ class Settings:
                 "COLLECTION_NAME", "ai_in_action_lessons"
             ),
             embedding_provider=os.getenv("EMBEDDING_PROVIDER", "hash"),
+            embedding_model=os.getenv("EMBEDDING_MODEL", ""),
+            embedding_api_key=os.getenv("EMBEDDING_API_KEY", ""),
+            embedding_base_url=os.getenv("EMBEDDING_BASE_URL", ""),
             embedding_dimension=int(os.getenv("EMBEDDING_DIMENSION", "384")),
+            embedding_batch_size=int(os.getenv("EMBEDDING_BATCH_SIZE", "64")),
+            embedding_timeout_seconds=int(os.getenv("EMBEDDING_TIMEOUT_SECONDS", "60")),
+            embedding_max_retries=int(os.getenv("EMBEDDING_MAX_RETRIES", "3")),
             local_embedding_model=os.getenv("LOCAL_EMBEDDING_MODEL", ""),
             chunk_max_tokens=int(os.getenv("CHUNK_MAX_TOKENS", "700")),
             chunk_overlap_tokens=int(

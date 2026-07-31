@@ -2,10 +2,17 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+from unittest.mock import MagicMock
 
+import pytest
 import pymupdf
 
-from app.rag.embeddings import HashEmbeddingProvider
+from app.config import Settings
+from app.rag.embeddings import (
+    HashEmbeddingProvider,
+    OpenAIEmbeddingProvider,
+    create_embedding_provider,
+)
 from app.rag.ingestion.chunker import SlideChunker
 from app.rag.ingestion.indexer import IndexingPipeline
 from app.rag.ingestion.normalizer import (
@@ -108,6 +115,7 @@ def test_indexing_is_idempotent(tmp_path: Path) -> None:
         path=tmp_path / "chroma",
         collection_name="test_ingestion",
         embedding_provider_name=embedding.name,
+        embedding_model_name=embedding.model,
         embedding_dimension=embedding.dimension,
     )
     pipeline = IndexingPipeline(
@@ -141,3 +149,148 @@ def test_private_pdfs_have_expected_page_count() -> None:
         assert hashlib.sha256(pdf_path.read_bytes()).hexdigest() == (
             loaded.metadata.file_sha256
         )
+
+
+def test_openai_missing_api_key_fails_fast() -> None:
+    with pytest.raises(ValueError, match="EMBEDDING_API_KEY"):
+        settings = Settings(
+            repo_root=Path("."),
+            lessons_dir=Path("."),
+            vector_store_dir=Path("."),
+            embedding_provider="openai",
+            embedding_model="text-embedding-3-large",
+            embedding_api_key="   ",
+        )
+        create_embedding_provider(settings)
+
+
+def test_openai_missing_model_fails_fast() -> None:
+    with pytest.raises(ValueError, match="EMBEDDING_MODEL"):
+        settings = Settings(
+            repo_root=Path("."),
+            lessons_dir=Path("."),
+            vector_store_dir=Path("."),
+            embedding_provider="openai",
+            embedding_model="",
+            embedding_api_key="sk-test",
+        )
+        create_embedding_provider(settings)
+
+
+def test_openai_embedding_provider_batching_and_dimension() -> None:
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    mock_response.data = [
+        MagicMock(embedding=[0.1, 0.2, 0.3]),
+        MagicMock(embedding=[0.4, 0.5, 0.6]),
+    ]
+    mock_client.embeddings.create.return_value = mock_response
+
+    provider = OpenAIEmbeddingProvider(
+        api_key="test-key",
+        model="text-embedding-3-large",
+        dimension=3,
+        batch_size=2,
+        client_factory=lambda: mock_client,
+    )
+
+    assert provider.name == "openai"
+    assert provider.dimension == 3
+
+    texts = ["a", "b", "c"]
+    result = provider.embed_documents(texts)
+
+    assert mock_client.embeddings.create.call_count == 2
+
+    call1_args = mock_client.embeddings.create.call_args_list[0][1]
+    assert call1_args["input"] == ["a", "b"]
+    assert call1_args["model"] == "text-embedding-3-large"
+    assert call1_args["dimensions"] == 3
+
+    call2_args = mock_client.embeddings.create.call_args_list[1][1]
+    assert call2_args["input"] == ["c"]
+
+    assert len(result) == 4
+
+
+def test_openai_vector_store_mismatch(tmp_path: Path) -> None:
+    store_dir = tmp_path / "chroma_mismatch"
+
+    store = ChromaVectorStore(
+        path=store_dir,
+        collection_name="test_col",
+        embedding_provider_name="hash",
+        embedding_model_name="hash",
+        embedding_dimension=384,
+    )
+    from app.rag.models import Chunk
+    store.upsert(
+        chunks=[Chunk(
+            chunk_id="1", document_id="1", document_title="1", session_number=1,
+            source_file="1", slide_number=1, chunk_index=1, text="test",
+            extraction_method="text", content_hash="hash", token_count=1
+        )],
+        embeddings=[[0.0] * 384]
+    )
+
+    with pytest.raises(RuntimeError, match="Embedding dimension differs"):
+        ChromaVectorStore(
+            path=store_dir,
+            collection_name="test_col",
+            embedding_provider_name="hash",
+            embedding_model_name="hash",
+            embedding_dimension=3072,
+        )
+
+    with pytest.raises(RuntimeError, match="Embedding provider differs"):
+        ChromaVectorStore(
+            path=store_dir,
+            collection_name="test_col",
+            embedding_provider_name="openai",
+            embedding_model_name="hash",
+            embedding_dimension=384,
+        )
+
+
+def test_openai_indexing_is_idempotent(tmp_path: Path) -> None:
+    source = tmp_path / "lessons_openai"
+    source.mkdir()
+    _create_test_pdf(source / "day-01-synthetic.pdf")
+
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    mock_response.data = [
+        MagicMock(embedding=[0.1, 0.2]),
+        MagicMock(embedding=[0.3, 0.4]),
+    ]
+    mock_client.embeddings.create.return_value = mock_response
+
+    provider = OpenAIEmbeddingProvider(
+        api_key="test",
+        model="text-embedding-3-large",
+        dimension=2,
+        client_factory=lambda: mock_client,
+    )
+
+    store = ChromaVectorStore(
+        path=tmp_path / "chroma_openai",
+        collection_name="test_openai",
+        embedding_provider_name=provider.name,
+        embedding_model_name=provider.model,
+        embedding_dimension=provider.dimension,
+    )
+
+    pipeline = IndexingPipeline(
+        loader=PDFLoader(ocr_enabled=False),
+        chunker=SlideChunker(max_tokens=200, overlap_tokens=20),
+        embedding_provider=provider,
+        vector_store=store,
+    )
+
+    first = pipeline.index_directory(source)
+    second = pipeline.index_directory(source)
+
+    assert first.total_pages == 2
+    assert first.total_chunks == 2
+    assert second.total_chunks == 2
+    assert store.count() == 2
