@@ -135,10 +135,8 @@ export function CourseReaderPage() {
           onCurrentPageChange={setChatPage}
         />
 
-        <ReaderChatSidebar currentPage={chatPage} slideFileId={file.id} />
+        <ReaderChatSidebar currentPage={chatPage} slideFileId={file.id} courseCode={courseCode} />
       </div>
-
-      
     </div>
   )
 }

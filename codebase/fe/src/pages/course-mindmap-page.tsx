@@ -14,7 +14,10 @@ export function CourseMindmapPage() {
   const { courseCode = "" } = useParams()
   const [searchParams] = useSearchParams()
   const slideId = searchParams.get("slide") ?? ""
-  const [view, setView] = useState<"slide" | "create">("slide")
+  const initialMindmapId = searchParams.get("mindmapId") ?? undefined
+  const [view, setView] = useState<"slide" | "create">(
+    searchParams.get("view") === "create" ? "create" : "slide"
+  )
   const [lastSlideId, setLastSlideId] = useState(slideId)
   if (slideId !== lastSlideId) {
     setLastSlideId(slideId)
@@ -82,15 +85,13 @@ export function CourseMindmapPage() {
               Tạo mindmap tuỳ chỉnh
             </button>
 
-            {view === "slide" && (
-              <Link
-                to={`/courses/${courseCode}/reader?slide=${file.id}`}
-                className="ml-auto flex items-center gap-1.5 rounded-[8px] border border-line px-3 py-1.5 text-[12.5px] font-semibold text-ink-soft transition-colors hover:text-ink"
-              >
-                <FileText className="size-3.5" />
-                Xem tài liệu PDF
-              </Link>
-            )}
+            <Link
+              to={`/courses/${courseCode}/reader?slide=${file.id}`}
+              className="ml-auto flex items-center gap-1.5 rounded-[8px] border border-line px-3 py-1.5 text-[12.5px] font-semibold text-ink-soft transition-colors hover:text-ink"
+            >
+              <FileText className="size-3.5" />
+              Xem tài liệu PDF
+            </Link>
           </div>
 
           <div className="relative min-h-0 flex-1 bg-[#F4F3EF]">
@@ -103,7 +104,7 @@ export function CourseMindmapPage() {
                 </div>
               )
             ) : (
-              <MindmapCreatePanel />
+              <MindmapCreatePanel initialMindmapId={initialMindmapId} />
             )}
           </div>
         </div>
