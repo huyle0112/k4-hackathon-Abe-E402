@@ -1,0 +1,14 @@
+{
+  "documents": {
+    "synthetic-day-01.pdf": {
+      "document_id": "synthetic-day-01",
+      "document_title": "Dữ liệu giả - Buổi 1",
+      "session_number": 1
+    },
+    "synthetic-day-02.pdf": {
+      "document_id": "synthetic-day-02",
+      "document_title": "Dữ liệu giả - Buổi 2",
+      "session_number": 2
+    }
+  }
+}
