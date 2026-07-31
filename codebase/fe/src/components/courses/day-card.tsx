@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { ChevronDown, FileText } from "lucide-react"
+import { ChevronDown, FileText, Workflow } from "lucide-react"
 
 import type { SlideFile } from "@/data/comp2010-slides"
 
@@ -46,13 +46,21 @@ export function DayCard({
         {hasFiles ? (
           <ul className="flex flex-col gap-2">
             {files.map((file, i) => (
-              <li key={file.id}>
+              <li key={file.id} className="flex items-center gap-3">
                 <Link
                   to={`/courses/${courseCode}/reader?slide=${file.id}`}
-                  className="flex items-center gap-2.5 transition-colors hover:text-ink"
+                  className="flex flex-1 items-center gap-2.5 transition-colors hover:text-ink"
                 >
                   <FileText className="size-3.5 shrink-0 text-navy" />
                   Slide {i + 1} · {file.label}
+                </Link>
+                <Link
+                  to={`/courses/${courseCode}/mindmap?slide=${file.id}`}
+                  aria-label={`Sơ đồ tư duy · ${file.label}`}
+                  className="flex items-center gap-1.5 text-ink-soft/80 transition-colors hover:text-navy"
+                >
+                  <Workflow className="size-3.5 shrink-0" />
+                  Sơ đồ
                 </Link>
               </li>
             ))}

@@ -157,7 +157,7 @@ export const PdfPageList = forwardRef<
   return (
     <div
       ref={scrollRef}
-      className="min-h-0 flex-1 overflow-y-auto bg-[#F4F3EF] px-6 py-6"
+      className="min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-auto bg-[#F4F3EF] px-6 py-6"
     >
       {Array.from({ length: numPages }, (_, i) => i + 1).map((n) => (
         <PdfPage
