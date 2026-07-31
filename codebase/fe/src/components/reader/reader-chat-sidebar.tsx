@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
-import { Bot, ChevronRight, Plus, Send } from "lucide-react"
+import { Bot, ChevronRight, MessageCircle, Plus, Send, Sparkles } from "lucide-react"
 
+import { MindmapCreateSidebarPanel } from "@/components/mindmap/mindmap-create-sidebar-panel"
 import {
   findChatDocumentContext,
   sendChatMessage,
@@ -35,11 +36,14 @@ function seedMessages(): ChatMessage[] {
 export function ReaderChatSidebar({
   currentPage,
   slideFileId,
+  courseCode,
 }: {
   currentPage: number
   slideFileId: string
+  courseCode: string
 }) {
   const [open, setOpen] = useState(true)
+  const [tab, setTab] = useState<"chat" | "mindmap">("chat")
   const [messages, setMessages] = useState<ChatMessage[]>(() => seedMessages())
   const [input, setInput] = useState("")
   const [isTyping, setIsTyping] = useState(false)
@@ -146,85 +150,116 @@ export function ReaderChatSidebar({
         </span>
       </div>
 
-      <div ref={scrollRef} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
-        {messages.map((msg) => (
-          <div key={msg.id} className={cn("flex flex-col gap-1", msg.role === "user" && "items-end")}>
-            {msg.page !== undefined && (
-              <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
-                Ngữ cảnh: Slide trang {msg.page}
-              </span>
-            )}
-            {msg.role === "assistant" ? (
-              <div className="max-w-[92%]">
-                <p className="text-[13.5px] leading-relaxed text-ink">{msg.text}</p>
-                {msg.sources && msg.sources.length > 0 && (
-                  <ul className="mt-1.5 flex flex-col gap-0.5">
-                    {msg.sources.map((source) => (
-                      <li
-                        key={source.source_id}
-                        className="text-[11px] text-ink-soft/80"
-                      >
-                        Nguồn: {source.file_name} · trang {source.page}
-                      </li>
-                    ))}
-                  </ul>
+      <div className="flex items-center gap-1.5 border-b border-line px-3 py-2">
+        <button
+          type="button"
+          onClick={() => setTab("chat")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-[7px] px-2.5 py-1.5 text-[12px] font-semibold transition-colors",
+            tab === "chat" ? "bg-[#EAF0F8] text-navy" : "text-ink-soft hover:text-ink"
+          )}
+        >
+          <MessageCircle className="size-3.5" />
+          Trò chuyện
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("mindmap")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-[7px] px-2.5 py-1.5 text-[12px] font-semibold transition-colors",
+            tab === "mindmap" ? "bg-[#EAF0F8] text-navy" : "text-ink-soft hover:text-ink"
+          )}
+        >
+          <Sparkles className="size-3.5" />
+          Tạo mindmap
+        </button>
+      </div>
+
+      {tab === "mindmap" ? (
+        <MindmapCreateSidebarPanel key={slideFileId} courseCode={courseCode} slideFileId={slideFileId} />
+      ) : (
+        <>
+          <div ref={scrollRef} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
+            {messages.map((msg) => (
+              <div key={msg.id} className={cn("flex flex-col gap-1", msg.role === "user" && "items-end")}>
+                {msg.page !== undefined && (
+                  <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
+                    Ngữ cảnh: Slide trang {msg.page}
+                  </span>
+                )}
+                {msg.role === "assistant" ? (
+                  <div className="max-w-[92%]">
+                    <p className="text-[13.5px] leading-relaxed text-ink">{msg.text}</p>
+                    {msg.sources && msg.sources.length > 0 && (
+                      <ul className="mt-1.5 flex flex-col gap-0.5">
+                        {msg.sources.map((source) => (
+                          <li
+                            key={source.source_id}
+                            className="text-[11px] text-ink-soft/80"
+                          >
+                            Nguồn: {source.file_name} · trang {source.page}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ) : (
+                  <p className="max-w-[85%] rounded-xl rounded-tr-[4px] bg-navy px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white">
+                    {msg.text}
+                  </p>
                 )}
               </div>
-            ) : (
-              <p className="max-w-[85%] rounded-xl rounded-tr-[4px] bg-navy px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white">
-                {msg.text}
+            ))}
+
+            {isTyping && (
+              <div className="flex flex-col gap-1">
+                <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
+                  Ngữ cảnh: Slide trang {currentPage}
+                </span>
+                <div className="flex w-fit gap-1 rounded-xl rounded-tl-[4px] bg-[#F1F0EC] px-3.5 py-3" aria-hidden="true">
+                  {[0, 0.2, 0.4].map((delay) => (
+                    <span
+                      key={delay}
+                      className="size-1.5 animate-blink rounded-full bg-ink-soft opacity-50 motion-reduce:animate-none motion-reduce:opacity-60"
+                      style={{ animationDelay: `${delay}s` }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {messages.length === 0 && !isTyping && (
+              <p className="mt-6 text-center text-[13px] text-ink-soft">
+                Bắt đầu cuộc trò chuyện mới — hãy đặt câu hỏi về slide hiện tại.
               </p>
             )}
           </div>
-        ))}
 
-        {isTyping && (
-          <div className="flex flex-col gap-1">
-            <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
-              Ngữ cảnh: Slide trang {currentPage}
-            </span>
-            <div className="flex w-fit gap-1 rounded-xl rounded-tl-[4px] bg-[#F1F0EC] px-3.5 py-3" aria-hidden="true">
-              {[0, 0.2, 0.4].map((delay) => (
-                <span
-                  key={delay}
-                  className="size-1.5 animate-blink rounded-full bg-ink-soft opacity-50 motion-reduce:animate-none motion-reduce:opacity-60"
-                  style={{ animationDelay: `${delay}s` }}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {messages.length === 0 && !isTyping && (
-          <p className="mt-6 text-center text-[13px] text-ink-soft">
-            Bắt đầu cuộc trò chuyện mới — hãy đặt câu hỏi về slide hiện tại.
-          </p>
-        )}
-      </div>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          sendMessage()
-        }}
-        className="flex items-center gap-2 border-t border-line px-3.5 py-3"
-      >
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Nhập câu hỏi hoặc bôi đen tài liệu..."
-          className="flex-1 rounded-full border border-line bg-paper px-4 py-2.5 text-[13.5px] text-ink outline-none placeholder:text-ink-soft focus:border-navy"
-        />
-        <button
-          type="submit"
-          disabled={!input.trim()}
-          aria-label="Gửi"
-          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-navy text-white transition-opacity hover:opacity-90 disabled:opacity-40"
-        >
-          <Send className="size-4" />
-        </button>
-      </form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              sendMessage()
+            }}
+            className="flex items-center gap-2 border-t border-line px-3.5 py-3"
+          >
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Nhập câu hỏi hoặc bôi đen tài liệu..."
+              className="flex-1 rounded-full border border-line bg-paper px-4 py-2.5 text-[13.5px] text-ink outline-none placeholder:text-ink-soft focus:border-navy"
+            />
+            <button
+              type="submit"
+              disabled={!input.trim()}
+              aria-label="Gửi"
+              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-navy text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+            >
+              <Send className="size-4" />
+            </button>
+          </form>
+        </>
+      )}
     </aside>
   )
 }
