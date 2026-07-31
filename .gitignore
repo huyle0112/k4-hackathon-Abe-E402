@@ -1,8 +1,24 @@
 .env
 .env.*
 !.env.example
-vector-store/
+# vector-store/
 # private-data/lessons/*
+!private-data/lessons/.gitkeep
+
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+private-data/lessons/*
+!private-data/lessons/.gitkeep
+
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+private-data/lessons/*
 !private-data/lessons/.gitkeep
 .vscode/
 .venv/

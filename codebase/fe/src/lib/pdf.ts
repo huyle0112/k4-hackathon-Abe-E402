@@ -26,4 +26,31 @@ export function loadPdfDocument(url: string): Promise<PDFDocumentProxy> {
   return pending
 }
 
+declare global {
+  interface Map<K, V> {
+    getOrInsertComputed(key: K, callback: (key: K) => V): V
+    getOrInsert(key: K, defaultValue: V): V
+  }
+}
+
+if (!Map.prototype.getOrInsertComputed) {
+  Map.prototype.getOrInsertComputed = function <K, V>(
+    this: Map<K, V>,
+    key: K,
+    callback: (key: K) => V,
+  ): V {
+    if (this.has(key)) return this.get(key) as V
+    const value = callback(key)
+    this.set(key, value)
+    return value
+  }
+}
+if (!Map.prototype.getOrInsert) {
+  Map.prototype.getOrInsert = function <K, V>(this: Map<K, V>, key: K, defaultValue: V): V {
+    if (this.has(key)) return this.get(key) as V
+    this.set(key, defaultValue)
+    return defaultValue
+  }
+}
+
 export type { PDFDocumentProxy, PDFPageProxy, RenderTask } from "pdfjs-dist"

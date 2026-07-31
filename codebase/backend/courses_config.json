@@ -1,0 +1,76 @@
+{
+  "courses": [
+    {
+      "code": "COMP2010",
+      "name": "COMP2010 – Khoá 3 + 4 Phase 1",
+      "description": "Khoá học AI Foundation",
+      "classmates": "1074 học viên cùng lớp",
+      "days": [
+        {
+          "day": 1,
+          "files": [
+            {
+              "id": "D01-S01",
+              "day": 1,
+              "fileName": "d1-slide-hackathon.pdf",
+              "url": "/slides/d1-slide-hackathon.pdf",
+              "label": "Giới thiệu môn học"
+            }
+          ]
+        },
+        {
+          "day": 2,
+          "files": [
+            {
+              "id": "D02-S01",
+              "day": 2,
+              "fileName": "d2-slide-hackathon.pdf",
+              "url": "/slides/d2-slide-hackathon.pdf",
+              "label": "Nội dung buổi học"
+            }
+          ]
+        },
+        {
+          "day": 3,
+          "files": [
+            {
+              "id": "D03-S01",
+              "day": 3,
+              "fileName": "day-03-slides.pdf",
+              "url": "/slides/day-03-slides.pdf",
+              "label": "Nội dung buổi học"
+            }
+          ]
+        },
+        {
+          "day": 4,
+          "files": [
+            {
+              "id": "D04-S01",
+              "day": 4,
+              "fileName": "day04-slides.pdf",
+              "url": "/slides/day04-slides.pdf",
+              "label": "Nội dung buổi học"
+            }
+          ]
+        },
+        {
+          "day": 5,
+          "files": [
+            {
+              "id": "D05-S01",
+              "day": 5,
+              "fileName": "day-05-slides.pdf",
+              "url": "/slides/day-05-slides.pdf",
+              "label": "Nội dung buổi học"
+            }
+          ]
+        },
+        {
+          "day": 6,
+          "files": []
+        }
+      ]
+    }
+  ]
+}

@@ -26,6 +26,24 @@ Các file trong `private-data/lessons/` không được commit, ngoại trừ
 Không tạo PDF rỗng để làm dữ liệu mẫu vì đó không phải file PDF hợp lệ. Nếu
 chưa có PDF giả an toàn, chỉ cần giữ README này và `.gitkeep`.
 
+File `lessons.example.json` minh họa manifest metadata bằng tên tài liệu giả.
+Có thể sao chép manifest này sang vùng local rồi thay bằng metadata thật;
+không đưa nội dung hoặc đường dẫn nhạy cảm vào bản được commit.
+
+Schema manifest:
+
+```json
+{
+  "documents": {
+    "ten-file.pdf": {
+      "document_id": "id-on-dinh",
+      "document_title": "Tên hiển thị",
+      "session_number": 1
+    }
+  }
+}
+```
+
 ## Metadata cần tạo khi ingestion
 
 Pipeline phải tạo và giữ metadata cho từng chunk:
