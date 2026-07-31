@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 type ChatMessage = {
   id: string
   role: "assistant" | "user"
-  page: number
+  page?: number
   text: string
   sources?: Source[]
 }
@@ -27,7 +27,6 @@ function seedMessages(): ChatMessage[] {
     {
       id: nextId(),
       role: "assistant",
-      page: 1,
       text: "Xin chào, mình là VLearn Tutor!",
     },
   ]
@@ -150,9 +149,11 @@ export function ReaderChatSidebar({
       <div ref={scrollRef} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
         {messages.map((msg) => (
           <div key={msg.id} className={cn("flex flex-col gap-1", msg.role === "user" && "items-end")}>
-            <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
-              Ngữ cảnh: Slide trang {msg.page}
-            </span>
+            {msg.page !== undefined && (
+              <span className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
+                Ngữ cảnh: Slide trang {msg.page}
+              </span>
+            )}
             {msg.role === "assistant" ? (
               <div className="max-w-[92%]">
                 <p className="text-[13.5px] leading-relaxed text-ink">{msg.text}</p>
