@@ -1,6 +1,38 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
-import type { PDFDocumentProxy, RenderTask } from "@/lib/pdf"
+import { Util, type PDFDocumentProxy, type RenderTask } from "@/lib/pdf"
+
+type PositionedTextItem = {
+  key: number
+  str: string
+  left: number
+  top: number
+  fontSize: number
+  scaleX: number
+  angleDeg: number
+}
+
+const DEFAULT_ASCENT_RATIO = 0.8
+
+function layoutTextItems(
+  items: Array<{ str?: string; transform?: number[] }>,
+  viewportTransform: number[]
+): PositionedTextItem[] {
+  const positioned: PositionedTextItem[] = []
+  let key = 0
+  for (const item of items) {
+    if (!item.str || !item.transform) continue
+    const tx = Util.transform(viewportTransform, item.transform)
+    const angle = Math.atan2(tx[1], tx[0])
+    const fontSize = Math.hypot(tx[2], tx[3])
+    const scaleX = fontSize ? Math.hypot(tx[0], tx[1]) / fontSize : 1
+    const ascent = fontSize * DEFAULT_ASCENT_RATIO
+    const left = angle === 0 ? tx[4] : tx[4] + ascent * Math.sin(angle)
+    const top = angle === 0 ? tx[5] - ascent : tx[5] - ascent * Math.cos(angle)
+    positioned.push({ key: key++, str: item.str, left, top, fontSize, scaleX, angleDeg: (angle * 180) / Math.PI })
+  }
+  return positioned
+}
 
 export function PdfPage({
   document,
@@ -20,9 +52,13 @@ export function PdfPage({
   registerEl: (el: HTMLDivElement | null) => void
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [textItems, setTextItems] = useState<PositionedTextItem[]>([])
 
   useEffect(() => {
-    if (!shouldRender || !canvasRef.current) return
+    if (!shouldRender || !canvasRef.current) {
+      setTextItems([])
+      return
+    }
 
     let cancelled = false
     let renderTask: RenderTask | null = null
@@ -54,11 +90,17 @@ export function PdfPage({
           throw err
         }
       })
+
+      page.getTextContent().then((textContent) => {
+        if (cancelled) return
+        setTextItems(layoutTextItems(textContent.items, cssViewport.transform))
+      })
     })
 
     return () => {
       cancelled = true
       renderTask?.cancel()
+      setTextItems([])
     }
   }, [shouldRender, zoom, document, pageNumber])
 
@@ -76,7 +118,30 @@ export function PdfPage({
       </div>
       <div className="flex min-h-[300px] min-w-[220px] items-center justify-center">
         {shouldRender ? (
-          <canvas ref={canvasRef} />
+          <div className="relative block leading-none">
+            <canvas ref={canvasRef} className="block" />
+            <div className="pdf-text-layer absolute inset-0 overflow-hidden">
+              {textItems.map((item) => (
+                <span
+                  key={item.key}
+                  style={{
+                    position: "absolute",
+                    left: item.left,
+                    top: item.top,
+                    fontSize: item.fontSize,
+                    transform: `rotate(${item.angleDeg}deg) scaleX(${item.scaleX})`,
+                    transformOrigin: "0% 0%",
+                    whiteSpace: "pre",
+                    color: "transparent",
+                    cursor: "text",
+                    userSelect: "text",
+                  }}
+                >
+                  {item.str}
+                </span>
+              ))}
+            </div>
+          </div>
         ) : (
           <span className="font-mono text-[11px] text-ink-soft/60">
             Đang tải…

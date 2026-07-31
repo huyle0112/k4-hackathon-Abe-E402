@@ -1,6 +1,7 @@
 import {
   GlobalWorkerOptions,
   getDocument,
+  Util,
   type PDFDocumentProxy,
 } from "pdfjs-dist"
 
@@ -53,4 +54,5 @@ if (!Map.prototype.getOrInsert) {
   }
 }
 
-export type { PDFDocumentProxy, PDFPageProxy, RenderTask } from "pdfjs-dist"
+export type { PDFDocumentProxy, PDFPageProxy, PageViewport, RenderTask } from "pdfjs-dist"
+export { Util }

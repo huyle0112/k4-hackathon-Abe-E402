@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { Bot, ChevronRight, MessageCircle, Plus, Send, Sparkles } from "lucide-react"
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
+import { Bot, ChevronRight, MessageCircle, Plus, Send, Sparkles, X } from "lucide-react"
 
 import { MindmapCreateSidebarPanel } from "@/components/mindmap/mindmap-create-sidebar-panel"
 import {
@@ -16,6 +16,16 @@ type ChatMessage = {
   page: number
   text: string
   sources?: Source[]
+  quote?: string
+}
+
+type QuotedSelection = {
+  text: string
+  page: number
+}
+
+export type ReaderChatSidebarHandle = {
+  askAboutSelection: (text: string, page: number) => void
 }
 
 let messageSeq = 0
@@ -35,23 +45,33 @@ function seedMessages(): ChatMessage[] {
   ]
 }
 
-export function ReaderChatSidebar({
-  currentPage,
-  slideFileId,
-  courseCode,
-}: {
-  currentPage: number
-  slideFileId: string
-  courseCode: string
-}) {
+export const ReaderChatSidebar = forwardRef<
+  ReaderChatSidebarHandle,
+  {
+    currentPage: number
+    slideFileId: string
+    courseCode: string
+  }
+>(function ReaderChatSidebar({ currentPage, slideFileId, courseCode }, ref) {
   const [open, setOpen] = useState(true)
   const [tab, setTab] = useState<"chat" | "mindmap">("chat")
   const [messages, setMessages] = useState<ChatMessage[]>(() => seedMessages())
   const [input, setInput] = useState("")
   const [isTyping, setIsTyping] = useState(false)
+  const [quotedSelection, setQuotedSelection] = useState<QuotedSelection | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const currentDocId = DOCUMENTS.find((d) => d.slideFileId === slideFileId)?.id
+
+  useImperativeHandle(ref, () => ({
+    askAboutSelection: (text, page) => {
+      setOpen(true)
+      setTab("chat")
+      setQuotedSelection({ text, page })
+      requestAnimationFrame(() => inputRef.current?.focus())
+    },
+  }))
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
@@ -61,13 +81,22 @@ export function ReaderChatSidebar({
     const text = input.trim()
     if (!text) return
 
-    setMessages((prev) => [...prev, { id: nextId(), role: "user", page: currentPage, text }])
+    const quote = quotedSelection
+    const questionForApi = quote
+      ? `Trích dẫn: "${quote.text}"\n\nCâu hỏi: ${text}`
+      : text
+
+    setMessages((prev) => [
+      ...prev,
+      { id: nextId(), role: "user", page: quote?.page ?? currentPage, text, quote: quote?.text },
+    ])
     setInput("")
+    setQuotedSelection(null)
     setIsTyping(true)
 
     const context = findChatDocumentContext(slideFileId)
     const response = await sendChatMessageMock(
-      { question: text, slide: currentPage, page: currentPage },
+      { question: questionForApi, slide: currentPage, page: currentPage },
       context ?? { document_id: slideFileId, file_name: slideFileId }
     )
 
@@ -190,9 +219,16 @@ export function ReaderChatSidebar({
                     )}
                   </div>
                 ) : (
-                  <p className="max-w-[85%] rounded-xl rounded-tr-[4px] bg-navy px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white">
-                    {msg.text}
-                  </p>
+                  <div className="flex max-w-[85%] flex-col items-end gap-1">
+                    {msg.quote && (
+                      <p className="max-w-full truncate rounded-lg border border-navy/20 bg-[#EAF0F8] px-2.5 py-1 text-[11.5px] text-navy/80">
+                        &ldquo;{msg.quote}&rdquo;
+                      </p>
+                    )}
+                    <p className="rounded-xl rounded-tr-[4px] bg-navy px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white">
+                      {msg.text}
+                    </p>
+                  </div>
                 )}
               </div>
             ))}
@@ -221,6 +257,27 @@ export function ReaderChatSidebar({
             )}
           </div>
 
+          {quotedSelection && (
+            <div className="flex items-start gap-2 border-t border-line bg-[#F7F6F2] px-3.5 py-2.5">
+              <div className="min-w-0 flex-1">
+                <p className="font-mono text-[10.5px] tracking-[0.02em] text-ink-soft/70 uppercase">
+                  Trích dẫn · trang {quotedSelection.page}
+                </p>
+                <p className="mt-0.5 line-clamp-2 text-[12.5px] text-ink-soft">
+                  &ldquo;{quotedSelection.text}&rdquo;
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setQuotedSelection(null)}
+                aria-label="Bỏ trích dẫn"
+                className="shrink-0 text-ink-soft transition-colors hover:text-ink"
+              >
+                <X className="size-3.5" />
+              </button>
+            </div>
+          )}
+
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -229,6 +286,7 @@ export function ReaderChatSidebar({
             className="flex items-center gap-2 border-t border-line px-3.5 py-3"
           >
             <input
+              ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -248,4 +306,4 @@ export function ReaderChatSidebar({
       )}
     </aside>
   )
-}
+})

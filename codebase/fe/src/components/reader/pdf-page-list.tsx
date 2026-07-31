@@ -6,12 +6,20 @@ import {
   useRef,
   useState,
 } from "react"
+import { Sparkles } from "lucide-react"
 
 import { PdfPage } from "@/components/reader/pdf-page"
 import type { PDFDocumentProxy } from "@/lib/pdf"
 
 export type PdfPageListHandle = {
   goToPage: (page: number) => void
+}
+
+type SelectionPopover = {
+  text: string
+  page: number
+  x: number
+  y: number
 }
 
 export const PdfPageList = forwardRef<
@@ -22,9 +30,10 @@ export const PdfPageList = forwardRef<
     zoom: number
     fileName: string
     onCurrentPageChange: (page: number) => void
+    onAskAboutSelection?: (text: string, page: number) => void
   }
 >(function PdfPageList(
-  { document, numPages, zoom, fileName, onCurrentPageChange },
+  { document, numPages, zoom, fileName, onCurrentPageChange, onAskAboutSelection },
   ref
 ) {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -35,6 +44,7 @@ export const PdfPageList = forwardRef<
   const [visiblePages, setVisiblePages] = useState<Set<number>>(
     () => new Set([1])
   )
+  const [selectionPopover, setSelectionPopover] = useState<SelectionPopover | null>(null)
 
   useImperativeHandle(ref, () => ({
     goToPage: (page: number) => {
@@ -146,6 +156,50 @@ export const PdfPageList = forwardRef<
     []
   )
 
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+
+    const handleSelectionChange = () => {
+      const selection = window.getSelection()
+      if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
+        setSelectionPopover(null)
+        return
+      }
+
+      const range = selection.getRangeAt(0)
+      if (!container.contains(range.commonAncestorContainer)) {
+        setSelectionPopover(null)
+        return
+      }
+
+      const text = selection.toString().trim()
+      if (!text) {
+        setSelectionPopover(null)
+        return
+      }
+
+      const anchorEl =
+        range.commonAncestorContainer instanceof Element
+          ? range.commonAncestorContainer
+          : range.commonAncestorContainer.parentElement
+      const pageEl = anchorEl?.closest<HTMLElement>("[data-page-number]")
+      const page = pageEl ? Number(pageEl.dataset.pageNumber) : 1
+      const rect = range.getBoundingClientRect()
+
+      setSelectionPopover({ text, page, x: rect.right, y: rect.bottom })
+    }
+
+    const handleScroll = () => setSelectionPopover(null)
+
+    window.document.addEventListener("selectionchange", handleSelectionChange)
+    container.addEventListener("scroll", handleScroll)
+    return () => {
+      window.document.removeEventListener("selectionchange", handleSelectionChange)
+      container.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
   if (!document || !numPages) {
     return (
       <div className="flex flex-1 items-center justify-center text-[13.5px] text-ink-soft">
@@ -171,6 +225,23 @@ export const PdfPageList = forwardRef<
           registerEl={registerEl(n)}
         />
       ))}
+
+      {selectionPopover && onAskAboutSelection && (
+        <button
+          type="button"
+          style={{ position: "fixed", left: selectionPopover.x + 8, top: selectionPopover.y + 8 }}
+          className="z-50 flex items-center gap-1.5 rounded-full border border-navy/30 bg-navy px-3 py-1.5 text-[12px] font-semibold text-white shadow-[0_10px_24px_-10px_rgba(0,0,0,0.5)] transition-opacity hover:opacity-90"
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => {
+            onAskAboutSelection(selectionPopover.text, selectionPopover.page)
+            window.getSelection()?.removeAllRanges()
+            setSelectionPopover(null)
+          }}
+        >
+          <Sparkles className="size-3.5" />
+          Hỏi chatbot
+        </button>
+      )}
     </div>
   )
 })
