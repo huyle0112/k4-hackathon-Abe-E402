@@ -18,30 +18,14 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     
     # Initialize components
-    vector_store = ChromaVectorStore(
-        path=settings.vector_store_dir,
-        collection_name=settings.collection_name,
-        embedding_provider_name=settings.embedding_provider,
-        embedding_dimension=settings.embedding_dimension,
-        embedding_model_name=settings.embedding_model,
-        allow_incompatible=True, # allow loading even if empty
-    )
+    from app.rag.runtime import create_rag_service
+    rag_service = create_rag_service(settings)
+    vector_store = rag_service.retriever.vector_store
+    embedding_provider = rag_service.retriever.embedding_provider
+    retriever = rag_service.retriever
+    generator = rag_service.generator
     
-    embedding_provider = create_embedding_provider(settings)
-    
-    provider = create_text_generation_provider(settings)
-    generator = AnswerGenerator(
-        provider=provider,
-        minimum_session_evidence=settings.retrieval_min_session_evidence,
-    )
-    
-    retriever = Retriever(
-        embedding_provider=embedding_provider,
-        vector_store=vector_store,
-        candidate_k=settings.retrieval_candidate_k,
-        score_threshold=settings.retrieval_score_threshold,
-        minimum_session_evidence=settings.retrieval_min_session_evidence,
-    )
+
     
     app.state.store = vector_store
     app.state.retriever = retriever
