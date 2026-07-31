@@ -14,7 +14,10 @@ export function CourseMindmapPage() {
   const { courseCode = "" } = useParams()
   const [searchParams] = useSearchParams()
   const slideId = searchParams.get("slide") ?? ""
-  const [view, setView] = useState<"slide" | "create">("slide")
+  const initialMindmapId = searchParams.get("mindmap")
+  const [view, setView] = useState<"slide" | "create">(
+    initialMindmapId ? "create" : "slide"
+  )
   const [lastSlideId, setLastSlideId] = useState(slideId)
   if (slideId !== lastSlideId) {
     setLastSlideId(slideId)
@@ -103,7 +106,7 @@ export function CourseMindmapPage() {
                 </div>
               )
             ) : (
-              <MindmapCreatePanel />
+              <MindmapCreatePanel initialMindmapId={initialMindmapId ?? undefined} />
             )}
           </div>
         </div>

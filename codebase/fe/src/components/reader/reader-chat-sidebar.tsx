@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
-import { Bot, ChevronRight, Plus, Send } from "lucide-react"
+import { Bot, ChevronRight, MessageCircle, Plus, Send, Sparkles } from "lucide-react"
 
+import { MindmapQuickCreatePanel } from "@/components/mindmap/mindmap-quick-create-panel"
 import {
   findChatDocumentContext,
   sendChatMessage,
@@ -60,11 +61,14 @@ function highlightedText(text: string, keywords: string[] = []) {
 export function ReaderChatSidebar({
   currentPage,
   slideFileId,
+  courseCode,
 }: {
   currentPage: number
   slideFileId: string
+  courseCode: string
 }) {
   const [open, setOpen] = useState(true)
+  const [tab, setTab] = useState<"chat" | "mindmap">("chat")
   const [messages, setMessages] = useState<ChatMessage[]>(() => seedMessages())
   const [input, setInput] = useState("")
   const [isTyping, setIsTyping] = useState(false)
@@ -172,6 +176,41 @@ export function ReaderChatSidebar({
         </span>
       </div>
 
+      <div className="flex items-center gap-1.5 border-b border-line px-4 py-2.5">
+        <button
+          type="button"
+          onClick={() => setTab("chat")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-[8px] border px-3 py-1.5 text-[12.5px] font-semibold transition-colors",
+            tab === "chat"
+              ? "border-navy bg-[#EAF0F8] text-navy"
+              : "border-line text-ink-soft hover:text-ink"
+          )}
+        >
+          <MessageCircle className="size-3.5" />
+          Trò chuyện
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("mindmap")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-[8px] border px-3 py-1.5 text-[12.5px] font-semibold transition-colors",
+            tab === "mindmap"
+              ? "border-navy bg-[#EAF0F8] text-navy"
+              : "border-line text-ink-soft hover:text-ink"
+          )}
+        >
+          <Sparkles className="size-3.5" />
+          Tạo mindmap
+        </button>
+      </div>
+
+      {tab === "mindmap" && (
+        <MindmapQuickCreatePanel courseCode={courseCode} slideFileId={slideFileId} />
+      )}
+
+      {tab === "chat" && (
+        <>
       <div ref={scrollRef} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
         {messages.map((msg) => (
           <div key={msg.id} className={cn("flex flex-col gap-1", msg.role === "user" && "items-end")}>
@@ -245,6 +284,8 @@ export function ReaderChatSidebar({
           <Send className="size-4" />
         </button>
       </form>
+        </>
+      )}
     </aside>
   )
 }

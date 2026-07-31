@@ -7,15 +7,27 @@ import { cn } from "@/lib/utils"
 import {
   createMindmap,
   DOCUMENTS,
+  getMindmapById,
   getMindmapHistory,
   type MindmapResponse,
 } from "@/lib/mindmap-api"
 
-export function MindmapCreatePanel() {
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
-  const [prompt, setPrompt] = useState("")
+export function MindmapCreatePanel({
+  initialMindmapId,
+}: {
+  initialMindmapId?: string
+} = {}) {
+  const initialEntry = initialMindmapId
+    ? getMindmapById(initialMindmapId)
+    : undefined
+  const [selectedIds, setSelectedIds] = useState<string[]>(
+    initialEntry?.document_ids ?? []
+  )
+  const [prompt, setPrompt] = useState(initialEntry?.prompt ?? "")
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<MindmapResponse | null>(null)
+  const [result, setResult] = useState<MindmapResponse | null>(
+    initialEntry ?? null
+  )
   const [error, setError] = useState<string | null>(null)
   const [history, setHistory] = useState<MindmapResponse[]>(() =>
     getMindmapHistory()

@@ -87,3 +87,13 @@ export async function createMindmap(
 export function getMindmapHistory(): MindmapResponse[] {
   return [...history]
 }
+
+export function getMindmapById(mindmapId: string): MindmapResponse | undefined {
+  return history.find((entry) => entry.mindmap_id === mindmapId)
+}
+
+export function findDocumentBySlideFileId(
+  slideFileId: string
+): MindmapDocument | undefined {
+  return DOCUMENTS.find((doc) => doc.slideFileId === slideFileId)
+}
