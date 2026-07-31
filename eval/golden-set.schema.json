@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RAG Golden Set",
+  "type": "array",
+  "minItems": 20,
+  "items": {
+    "type": "object",
+    "required": [
+      "case_id",
+      "category",
+      "query",
+      "expected_abstain"
+    ],
+    "properties": {
+      "case_id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "category": {
+        "enum": [
+          "single-session",
+          "cross-session",
+          "low-confidence",
+          "out-of-scope",
+          "correction"
+        ]
+      },
+      "query": {
+        "type": "string",
+        "minLength": 1
+      },
+      "session_numbers": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "uniqueItems": true
+      },
+      "expected_abstain": {
+        "type": "boolean"
+      },
+      "expected_sources": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "document_id",
+            "slide_number"
+          ],
+          "properties": {
+            "document_id": {
+              "type": "string"
+            },
+            "slide_number": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "expected_answer_notes": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false
+  }
+}
