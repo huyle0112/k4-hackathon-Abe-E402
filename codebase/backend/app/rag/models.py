@@ -227,3 +227,33 @@ class EvaluationReport(BaseModel):
         default=None, ge=0.0, le=1.0
     )
     cases: list[EvaluationCaseResult]
+
+
+class SlideFile(BaseModel):
+    id: str
+    day: int
+    fileName: str | None = None
+    file_name: str | None = None
+    url: str | None = None
+    label: str | None = None
+
+
+class CourseDay(BaseModel):
+    day: int
+    files: list[SlideFile]
+
+
+class Course(BaseModel):
+    code: str
+    name: str
+    description: str | None = None
+    classmates: str | None = None
+    days: list[CourseDay]
+
+
+class CourseSummary(BaseModel):
+    code: str
+    name: str
+    description: str
+    read_percent: int
+    total_days: int

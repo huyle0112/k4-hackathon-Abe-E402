@@ -1,16 +1,37 @@
+import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
-import { CheckCircle2 } from "lucide-react"
+import { CheckCircle2, Loader2 } from "lucide-react"
 
 import { DayCard } from "@/components/courses/day-card"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { SupportFab } from "@/components/dashboard/support-fab"
-import { COURSES } from "@/data/comp2010-slides"
+import { fetchCourse, type Course } from "@/lib/courses-api"
 
 const DEMO_EMAIL = "demo@vinuni.edu.vn"
 
 export function CourseDetailPage() {
   const { courseCode = "" } = useParams()
-  const course = COURSES[courseCode.toLowerCase()]
+  const [course, setCourse] = useState<Course | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchCourse(courseCode)
+      .then(setCourse)
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [courseCode])
+
+  if (loading) {
+    return (
+      <div className="min-h-svh bg-paper font-sans text-ink antialiased">
+        <div className="h-1 bg-gradient-to-r from-navy to-maroon" />
+        <DashboardHeader email={DEMO_EMAIL} />
+        <main className="flex h-64 items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-navy" />
+        </main>
+      </div>
+    )
+  }
 
   if (!course) {
     return (
@@ -28,7 +49,7 @@ export function CourseDetailPage() {
   }
 
   const readDays = 0
-  const readPercent = Math.round((readDays / course.days.length) * 100)
+  const readPercent = Math.round((readDays / course.days.length) * 100) || 0
   const firstFile = course.days.find((d) => d.files.length > 0)?.files[0]
 
   return (

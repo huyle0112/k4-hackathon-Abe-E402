@@ -263,7 +263,7 @@ class RAGService:
     ) -> ChatResponse:
         current_chunks = self.retriever.vector_store.get_chunks(
             where={"document_id": document_id}
-        )
+        )        
         if not current_chunks:
             generated = self.generator.generate(
                 query, [], trusted_context=True

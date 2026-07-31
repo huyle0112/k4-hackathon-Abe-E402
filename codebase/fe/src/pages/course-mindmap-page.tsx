@@ -1,13 +1,13 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
-import { FileText, LayoutGrid, Sparkles } from "lucide-react"
+import { FileText, LayoutGrid, Sparkles, Loader2 } from "lucide-react"
 
 import { MindElixirCanvas } from "@/components/mindmap/mind-elixir-canvas"
 import { MindmapCreatePanel } from "@/components/mindmap/mindmap-create-panel"
 import { MindmapSidebar } from "@/components/mindmap/mindmap-sidebar"
 import { ReaderTopbar } from "@/components/reader/reader-topbar"
 import { cn } from "@/lib/utils"
-import { COURSES, findSlideFile } from "@/data/comp2010-slides"
+import { fetchCourse, findSlideFile, type Course } from "@/lib/courses-api"
 import { MINDMAPS } from "@/data/mindmap-data"
 
 export function CourseMindmapPage() {
@@ -16,12 +16,32 @@ export function CourseMindmapPage() {
   const slideId = searchParams.get("slide") ?? ""
   const [view, setView] = useState<"slide" | "create">("slide")
   const [lastSlideId, setLastSlideId] = useState(slideId)
+
+  const [course, setCourse] = useState<Course | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchCourse(courseCode)
+      .then(setCourse)
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [courseCode])
+
   if (slideId !== lastSlideId) {
     setLastSlideId(slideId)
     setView("slide")
   }
 
-  const course = COURSES[courseCode.toLowerCase()]
+  if (loading) {
+    return (
+      <div className="flex h-svh flex-col bg-paper text-ink antialiased">
+        <div className="flex flex-1 items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-navy" />
+        </div>
+      </div>
+    )
+  }
+
   const file = course ? findSlideFile(course, slideId) : undefined
 
   if (!course || !file) {

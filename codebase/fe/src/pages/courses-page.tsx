@@ -1,24 +1,25 @@
-import { ArrowRight, NotebookPen } from "lucide-react"
+import { useEffect, useState } from "react"
+import { ArrowRight, NotebookPen, Loader2 } from "lucide-react"
 
 import { CourseCard } from "@/components/courses/course-card"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { PageHead } from "@/components/dashboard/page-head"
 import { SupportFab } from "@/components/dashboard/support-fab"
+import { fetchCourses, type CourseSummary } from "@/lib/courses-api"
 
 const DEMO_EMAIL = "demo@vinuni.edu.vn"
 
-const COURSES = [
-  {
-    code: "COMP2010",
-    name: "Khoá 3 + 4 Phase 1",
-    description: "Khóa học Khoá 3 + 4 Phase 1",
-    readPercent: 0,
-    notebookHref: "#",
-    openHref: "/courses/comp2010",
-  },
-]
-
 export function CoursesPage() {
+  const [courses, setCourses] = useState<CourseSummary[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchCourses()
+      .then(setCourses)
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [])
+
   return (
     <div className="min-h-svh bg-paper font-sans text-ink antialiased">
       <div className="h-1 bg-gradient-to-r from-navy to-maroon" />
@@ -28,12 +29,26 @@ export function CoursesPage() {
         <PageHead
           title="Khóa học của tôi"
           description="Mỗi khóa học lưu trữ tài liệu, giáo án và phần ghi chú tương tác của riêng bạn."
-          pill={`${COURSES.length} khóa học đang theo học`}
+          pill={`${courses.length} khóa học đang theo học`}
         />
 
-        {COURSES.map((course) => (
-          <CourseCard key={course.code} {...course} />
-        ))}
+        {loading ? (
+          <div className="flex h-32 items-center justify-center">
+            <Loader2 className="size-6 animate-spin text-navy" />
+          </div>
+        ) : (
+          courses.map((course) => (
+            <CourseCard
+              key={course.code}
+              code={course.code}
+              name={course.name}
+              description={course.description}
+              readPercent={course.read_percent}
+              notebookHref="#"
+              openHref={`/courses/${course.code.toLowerCase()}`}
+            />
+          ))
+        )}
 
         <a
           href="#"

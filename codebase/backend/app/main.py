@@ -9,6 +9,7 @@ from app.agent import AgentTools
 from app.api.chat import router as chat_router
 from app.api.health import router as health_router
 from app.api.mindmaps import router as mindmaps_router
+from app.api.courses import router as courses_router
 from app.config import get_settings
 from app.mindmaps import (
     MindmapRepository,
@@ -77,9 +78,10 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    application.include_router(health_router)
-    application.include_router(chat_router)
-    application.include_router(mindmaps_router)
+    application.include_router(health_router, prefix="/api")
+    application.include_router(chat_router, prefix="/api")
+    application.include_router(mindmaps_router, prefix="/api")
+    application.include_router(courses_router)
 
     @application.get("/")
     def root() -> dict[str, str]:

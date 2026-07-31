@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 
@@ -7,7 +8,8 @@ import { ReaderPager } from "@/components/reader/reader-pager"
 import { ReaderSidebar } from "@/components/reader/reader-sidebar"
 import { ReaderToolbar } from "@/components/reader/reader-toolbar"
 import { ReaderTopbar } from "@/components/reader/reader-topbar"
-import { COURSES, findSlideFile, type SlideFile } from "@/data/comp2010-slides"
+import { SupportFab } from "@/components/dashboard/support-fab"
+import { fetchCourse, findSlideFile, type Course, type SlideFile } from "@/lib/courses-api"
 import { usePdfDocument } from "@/hooks/use-pdf-document"
 import { loadPdfDocument, type PDFDocumentProxy } from "@/lib/pdf"
 
@@ -73,7 +75,16 @@ export function CourseReaderPage() {
   const [searchParams] = useSearchParams()
   const slideId = searchParams.get("slide") ?? ""
 
-  const course = COURSES[courseCode.toLowerCase()]
+  const [course, setCourse] = useState<Course | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchCourse(courseCode)
+      .then(setCourse)
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [courseCode])
+
   const file = course ? findSlideFile(course, slideId) : undefined
 
   const [pageCounts, setPageCounts] = useState<Record<string, number | undefined>>({})
@@ -96,6 +107,16 @@ export function CourseReaderPage() {
       }
     }
   }, [course])
+
+  if (loading) {
+    return (
+      <div className="flex h-svh flex-col bg-paper text-ink antialiased">
+        <div className="flex flex-1 items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-navy" />
+        </div>
+      </div>
+    )
+  }
 
   if (!course || !file) {
     return (

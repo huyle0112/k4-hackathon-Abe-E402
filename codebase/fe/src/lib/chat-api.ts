@@ -61,7 +61,7 @@ export async function sendChatMessage(
   request: ChatRequest,
   context: ChatDocumentContext
 ): Promise<ChatResponse> {
-  const response = await postJson<ApiChatResponse>("/chat", {
+  const response = await postJson<ApiChatResponse>("/api/chat", {
     ...request,
     document_id: context.document_id,
   })
