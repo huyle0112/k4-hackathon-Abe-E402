@@ -62,7 +62,11 @@ def main() -> int:
     source = (args.source or settings.lessons_dir).resolve()
 
     embedding_provider = create_embedding_provider(settings)
-    vector_store = create_vector_store(settings, embedding_provider)
+    vector_store = create_vector_store(
+        settings,
+        embedding_provider,
+        allow_incompatible=args.rebuild,
+    )
     if args.rebuild:
         if args.dry_run:
             raise ValueError("--rebuild cannot be combined with --dry-run")

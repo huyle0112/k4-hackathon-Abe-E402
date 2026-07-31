@@ -101,6 +101,40 @@ def test_retrieval_filters_sessions(tmp_path: Path) -> None:
     assert all(hit.chunk.session_number == 2 for hit in hits)
 
 
+def test_cross_session_retrieval_preserves_each_requested_session(
+    tmp_path: Path,
+) -> None:
+    retriever, _ = _build_retriever(tmp_path)
+
+    hits = retriever.retrieve(
+        RetrievalRequest(
+            query="Context và reward function liên hệ thế nào?",
+            session_numbers=[1, 2],
+            top_k=2,
+        )
+    )
+
+    assert len(hits) == 2
+    assert {hit.chunk.session_number for hit in hits} == {1, 2}
+    assert [hit.rank for hit in hits] == [1, 2]
+
+
+def test_unfiltered_retrieval_does_not_force_cross_session_coverage(
+    tmp_path: Path,
+) -> None:
+    retriever, _ = _build_retriever(tmp_path)
+
+    hits = retriever.retrieve(
+        RetrievalRequest(
+            query="Context của mô hình là gì?",
+            top_k=1,
+        )
+    )
+
+    assert len(hits) == 1
+    assert hits[0].chunk.session_number == 1
+
+
 def test_vector_store_deletes_only_stale_chunks(tmp_path: Path) -> None:
     _, store = _build_retriever(tmp_path)
 

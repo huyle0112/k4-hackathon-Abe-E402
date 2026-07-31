@@ -39,6 +39,33 @@ def build_citations(
     return citations
 
 
+def build_citations_for_chunk_ids(
+    hits: list[SearchHit],
+    cited_chunk_ids: list[str],
+    *,
+    maximum_citations: int = 5,
+) -> list[Citation]:
+    """Resolve model-proposed IDs only against the exact supplied hits."""
+
+    hits_by_id = {hit.chunk.chunk_id: hit for hit in hits}
+    resolved_hits: list[SearchHit] = []
+    seen_chunk_ids: set[str] = set()
+    for chunk_id in cited_chunk_ids:
+        if chunk_id in seen_chunk_ids:
+            continue
+        hit = hits_by_id.get(chunk_id)
+        if hit is None:
+            continue
+        seen_chunk_ids.add(chunk_id)
+        resolved_hits.append(hit)
+        if len(resolved_hits) >= maximum_citations:
+            break
+    return build_citations(
+        resolved_hits,
+        maximum_citations=maximum_citations,
+    )
+
+
 def citations_belong_to_hits(
     citations: list[Citation], hits: list[SearchHit]
 ) -> bool:

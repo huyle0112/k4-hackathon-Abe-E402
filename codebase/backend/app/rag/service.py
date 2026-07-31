@@ -28,7 +28,17 @@ class RAGService:
             top_k=top_k,
         )
         hits = self.retriever.retrieve(request)
-        generated = self.generator.generate(request.query, hits)
+        required_sessions = (
+            request.session_numbers
+            if request.session_numbers
+            and len(request.session_numbers) >= 2
+            else None
+        )
+        generated = self.generator.generate(
+            request.query,
+            hits,
+            required_session_numbers=required_sessions,
+        )
         return ChatResponse(
             **generated.model_dump(),
             retrieval_hits=hits,

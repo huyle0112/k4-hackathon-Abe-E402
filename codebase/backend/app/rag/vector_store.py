@@ -19,6 +19,8 @@ class ChromaVectorStore:
         collection_name: str,
         embedding_provider_name: str,
         embedding_dimension: int,
+        embedding_model_name: str = "",
+        allow_incompatible: bool = False,
     ) -> None:
         try:
             import chromadb
@@ -31,7 +33,9 @@ class ChromaVectorStore:
         self.path.mkdir(parents=True, exist_ok=True)
         self.collection_name = collection_name
         self.embedding_provider_name = embedding_provider_name
+        self.embedding_model_name = embedding_model_name
         self.embedding_dimension = embedding_dimension
+        self.allow_incompatible = allow_incompatible
         self._client = chromadb.PersistentClient(path=str(self.path))
         self._collection = self._get_or_create_collection()
         self._validate_collection()
@@ -43,6 +47,7 @@ class ChromaVectorStore:
             metadata={
                 "hnsw:space": "cosine",
                 "embedding_provider": self.embedding_provider_name,
+                "embedding_model": self.embedding_model_name,
                 "embedding_dimension": self.embedding_dimension,
             },
         )
@@ -51,17 +56,58 @@ class ChromaVectorStore:
         metadata = self._collection.metadata or {}
         existing_dimension = metadata.get("embedding_dimension")
         existing_provider = metadata.get("embedding_provider")
+        existing_model = metadata.get("embedding_model")
         if self._collection.count() == 0:
             return
-        if existing_dimension and int(existing_dimension) != self.embedding_dimension:
+        mismatches: list[str] = []
+        if (
+            existing_dimension
+            and int(existing_dimension) != self.embedding_dimension
+        ):
+            mismatches.append("dimension")
+        if (
+            existing_provider
+            and existing_provider != self.embedding_provider_name
+        ):
+            mismatches.append("provider")
+        if (
+            existing_model
+            and self.embedding_model_name
+            and existing_model != self.embedding_model_name
+        ):
+            mismatches.append("model")
+        if not mismatches:
+            return
+        if self.allow_incompatible:
+            return
+        if "dimension" in mismatches:
             raise VectorStoreError(
                 "Embedding dimension differs from the existing collection. "
-                "Use a new collection or rebuild the local vector store."
+                "Run ingestion with --rebuild or use a new collection."
             )
-        if existing_provider and existing_provider != self.embedding_provider_name:
+        if "provider" in mismatches:
             raise VectorStoreError(
                 "Embedding provider differs from the existing collection. "
-                "Use a new collection or rebuild the local vector store."
+                "Run ingestion with --rebuild or use a new collection."
+            )
+        raise VectorStoreError(
+            "Embedding model differs from the existing collection. "
+            "Run ingestion with --rebuild or use a new collection."
+        )
+
+    def embedding_metadata(self) -> dict[str, Any]:
+        metadata = self._collection.metadata or {}
+        return {
+            "embedding_provider": metadata.get("embedding_provider"),
+            "embedding_model": metadata.get("embedding_model"),
+            "embedding_dimension": metadata.get("embedding_dimension"),
+        }
+
+    def _validate_embedding(self, embedding: Sequence[float]) -> None:
+        if len(embedding) != self.embedding_dimension:
+            raise VectorStoreError(
+                "Embedding vector dimension does not match the collection "
+                f"dimension ({self.embedding_dimension})."
             )
 
     def count(self) -> int:
@@ -78,6 +124,8 @@ class ChromaVectorStore:
             raise VectorStoreError("Chunks and embeddings must have equal length")
         if not chunks:
             return 0
+        for embedding in embeddings:
+            self._validate_embedding(embedding)
 
         for start in range(0, len(chunks), batch_size):
             batch_chunks = chunks[start : start + batch_size]
@@ -114,6 +162,7 @@ class ChromaVectorStore:
     ) -> list[SearchHit]:
         if self.count() == 0:
             return []
+        self._validate_embedding(query_embedding)
 
         result = self._collection.query(
             query_embeddings=[list(query_embedding)],
@@ -146,11 +195,10 @@ class ChromaVectorStore:
         return hits
 
     def reset(self) -> None:
-        try:
-            self._client.delete_collection(self.collection_name)
-        except Exception:
-            pass
+        self._client.delete_collection(self.collection_name)
         self._collection = self._get_or_create_collection()
+        self.allow_incompatible = False
+        self._validate_collection()
 
     @staticmethod
     def _chunk_to_metadata(chunk: Chunk) -> dict[str, Any]:

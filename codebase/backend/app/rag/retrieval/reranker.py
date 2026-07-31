@@ -68,14 +68,23 @@ class BaselineReranker:
         *,
         top_k: int,
         score_threshold: float,
+        preserve_cross_document_duplicates: bool = False,
     ) -> list[SearchHit]:
         rescored: list[SearchHit] = []
-        seen_hashes: set[str] = set()
+        seen_keys: set[str | tuple[str, str]] = set()
 
         for hit in hits:
-            if hit.chunk.content_hash in seen_hashes:
+            deduplication_key: str | tuple[str, str]
+            if preserve_cross_document_duplicates:
+                deduplication_key = (
+                    hit.chunk.document_id,
+                    hit.chunk.content_hash,
+                )
+            else:
+                deduplication_key = hit.chunk.content_hash
+            if deduplication_key in seen_keys:
                 continue
-            seen_hashes.add(hit.chunk.content_hash)
+            seen_keys.add(deduplication_key)
             body_overlap = lexical_overlap(query, hit.chunk.text)
             first_line = hit.chunk.text.splitlines()[0]
             title_overlap = lexical_overlap(query, first_line)

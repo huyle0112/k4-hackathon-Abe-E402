@@ -97,12 +97,39 @@ class Citation(BaseModel):
     excerpt: str
 
 
+class LLMAnswer(BaseModel):
+    """Strict model output before backend citation validation."""
+
+    answer: str
+    abstained: bool
+    reason: str | None
+    cited_chunk_ids: list[str]
+
+
+class GenerationUsage(BaseModel):
+    input_tokens: int | None = Field(default=None, ge=0)
+    output_tokens: int | None = Field(default=None, ge=0)
+    total_tokens: int | None = Field(default=None, ge=0)
+
+
+class GenerationMetadata(BaseModel):
+    mode: str
+    provider: str | None = None
+    model: str | None = None
+    latency_ms: float | None = Field(default=None, ge=0.0)
+    response_status: str | None = None
+    request_id: str | None = None
+    usage: GenerationUsage | None = None
+    error_type: str | None = None
+
+
 class GenerationResult(BaseModel):
     answer: str
     confidence: float = Field(ge=0.0, le=1.0)
     abstained: bool
     citations: list[Citation] = Field(default_factory=list)
     reason: str | None = None
+    generation: GenerationMetadata | None = None
 
 
 class ChatResponse(GenerationResult):
@@ -163,6 +190,15 @@ class EvaluationCaseResult(BaseModel):
     abstention_correct: bool
     retrieval_hit: bool | None
     citation_hit: bool | None
+    cross_session_source_coverage: float | None = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    citation_precision: float | None = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    citation_completeness: float | None = Field(
+        default=None, ge=0.0, le=1.0
+    )
 
 
 class EvaluationReport(BaseModel):
@@ -171,4 +207,13 @@ class EvaluationReport(BaseModel):
     abstention_accuracy: float
     retrieval_hit_rate: float | None
     citation_hit_rate: float | None
+    cross_session_source_coverage: float | None = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    citation_precision: float | None = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    citation_completeness: float | None = Field(
+        default=None, ge=0.0, le=1.0
+    )
     cases: list[EvaluationCaseResult]

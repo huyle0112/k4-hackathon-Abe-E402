@@ -20,7 +20,9 @@ from app.rag.runtime import create_rag_service
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Query the local PDF RAG pipeline without an API key."
+        description=(
+            "Query the PDF RAG pipeline with optional OpenAI generation."
+        )
     )
     parser.add_argument("query", help="Question to ask.")
     parser.add_argument(
