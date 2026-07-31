@@ -1,0 +1,1789 @@
+{
+  "golden_set": "VLearn Tutor Golden Set",
+  "run_at": "2026-07-31T04:44:13.126032+00:00",
+  "passed": 22,
+  "failed": 0,
+  "total": 22,
+  "pass_rate": 1.0,
+  "results": [
+    {
+      "id": "CHAT-01",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "answered",
+      "status_code": 200,
+      "response": {
+        "answer": "Đoạn bôi đen nói về cơ chế attention trong mô hình ngôn ngữ, cho phép mỗi từ (token) \"quay đầu\" và nhìn lại các từ quan trọng khác trong câu. Thay vì đọc theo trình tự từng chữ, cơ chế này giúp mỗi token tự đánh giá mức độ liên quan của các token khác đối với nghĩa của mình. Điều này giúp xác định nghĩa của từ theo ngữ cảnh, ví dụ như từ \"nó\" có thể ám chỉ quyển sách hay cái túi tùy thuộc vào từ nào được chú ý. Đây chính là khía cạnh quan trọng trong mô hình GPT, giúp nó hiểu ngữ cảnh một cách hiệu quả hơn so với các thế hệ trước.",
+        "confidence": 0.482,
+        "abstained": false,
+        "citations": [
+          {
+            "source_file": "day-01-ai-llm-foundation.pdf",
+            "document_id": "day-01-ai-llm-foundation",
+            "document_title": "Day 01 Ai Llm Foundation",
+            "slide_number": 15,
+            "chunk_id": "day-01-ai-llm-foundation-slide-15-chunk-01",
+            "excerpt": "Attention: mỗi từ được “nhìn sang” những từ quan trọng khác Thay vì đọc tuần tự từng chữ, cơ chế attention cho phép mỗi token: Chủ động “quay đầu” nhìn lại các token trước đó trong câu Chấm điểm mức độ liên quan của từng token đối với…"
+          }
+        ],
+        "reason": null,
+        "generation": {
+          "mode": "openai",
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "latency_ms": 2873.8544000079855,
+          "response_status": "completed",
+          "request_id": "req_2212319b40f9466b92bacd91fad0f8c9",
+          "usage": {
+            "input_tokens": 2075,
+            "output_tokens": 187,
+            "total_tokens": 2262
+          },
+          "error_type": null
+        },
+        "status": "answered",
+        "important_keywords": [
+          "Attention",
+          "token",
+          "ngữ cảnh"
+        ],
+        "clarification_question": null,
+        "retrieval_hits": [
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-15-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 15,
+              "chunk_index": 1,
+              "text": "Attention: mỗi từ được “nhìn sang” những từ quan trọng khác\n\nThay vì đọc tuần tự từng chữ, cơ chế attention cho phép mỗi token:\n\nChủ động “quay đầu” nhìn lại các token trước đó trong câu\n\nChấm điểm mức độ liên quan của từng token đối với nghĩa của mình\n\nKhóa nghĩa theo ngữ cảnh — “nó” là quyển sách hay cái túi, tùy theo nó chú ý vào từ nào\n\nĐây chính là chữ T trong GPT — và là lý do model hiểu ngữ cảnh tốt hơn hẳn các thế hệ trước\n\nVideo minh họa: Attention in transformers, step-by-step - 3Blue1Brown\n\nAI IN ACTION - HACKATHON",
+              "extraction_method": "text",
+              "content_hash": "951be84574c13dbd6faa4d0b3193a9f627e37693f2879dc14ed6ecda94f86105",
+              "token_count": 125
+            },
+            "score": 0.5330895990133285,
+            "rank": 1,
+            "vector_score": 0.5509070754051208,
+            "lexical_score": 0.5
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-14-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 14,
+              "chunk_index": 1,
+              "text": "Context: bàn làm việc có hạn của model\n\nMỗi lần trả lời, model chỉ nhìn được một lượng chữ có\n\nhạn — gọi là context. Hãy hình dung một bàn làm việc:\nmọi thứ muốn model \"thấy\" phải bày lên bàn.\n\nQuy đổi: 128K token ≈ một cuốn sách 300 trang; 1M\ntoken ≈ 4–5 cuốn sách trên bàn cùng lúc.\n\nBàn đầy quá thì đồ ở giữa bàn dễ bị bỏ sót — đặt điều\nquan trọng ở giữa một prompt rất dài, model có thể\n\n\"quên\" mất.\n\nAI IN ACTION - HACKATHON\n\nContext càng dài càng tốn tiền và càng chậm — bàn rộng không có nghĩa là dùng tốt\n\nHiện tượng “quên phần giữa”: Liu et al. (2023), “Lost in the Middle” — arxiv.org/abs/2307.03172. Model thế hệ mới đã cải thiện đáng kể nhưng chưa hết hẳn.",
+              "extraction_method": "text",
+              "content_hash": "34dc45342148b4b9ab5bc028513d89d4ed4db0ad4221760514b54d5bf65a5bff",
+              "token_count": 175
+            },
+            "score": 0.32644575238227846,
+            "rank": 2,
+            "vector_score": 0.384435772895813,
+            "lexical_score": 0.21875
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-13-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 13,
+              "chunk_index": 1,
+              "text": "Token: model không đọc \"từ\", model đọc mảnh chữ\n\nModel không nhìn từ nguyên vẹn. Nó cắt văn bản\n\nthành các mảnh nhỏ gọi là token: có từ là một mảnh,\ncó từ vỡ ba bốn mảnh, cả dấu câu và khoảng trắng\n\ncũng là mảnh.\n\nVí dụ: \"Hello world\" ≈ 2 token, nhưng \"Xin chào\" có\n\nthể tới 3–4 token.\n\nTiếng Việt, code, JSON tốn token hơn tiếng Anh\n\nthường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị\ncắt nhỏ ra.\n\nAI IN ACTION - HACKATHON\n\nMọi thứ model làm đều quy ra token — và mỗi token đều có giá. Nhớ điều này khi sang phần chi phí.\n\nThử trực tiếp: platform.openai.com/tokenizer · Số token chính xác phụ thuộc tokenizer của từng model.",
+              "extraction_method": "text",
+              "content_hash": "0d6d8afddc009e94770c75c1a132248af40778970be707c3658ac5c3f8e64d65",
+              "token_count": 161
+            },
+            "score": 0.31002455711364746,
+            "rank": 3,
+            "vector_score": 0.3726339340209961,
+            "lexical_score": 0.19374999999999998
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-02-xac-dinh-bai-toan-ai-slide-06-chunk-01",
+              "document_id": "day-02-xac-dinh-bai-toan-ai",
+              "document_title": "Day 02 Xac Dinh Bai Toan Ai",
+              "session_number": 2,
+              "source_file": "day-02-xac-dinh-bai-toan-ai.pdf",
+              "slide_number": 6,
+              "chunk_index": 1,
+              "text": "Tìm bài toán AI ở đâu?\n— Bắt đầu từ việc quan sát các hoạt động thực tế xung quanh\n\nR E P E T I T I V E\n\nT I M E - C O N S U M I N G\n\nA I A DVA N TAG E\n\nU S E R PA I N P O I N T S\n\nTác vụ lặp lại\n\nTiêu tốn thời gian\n\nLợi thế của AI\n\nĐiểm đau người dùng\n\nViệc diễn ra thường xuyên;\n\nKhối lượng xử lý lớn; thời gian\n\nTác vụ đòi hỏi phân tích ngữ\n\nAi đang gặp khó khăn, phàn\n\ncông đoạn nào cần chuẩn hóa\n\nhao phí ở bước nào (tìm kiếm,\n\ncảnh, xử lý ngôn ngữ tự nhiên,\n\nnàn hoặc bị tắc nghẽn liên tục?\n\nđể hướng tới tự động hóa?\n\nđọc hiểu, chờ đợi, định dạng)?\n\ntổng hợp đa nguồn.\n\nTập trung nhận diện vấn đề; chưa vội đề xuất giải pháp.\n\nSàng lọc bài toán sẽ diễn ra vào buổi chiều.\n\nAI IN ACTION - HACKATHON\n\nBÀI TOÁN · 4 LENSES\nDAY 02 · 23 / 83",
+              "extraction_method": "text",
+              "content_hash": "0394251f6e058d71d97dbd5be3f5a54de147c4c3f0b2682bf17ea19dcab9380c",
+              "token_count": 204
+            },
+            "score": 0.29336779594421386,
+            "rank": 4,
+            "vector_score": 0.3571043014526367,
+            "lexical_score": 0.175
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-11-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 11,
+              "chunk_index": 1,
+              "text": "Bên trong Transformer: đầu ra luôn là một phân bố xác suất\n\nAI IN ACTION - HACKATHON\n\nVới mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “land” 22%, “forest” 9%… — rồi chọn theo xác suất đó\n\nTransformers, the tech behind LLMs - 3Blue1Brown",
+              "extraction_method": "text",
+              "content_hash": "2a6f76193d2e470cbac797b2b1eec59deca605442d5f738cb30e03278bed3c04",
+              "token_count": 59
+            },
+            "score": 0.2859049224853516,
+            "rank": 5,
+            "vector_score": 0.39273834228515625,
+            "lexical_score": 0.0875
+          }
+        ]
+      }
+    },
+    {
+      "id": "CHAT-02",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "answered",
+      "status_code": 200,
+      "response": {
+        "answer": "Slide 3 trình bày cấu trúc của AI từ khái niệm rộng đến cụ thể:  \n- **Artificial Intelligence (AI)** là khái niệm bao trùm lớn nhất, bao gồm mọi hệ thống có yếu tố \"thông minh\".  \n- **Machine Learning (ML)** là một nhánh của AI, cho phép máy học từ dữ liệu mà không cần phải lập trình cụ thể.  \n- **Deep Learning** là phần mở rộng của ML, sử dụng mạng nơ-ron sâu để tự động học các đặc trưng.  \n- **Generative AI** tạo ra nội dung mới như văn bản, hình ảnh và mã code.  \n- **LLM (Large Language Model)**, như GPT và Claude, là một loại mô hình ngôn ngữ quan trọng trong AI hiện nay, nhưng không phải là toàn bộ AI.",
+        "confidence": 0.5138,
+        "abstained": false,
+        "citations": [
+          {
+            "source_file": "day-01-ai-llm-foundation.pdf",
+            "document_id": "day-01-ai-llm-foundation",
+            "document_title": "Day 01 Ai Llm Foundation",
+            "slide_number": 3,
+            "chunk_id": "day-01-ai-llm-foundation-slide-03-chunk-01",
+            "excerpt": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHINE LEARNING Machine learning — học từ dữ liệu thay vì viết luật tay.…"
+          }
+        ],
+        "reason": null,
+        "generation": {
+          "mode": "openai",
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "latency_ms": 3604.018699959852,
+          "response_status": "completed",
+          "request_id": "req_6c908f3040484221a3ae92ead693e074",
+          "usage": {
+            "input_tokens": 1890,
+            "output_tokens": 225,
+            "total_tokens": 2115
+          },
+          "error_type": null
+        },
+        "status": "answered",
+        "important_keywords": [
+          "AI",
+          "Machine Learning",
+          "Deep Learning",
+          "Generative AI",
+          "LLM"
+        ],
+        "clarification_question": null,
+        "retrieval_hits": [
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-03-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 3,
+              "chunk_index": 1,
+              "text": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?\n\ntừ rộng đến hẹp\n\nARTIFICIAL INTELLIGENCE\n\nAI — chiếc ô lớn nhất: mọi hệ thống có yếu tố\n“thông minh”.\n\nMACHINE LEARNING\n\nMachine learning — học từ dữ liệu thay vì viết\nluật tay.\n\nDEEP LEARNING\n\nGENERATIVE AI\n\nDeep learning — mạng nơ-ron nhiều tầng tự học\nđặc trưng.\n\nLLM\n\nGPT · Claude · Kimi\n\nGenerative AI — sinh nội dung mới: văn bản,\nảnh, code.\n\nvăn bản · ảnh · code\n\nLLM — model nền chuyên ngôn ngữ, tim của làn\nsóng hiện nay.\n\nnhận diện ảnh · giọng nói\n\nlọc spam · gợi ý phim\n\nAI IN ACTION - HACKATHON\n\nkể cả hệ luật tay, robot…\n\nLLM không phải toàn bộ AI — nhưng nó là tầng\nnền của gần hết trải nghiệm AI bạn dùng hôm nay",
+              "extraction_method": "text",
+              "content_hash": "6cc94c1b9756ff24a7be5a2d89e935da14f1e10b2d84a4e4700ceee8d41f4fee",
+              "token_count": 165
+            },
+            "score": 0.5774317951997121,
+            "rank": 1,
+            "vector_score": 0.6909207105636597,
+            "lexical_score": 0.3666666666666667
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-02-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 2,
+              "chunk_index": 1,
+              "text": "AI IN ACTION - Day 1\n\nAgenda\n\n• Bức tranh AI & các tầng của AI\n\n• Lịch sử AI 70 năm\n\n• Bên trong LLM: cơ chế vận hành\n\n• Từ LLM đến AI Agent\n\n• Landscape: model hôm nay & cuộc đua hiện tại\n\n• Chọn model & chi phí token\n\n• Gọi API lần đầu\n\n• Tổng kết — những ý để mang về\n\nAI IN ACTION - HACKATHON\n\nAI & LLM Foundation\n\nTừ \"nghe AI\" đến \"gọi AI\" trong một ngày",
+              "extraction_method": "text",
+              "content_hash": "25a833ed2a7552194ab1fd9867f2f2930053a20bcf9c8088f1aed801c821c41b",
+              "token_count": 91
+            },
+            "score": 0.4265428694089254,
+            "rank": 2,
+            "vector_score": 0.5933992862701416,
+            "lexical_score": 0.11666666666666665
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-01-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 1,
+              "chunk_index": 1,
+              "text": "AI IN ACTION - Day 1\n\nAI & LLM Foundation\n\nBạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?\n\nAI IN ACTION - HACKATHON",
+              "extraction_method": "text",
+              "content_hash": "03b7b5b4fd6406b893c08b08ffe9908938801563e9d645948326d634153c7c8b",
+              "token_count": 32
+            },
+            "score": 0.3888589040438334,
+            "rank": 3,
+            "vector_score": 0.5668342113494873,
+            "lexical_score": 0.05833333333333333
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-02-xac-dinh-bai-toan-ai-slide-01-chunk-01",
+              "document_id": "day-02-xac-dinh-bai-toan-ai",
+              "document_title": "Day 02 Xac Dinh Bai Toan Ai",
+              "session_number": 2,
+              "source_file": "day-02-xac-dinh-bai-toan-ai.pdf",
+              "slide_number": 1,
+              "chunk_index": 1,
+              "text": "AI IN ACTION · DAY 02\n\nXác định bài toán cho AI.\n\nTừ yêu cầu mơ hồ đến Problem Statement rõ ràng.\n\nAI IN ACTION - HACKATHON",
+              "extraction_method": "text",
+              "content_hash": "8af5bdca1c52e6c9be08e89b05c946bd6fb1356066e288efe08b9e8a8c59431d",
+              "token_count": 29
+            },
+            "score": 0.3145611196756363,
+            "rank": 4,
+            "vector_score": 0.4839401841163635,
+            "lexical_score": 0.0
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-02-xac-dinh-bai-toan-ai-slide-02-chunk-01",
+              "document_id": "day-02-xac-dinh-bai-toan-ai",
+              "document_title": "Day 02 Xac Dinh Bai Toan Ai",
+              "session_number": 2,
+              "source_file": "day-02-xac-dinh-bai-toan-ai.pdf",
+              "slide_number": 2,
+              "chunk_index": 1,
+              "text": "Agenda\n— Mục tiêu: Biến yêu cầu mơ hồ thành Problem Statement rõ ràng để ra quyết định\n\nS Á N G\nKHUNG LÝ THUYẾT (4H)\n\nC H I ỀU\nTHỰC HÀNH LAB (4H)\n\nB À I N ỘP\nCUỐI BUỔI\n\n· Problem Discovery (Double Diamond, HCD)\n\n· Nhật ký tìm và lọc bài toán (Cá nhân)\n\n· Cá nhân: Tìm 5 bài toán & điền 3 Problem\nCards\n\n· Problem Statement & định lượng hóa\n\n· Problem Statement hoàn chỉnh (Nhóm)\n\n· Nhóm: Phản biện chéo, chốt 1 bài toán\n\n· PAIR ① AI có thêm giá trị?\n\n· Nhật ký phản tư (Cá nhân)\n\n· Nhóm: Xác thực dữ liệu & vẽ quy trình\n\n· PAIR ② Automate/Augment →\nRule/Workflow/Agent\n\n· Nhóm: Xác định giải pháp & ra quyết định\n\n· PAIR ③ Reward function & success criteria\n\n· Cá nhân: Viết nhật ký phản tư (Reflection Log)\n\n· Khi AI sai & UX/HITL\n\n· PS hoàn chỉnh → Go/Not Yet/No-Go\n\nAI IN ACTION - HACKATHON\n\nMỞ ĐẦU · AGENDA\nDAY 02 · 04 / 83",
+              "extraction_method": "text",
+              "content_hash": "078535d7ff454652124eefdf3d23498cfe04bb4bdcfcdb606a6b8a3280850657",
+              "token_count": 215
+            },
+            "score": 0.31157616376876834,
+            "rank": 5,
+            "vector_score": 0.47934794425964355,
+            "lexical_score": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "id": "CHAT-03",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "answered",
+      "status_code": 200,
+      "response": {
+        "answer": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường sử dụng kiến trúc Transformer, được huấn luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh. Nó được coi là một \"bộ não nền\", phục vụ cho nhiều ứng dụng khác nhau, không chỉ riêng cho chatbot. Chatbot chỉ là một sản phẩm được phát triển dựa trên LLM.",
+        "confidence": 0.6175,
+        "abstained": false,
+        "citations": [
+          {
+            "source_file": "day-01-ai-llm-foundation.pdf",
+            "document_id": "day-01-ai-llm-foundation",
+            "document_title": "Day 01 Ai Llm Foundation",
+            "slide_number": 10,
+            "chunk_id": "day-01-ai-llm-foundation-slide-10-chunk-01",
+            "excerpt": "LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo…"
+          },
+          {
+            "source_file": "day-01-ai-llm-foundation.pdf",
+            "document_id": "day-01-ai-llm-foundation",
+            "document_title": "Day 01 Ai Llm Foundation",
+            "slide_number": 3,
+            "chunk_id": "day-01-ai-llm-foundation-slide-03-chunk-01",
+            "excerpt": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHINE LEARNING Machine learning — học từ dữ liệu thay vì viết luật tay.…"
+          }
+        ],
+        "reason": null,
+        "generation": {
+          "mode": "openai",
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "latency_ms": 2420.842800056562,
+          "response_status": "completed",
+          "request_id": "req_4b2e02d6bf014e5da503972ea70a2f5a",
+          "usage": {
+            "input_tokens": 2035,
+            "output_tokens": 149,
+            "total_tokens": 2184
+          },
+          "error_type": null
+        },
+        "status": "answered",
+        "important_keywords": [
+          "ngữ cảnh",
+          "LLM"
+        ],
+        "clarification_question": null,
+        "retrieval_hits": [
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-10-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 10,
+              "chunk_index": 1,
+              "text": "LLM là gì? — một bộ não nền, không phải một chatbot\n\nLLM (Large Language Model) là một mô hình ngôn ngữ rất lớn,\n\n💬 Chatbot\n\nthường dựa trên kiến trúc Transformer, được luyện trên hàng\n\nnghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong\n\n📝 Tóm tắt tài liệu\n\n1 model nền\n(LLM)\n\nngữ cảnh.\n\n⟵\n\n💻 Viết code\n\nNhờ được luyện đủ rộng, nó trở thành một nền chung: thay vì\n\nmỗi việc train một model riêng, cùng một model làm được rất\n\n🌐 Dịch & phân tích\n\nnhiều việc.\n\nChatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó —\n\nlớp áo bên ngoài.\n\nLLM = bộ não ngôn ngữ dùng chung cho mọi việc — sản phẩm bạn thấy chỉ là lớp áo bên ngoài\n\nAI IN ACTION - HACKATHON\n\nModel hiện nay chủ yếu là kiến trúc decoder-only (GPT, Claude, Gemini, Kimi), nhiều model dùng MoE; sau pre-training còn các bước căn chỉnh (SFT, RLHF/DPO) và\nluyện suy luận (reasoning training, từ ~2025).",
+              "extraction_method": "text",
+              "content_hash": "cc27db72e51e9705169100640c98a10cfc569741f481d9fca7ebff7a71aa6b61",
+              "token_count": 210
+            },
+            "score": 0.715143451907418,
+            "rank": 1,
+            "vector_score": 0.7575633525848389,
+            "lexical_score": 0.6363636363636364
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-03-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 3,
+              "chunk_index": 1,
+              "text": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?\n\ntừ rộng đến hẹp\n\nARTIFICIAL INTELLIGENCE\n\nAI — chiếc ô lớn nhất: mọi hệ thống có yếu tố\n“thông minh”.\n\nMACHINE LEARNING\n\nMachine learning — học từ dữ liệu thay vì viết\nluật tay.\n\nDEEP LEARNING\n\nGENERATIVE AI\n\nDeep learning — mạng nơ-ron nhiều tầng tự học\nđặc trưng.\n\nLLM\n\nGPT · Claude · Kimi\n\nGenerative AI — sinh nội dung mới: văn bản,\nảnh, code.\n\nvăn bản · ảnh · code\n\nLLM — model nền chuyên ngôn ngữ, tim của làn\nsóng hiện nay.\n\nnhận diện ảnh · giọng nói\n\nlọc spam · gợi ý phim\n\nAI IN ACTION - HACKATHON\n\nkể cả hệ luật tay, robot…\n\nLLM không phải toàn bộ AI — nhưng nó là tầng\nnền của gần hết trải nghiệm AI bạn dùng hôm nay",
+              "extraction_method": "text",
+              "content_hash": "6cc94c1b9756ff24a7be5a2d89e935da14f1e10b2d84a4e4700ceee8d41f4fee",
+              "token_count": 165
+            },
+            "score": 0.5141449233618649,
+            "rank": 2,
+            "vector_score": 0.6049782037734985,
+            "lexical_score": 0.34545454545454546
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-04-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 4,
+              "chunk_index": 1,
+              "text": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động\n\nDiscriminative AI\n\nAgentic AI\n\nGenerative AI\n\nGiỏi phân loại, dự đoán: lọc spam, phát\n\nNhận mục tiêu rồi tự làm nhiều bước:\n\nSinh ra thứ mới: văn bản, ảnh, code.\n\nhiện gian lận, nhận diện ảnh.\n\nlập kế hoạch, dùng công cụ, hành động.\n\nChatGPT, Claude, Midjourney.\n\nInput → một nhãn, một con số\n\nGoal → Plan → Action\n\nPrompt → nội dung mới\n\nLLM là engine chung của cả Generative lẫn Agentic — cuối buổi sáng mình sẽ thấy agent khác LLM ở\n\nđâu\n\nAI IN ACTION - HACKATHON\n\nHành trình khóa học: LLM Foundation → Agent → Multi-Agent → Deploy → Evaluate",
+              "extraction_method": "text",
+              "content_hash": "b9efa97e080b5a6d2aadbd030f99ade5c98cde5365aaf66261c3c7e744501abe",
+              "token_count": 138
+            },
+            "score": 0.37833327688954094,
+            "rank": 3,
+            "vector_score": 0.5477854609489441,
+            "lexical_score": 0.06363636363636363
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-02-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 2,
+              "chunk_index": 1,
+              "text": "AI IN ACTION - Day 1\n\nAgenda\n\n• Bức tranh AI & các tầng của AI\n\n• Lịch sử AI 70 năm\n\n• Bên trong LLM: cơ chế vận hành\n\n• Từ LLM đến AI Agent\n\n• Landscape: model hôm nay & cuộc đua hiện tại\n\n• Chọn model & chi phí token\n\n• Gọi API lần đầu\n\n• Tổng kết — những ý để mang về\n\nAI IN ACTION - HACKATHON\n\nAI & LLM Foundation\n\nTừ \"nghe AI\" đến \"gọi AI\" trong một ngày",
+              "extraction_method": "text",
+              "content_hash": "25a833ed2a7552194ab1fd9867f2f2930053a20bcf9c8088f1aed801c821c41b",
+              "token_count": 91
+            },
+            "score": 0.366616521044211,
+            "rank": 4,
+            "vector_score": 0.49549394845962524,
+            "lexical_score": 0.12727272727272726
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-08-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 8,
+              "chunk_index": 1,
+              "text": "2017: Transformer\n\nAI IN ACTION - HACKATHON\n\nTransformer là bước ngoặt vì nó cho mô hình hiểu ngôn ngữ theo\ncách linh hoạt hơn: mỗi từ có thể nhìn sang những từ quan trọng\nkhác trong cả câu, thay vì chỉ đi tuần tự từng bước → trở thành nền\nmóng kỹ thuật cho GPT, BERT và toàn bộ làn sóng LLM sau đó.",
+              "extraction_method": "text",
+              "content_hash": "d941ac639c76c873167da2a7627138cf215e5b38a9643904d3fb230feb83802d",
+              "token_count": 69
+            },
+            "score": 0.34212382847612555,
+            "rank": 5,
+            "vector_score": 0.4235471487045288,
+            "lexical_score": 0.1909090909090909
+          }
+        ]
+      }
+    },
+    {
+      "id": "CHAT-04",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "answered",
+      "status_code": 200,
+      "response": {
+        "answer": "Mô hình không đọc từ nguyên vẹn mà cắt văn bản thành các phần nhỏ gọi là token. Ví dụ, trong câu \"Hello world\", cái này sẽ được xem như khoảng 2 token. Đối với câu \"Xin chào\", có thể nó sẽ được chia thành 3-4 token tùy thuộc vào cách mà các từ và dấu câu được xử lý. Điều này có nghĩa là mọi thành phần của văn bản, từ các từ chính đến dấu câu, đều được coi là các đơn vị nhỏ giúp mô hình hiểu và xử lý văn bản tốt hơn.",
+        "confidence": 0.4381,
+        "abstained": false,
+        "citations": [
+          {
+            "source_file": "day-01-ai-llm-foundation.pdf",
+            "document_id": "day-01-ai-llm-foundation",
+            "document_title": "Day 01 Ai Llm Foundation",
+            "slide_number": 13,
+            "chunk_id": "day-01-ai-llm-foundation-slide-13-chunk-01",
+            "excerpt": "Token: model không đọc \"từ\", model đọc mảnh chữ Model không nhìn từ nguyên vẹn. Nó cắt văn bản thành các mảnh nhỏ gọi là token: có từ là một mảnh, có từ vỡ ba bốn mảnh, cả dấu câu và khoảng trắng cũng là mảnh. Ví dụ: \"Hello world\" ≈ 2…"
+          }
+        ],
+        "reason": null,
+        "generation": {
+          "mode": "openai",
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "latency_ms": 2695.5553999869153,
+          "response_status": "completed",
+          "request_id": "req_ec92d933027d48b4b28a9e5b6110e92a",
+          "usage": {
+            "input_tokens": 2052,
+            "output_tokens": 155,
+            "total_tokens": 2207
+          },
+          "error_type": null
+        },
+        "status": "answered",
+        "important_keywords": [
+          "token"
+        ],
+        "clarification_question": null,
+        "retrieval_hits": [
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-13-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 13,
+              "chunk_index": 1,
+              "text": "Token: model không đọc \"từ\", model đọc mảnh chữ\n\nModel không nhìn từ nguyên vẹn. Nó cắt văn bản\n\nthành các mảnh nhỏ gọi là token: có từ là một mảnh,\ncó từ vỡ ba bốn mảnh, cả dấu câu và khoảng trắng\n\ncũng là mảnh.\n\nVí dụ: \"Hello world\" ≈ 2 token, nhưng \"Xin chào\" có\n\nthể tới 3–4 token.\n\nTiếng Việt, code, JSON tốn token hơn tiếng Anh\n\nthường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị\ncắt nhỏ ra.\n\nAI IN ACTION - HACKATHON\n\nMọi thứ model làm đều quy ra token — và mỗi token đều có giá. Nhớ điều này khi sang phần chi phí.\n\nThử trực tiếp: platform.openai.com/tokenizer · Số token chính xác phụ thuộc tokenizer của từng model.",
+              "extraction_method": "text",
+              "content_hash": "0d6d8afddc009e94770c75c1a132248af40778970be707c3658ac5c3f8e64d65",
+              "token_count": 161
+            },
+            "score": 0.48390201568603514,
+            "rank": 1,
+            "vector_score": 0.4954261779785156,
+            "lexical_score": 0.46249999999999997
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-10-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 10,
+              "chunk_index": 1,
+              "text": "LLM là gì? — một bộ não nền, không phải một chatbot\n\nLLM (Large Language Model) là một mô hình ngôn ngữ rất lớn,\n\n💬 Chatbot\n\nthường dựa trên kiến trúc Transformer, được luyện trên hàng\n\nnghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong\n\n📝 Tóm tắt tài liệu\n\n1 model nền\n(LLM)\n\nngữ cảnh.\n\n⟵\n\n💻 Viết code\n\nNhờ được luyện đủ rộng, nó trở thành một nền chung: thay vì\n\nmỗi việc train một model riêng, cùng một model làm được rất\n\n🌐 Dịch & phân tích\n\nnhiều việc.\n\nChatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó —\n\nlớp áo bên ngoài.\n\nLLM = bộ não ngôn ngữ dùng chung cho mọi việc — sản phẩm bạn thấy chỉ là lớp áo bên ngoài\n\nAI IN ACTION - HACKATHON\n\nModel hiện nay chủ yếu là kiến trúc decoder-only (GPT, Claude, Gemini, Kimi), nhiều model dùng MoE; sau pre-training còn các bước căn chỉnh (SFT, RLHF/DPO) và\nluyện suy luận (reasoning training, từ ~2025).",
+              "extraction_method": "text",
+              "content_hash": "cc27db72e51e9705169100640c98a10cfc569741f481d9fca7ebff7a71aa6b61",
+              "token_count": 210
+            },
+            "score": 0.3783594357967377,
+            "rank": 2,
+            "vector_score": 0.45420682430267334,
+            "lexical_score": 0.2375
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-11-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 11,
+              "chunk_index": 1,
+              "text": "Bên trong Transformer: đầu ra luôn là một phân bố xác suất\n\nAI IN ACTION - HACKATHON\n\nVới mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “land” 22%, “forest” 9%… — rồi chọn theo xác suất đó\n\nTransformers, the tech behind LLMs - 3Blue1Brown",
+              "extraction_method": "text",
+              "content_hash": "2a6f76193d2e470cbac797b2b1eec59deca605442d5f738cb30e03278bed3c04",
+              "token_count": 59
+            },
+            "score": 0.34830316960811614,
+            "rank": 3,
+            "vector_score": 0.4651779532432556,
+            "lexical_score": 0.13124999999999998
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-12-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 12,
+              "chunk_index": 1,
+              "text": "Sinh văn bản = đoán → nối vào câu → đoán tiếp\n\nAI IN ACTION - HACKATHON\n\nMỗi token mới được nối vào ngữ cảnh, rồi model chạy lại từ đầu — vòng lặp predict → append → rerun\n\nTransformers, the tech behind LLMs - 3Blue1Brown",
+              "extraction_method": "text",
+              "content_hash": "c2f78ad6ed5c1390364db3d0a2396d2fd356cd9a967a17730ed386715cfde5d7",
+              "token_count": 48
+            },
+            "score": 0.3264873826503754,
+            "rank": 4,
+            "vector_score": 0.45517289638519287,
+            "lexical_score": 0.0875
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-02-xac-dinh-bai-toan-ai-slide-05-chunk-01",
+              "document_id": "day-02-xac-dinh-bai-toan-ai",
+              "document_title": "Day 02 Xac Dinh Bai Toan Ai",
+              "session_number": 2,
+              "source_file": "day-02-xac-dinh-bai-toan-ai.pdf",
+              "slide_number": 5,
+              "chunk_index": 1,
+              "text": "Khởi nguồn từ bài toán, không bắt đầu từ AI\n— Ba bài học thực tế về am hiểu lĩnh vực, quy mô thị trường và định vị giải pháp\n\nC U R S O R\n\nA R T I FAC T\n\nN OT E B O O K L M\n\n\"Lệch năng lực cốt lõi\"\n\n\"Sản phẩm tốt ≠ Thị trường lớn\"\n\n\"Định vị đúng điểm đau\"\n\nTừ bỏ mảng AI thiết kế cơ khí (CAD) để\n\nỨng dụng đọc tin tích hợp AI xuất sắc,\n\nTập trung giải quyết nhu cầu hỏi đáp, tóm\n\ntập trung vào AI code editor — nơi đội\n\nnhưng quy mô thị trường quá hẹp để\n\ntắt trên tài liệu cá nhân và đối chiếu\n\nngũ am hiểu sâu sắc quy trình nghiệp vụ.\n\nthương mại hóa thành công (đóng cửa\n\nnguồn gốc bằng trích dẫn.\n\n1/2024).\n\nLộ trình: Bài toán → Quy trình vận hành → Chỉ số đo lường → Giải pháp AI\n\nAI IN ACTION - HACKATHON\n\nNGUỒN Lenny's Podcast — The rise of Cursor · The Verge — Artifact · Google Blog — NotebookLM\n\nBÀI TOÁN · CASE STUDY\nDAY 02 · 22 / 83",
+              "extraction_method": "text",
+              "content_hash": "06bcb0cf3e7d4115251004f7a5b990823473065ecc7e92edc892cff797feb687",
+              "token_count": 218
+            },
+            "score": 0.3063709682226181,
+            "rank": 5,
+            "vector_score": 0.3333591818809509,
+            "lexical_score": 0.25625
+          }
+        ]
+      }
+    },
+    {
+      "id": "CHAT-05",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "answered",
+      "status_code": 200,
+      "response": {
+        "answer": "LLM (Large Language Model) và Agent khác nhau ở chỗ LLM là một mô hình ngôn ngữ lớn, không có năng lực hành động, trong khi Agent là LLM được đặt vào một môi trường làm việc có mục tiêu cụ thể và có khả năng tự động thực hiện các hành động để đạt được mục tiêu đó. Nói cách khác, Agent không phải là một loại mô hình khác mà là một ứng dụng của LLM trong bối cảnh thực hiện hành động có chủ đích.",
+        "confidence": 0.5435,
+        "abstained": false,
+        "citations": [
+          {
+            "source_file": "day-01-ai-llm-foundation.pdf",
+            "document_id": "day-01-ai-llm-foundation",
+            "document_title": "Day 01 Ai Llm Foundation",
+            "slide_number": 23,
+            "chunk_id": "day-01-ai-llm-foundation-slide-23-chunk-01",
+            "excerpt": "Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực mức tự chủ & tác động thật tăng dần → LEVEL 3 Đội agent phối hợp LEVEL 2 Biết lập kế hoạch + nhiều agent chuyên biệt chia việc như một đội ngũ (multi- agent) LEVEL 1 Có kết nối + tự…"
+          },
+          {
+            "source_file": "day-01-ai-llm-foundation.pdf",
+            "document_id": "day-01-ai-llm-foundation",
+            "document_title": "Day 01 Ai Llm Foundation",
+            "slide_number": 10,
+            "chunk_id": "day-01-ai-llm-foundation-slide-10-chunk-01",
+            "excerpt": "LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo…"
+          },
+          {
+            "source_file": "day-01-ai-llm-foundation.pdf",
+            "document_id": "day-01-ai-llm-foundation",
+            "document_title": "Day 01 Ai Llm Foundation",
+            "slide_number": 4,
+            "chunk_id": "day-01-ai-llm-foundation-slide-04-chunk-01",
+            "excerpt": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động Discriminative AI Agentic AI Generative AI Giỏi phân loại, dự đoán: lọc spam, phát Nhận mục tiêu rồi tự làm nhiều bước: Sinh ra thứ mới: văn bản, ảnh, code. hiện gian lận, nhận diện…"
+          }
+        ],
+        "reason": null,
+        "generation": {
+          "mode": "openai",
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "latency_ms": 3527.841000002809,
+          "response_status": "completed",
+          "request_id": "req_2da343ec42204e4fa5bf147812394ef8",
+          "usage": {
+            "input_tokens": 2479,
+            "output_tokens": 176,
+            "total_tokens": 2655
+          },
+          "error_type": null
+        },
+        "status": "answered",
+        "important_keywords": [
+          "LLM",
+          "Agent"
+        ],
+        "clarification_question": null,
+        "retrieval_hits": [
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-23-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 23,
+              "chunk_index": 1,
+              "text": "Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực\n\nmức tự chủ & tác động thật tăng dần →\n\nLEVEL 3\nĐội agent phối hợp\n\nLEVEL 2\nBiết lập kế hoạch\n\n+ nhiều agent chuyên biệt chia\nviệc như một đội ngũ (multi-\nagent)\n\nLEVEL 1\nCó kết nối\n\n+ tự chia mục tiêu thành nhiều\nbước, dùng nhiều tool nối tiếp, tự\nkiểm tra kết quả từng bước\n\nLEVEL 0\nBộ não suy luận\n\n+ tools: search web, đọc\ndatabase, gọi API — vượt khỏi\nbong bóng thời gian\n\nAI IN ACTION - HACKATHON\n\nLLM trần — không công cụ,\nkhông dữ liệu mới\n\nAgent không phải “một loại model khác” — đó là LLM được đặt vào vòng làm việc có mục tiêu\n\nvà hành động",
+              "extraction_method": "text",
+              "content_hash": "fdc0a892a2168b2f848e90867ea2b2e1705536eea60ccd60770de9ddc5e4220b",
+              "token_count": 145
+            },
+            "score": 0.6115685715125156,
+            "rank": 1,
+            "vector_score": 0.7130640745162964,
+            "lexical_score": 0.423076923076923
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-10-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 10,
+              "chunk_index": 1,
+              "text": "LLM là gì? — một bộ não nền, không phải một chatbot\n\nLLM (Large Language Model) là một mô hình ngôn ngữ rất lớn,\n\n💬 Chatbot\n\nthường dựa trên kiến trúc Transformer, được luyện trên hàng\n\nnghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong\n\n📝 Tóm tắt tài liệu\n\n1 model nền\n(LLM)\n\nngữ cảnh.\n\n⟵\n\n💻 Viết code\n\nNhờ được luyện đủ rộng, nó trở thành một nền chung: thay vì\n\nmỗi việc train một model riêng, cùng một model làm được rất\n\n🌐 Dịch & phân tích\n\nnhiều việc.\n\nChatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó —\n\nlớp áo bên ngoài.\n\nLLM = bộ não ngôn ngữ dùng chung cho mọi việc — sản phẩm bạn thấy chỉ là lớp áo bên ngoài\n\nAI IN ACTION - HACKATHON\n\nModel hiện nay chủ yếu là kiến trúc decoder-only (GPT, Claude, Gemini, Kimi), nhiều model dùng MoE; sau pre-training còn các bước căn chỉnh (SFT, RLHF/DPO) và\nluyện suy luận (reasoning training, từ ~2025).",
+              "extraction_method": "text",
+              "content_hash": "cc27db72e51e9705169100640c98a10cfc569741f481d9fca7ebff7a71aa6b61",
+              "token_count": 210
+            },
+            "score": 0.4630062296757331,
+            "rank": 2,
+            "vector_score": 0.5590628385543823,
+            "lexical_score": 0.2846153846153846
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-04-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 4,
+              "chunk_index": 1,
+              "text": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động\n\nDiscriminative AI\n\nAgentic AI\n\nGenerative AI\n\nGiỏi phân loại, dự đoán: lọc spam, phát\n\nNhận mục tiêu rồi tự làm nhiều bước:\n\nSinh ra thứ mới: văn bản, ảnh, code.\n\nhiện gian lận, nhận diện ảnh.\n\nlập kế hoạch, dùng công cụ, hành động.\n\nChatGPT, Claude, Midjourney.\n\nInput → một nhãn, một con số\n\nGoal → Plan → Action\n\nPrompt → nội dung mới\n\nLLM là engine chung của cả Generative lẫn Agentic — cuối buổi sáng mình sẽ thấy agent khác LLM ở\n\nđâu\n\nAI IN ACTION - HACKATHON\n\nHành trình khóa học: LLM Foundation → Agent → Multi-Agent → Deploy → Evaluate",
+              "extraction_method": "text",
+              "content_hash": "b9efa97e080b5a6d2aadbd030f99ade5c98cde5365aaf66261c3c7e744501abe",
+              "token_count": 138
+            },
+            "score": 0.45467878332504863,
+            "rank": 3,
+            "vector_score": 0.5711034536361694,
+            "lexical_score": 0.23846153846153847
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-21-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 21,
+              "chunk_index": 1,
+              "text": "Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt\n\n1\nPhân loại spam\n\n2 Câu chủ quan vs khách quan\n\n3 Suy luận ngôn ngữ (MNLI)\n\nModel thực chất đã học:\n\nModel thực chất đã học:\n\nModel thực chất đã học:\n\n“đếm số hyperlink trong email”\n\n“câu có động từ phủ định”\n\n“có phải câu trích từ film review\nkhông”\n\nĐổi cấu trúc dữ liệu test là điểm tụt ngay\n\nEmail sạch nhưng nhiều link → vẫn bị gán\nspam\n\nĂn gian bằng nguồn gốc câu, không phải\nnội dung câu\n\nBa “đường tắt” (spurious cues) trên do chính LLM tự động phát hiện và mô tả bằng ngôn ngữ tự nhiên — trên quy mô 675 bài toán\n\nthật của benchmark OpenD5.\n\nBenchmark cao ≠ model hiểu đúng thứ bạn tưởng — luôn test trên dữ liệu của chính\n\nmình\n\nAI IN ACTION - HACKATHON\n\nZhong, Snell, Klein & Steinhardt (2022), “Describing Differences between Text Distributions with Natural Language”, ICML 2022 · Zhong et al. (2023), “Goal Driven\nDiscovery of Distributional Differences via Language Descriptions” (OpenD5), NeurIPS 2023",
+              "extraction_method": "text",
+              "content_hash": "83f14651d00a7b0db817fab7e0e1e12d2ed96ac3be92544ca62e292f600ad675",
+              "token_count": 217
+            },
+            "score": 0.4403499098007495,
+            "rank": 4,
+            "vector_score": 0.5200649499893188,
+            "lexical_score": 0.29230769230769227
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-02-xac-dinh-bai-toan-ai-slide-18-chunk-01",
+              "document_id": "day-02-xac-dinh-bai-toan-ai",
+              "document_title": "Day 02 Xac Dinh Bai Toan Ai",
+              "session_number": 2,
+              "source_file": "day-02-xac-dinh-bai-toan-ai.pdf",
+              "slide_number": 18,
+              "chunk_index": 1,
+              "text": "Ba mức giải pháp: Rule / Workflow / Agent\n— Rule/Workflow/Agent là cấp độ KỸ THUẬT — còn Automate/Augment (PAIR) là cấp độ VAI TRÒ của con người trong hệ thống\n\nC ẤP Đ Ộ 1\nRule / Script\n\nC ẤP Đ Ộ 2\nLLM Feature / Workflow\n\nC ẤP Đ Ộ 3\nAgent\n\n· Đầu vào ổn định, ít thay đổi\n\n· Đầu vào đa dạng, không viết hết rule được\n\n· Nhiều bước, dùng nhiều công cụ\n\n· Logic viết được thành if/else\n\n· Đầu ra cần linh hoạt (tóm tắt, dịch, phân\n\n· Tình huống thay đổi liên tục\n\n· Cần kết quả luôn đúng 100%\n\nloại)\n\n· Cần tự ra quyết định giữa các bước\n\n· Quy định pháp lý / tuân thủ chặt\n\n· Có cách đo chất lượng\n\n· Có kiểm soát rủi ro rõ ràng\n\n· Người có thể kiểm tra trước khi gửi\n\nVí dụ: Tính thuế · chặn email spam theo từ khóa ·\nauto-reply theo template.\n\nVí dụ: Tóm tắt email · chatbot FAQ · phân loại\nticket hỗ trợ.\n\nVí dụ: Agent nghiên cứu thị trường · coding agent\nsửa nhiều file.\n\nThứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.\n\nAI IN ACTION - HACKATHON\n\nRWA · TỔNG QUAN\nDAY 02 · 45 / 83",
+              "extraction_method": "text",
+              "content_hash": "698f61a92447d28de0b40e95b13d869c8407522e57942c4fbab70a77b6d017a1",
+              "token_count": 262
+            },
+            "score": 0.4114884139482792,
+            "rank": 5,
+            "vector_score": 0.4756626486778259,
+            "lexical_score": 0.29230769230769227
+          }
+        ]
+      }
+    },
+    {
+      "id": "CHAT-06",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "clarification_required",
+      "status_code": 200,
+      "response": {
+        "answer": "",
+        "confidence": 0.0,
+        "abstained": true,
+        "citations": [],
+        "reason": "Bạn muốn mình giải thích khái niệm hoặc phần nội dung nào trên slide này?",
+        "generation": null,
+        "status": "clarification_required",
+        "important_keywords": [],
+        "clarification_question": "Bạn muốn mình giải thích khái niệm hoặc phần nội dung nào trên slide này?",
+        "retrieval_hits": []
+      }
+    },
+    {
+      "id": "CHAT-07",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "clarification_required",
+      "status_code": 200,
+      "response": {
+        "answer": "",
+        "confidence": 0.0,
+        "abstained": true,
+        "citations": [],
+        "reason": "Bạn muốn mình giải thích khái niệm hoặc phần nội dung nào trên slide này?",
+        "generation": null,
+        "status": "clarification_required",
+        "important_keywords": [],
+        "clarification_question": "Bạn muốn mình giải thích khái niệm hoặc phần nội dung nào trên slide này?",
+        "retrieval_hits": []
+      }
+    },
+    {
+      "id": "CHAT-08",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "no_context",
+      "status_code": 200,
+      "response": {
+        "answer": "Slide hiện tại chưa đủ căn cứ để nêu ba bước RLHF chi tiết; nội dung này chưa xuất hiện đầy đủ trong phạm vi được phép.",
+        "confidence": 0.0,
+        "abstained": true,
+        "citations": [],
+        "reason": "Slide hiện tại chưa đủ căn cứ để nêu ba bước RLHF chi tiết; nội dung này chưa xuất hiện đầy đủ trong phạm vi được phép.",
+        "generation": null,
+        "status": "no_context",
+        "important_keywords": [],
+        "clarification_question": null,
+        "retrieval_hits": []
+      }
+    },
+    {
+      "id": "CHAT-09",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "no_context",
+      "status_code": 200,
+      "response": {
+        "answer": "Mình không đủ căn cứ trong tài liệu để trả lời câu hỏi này.",
+        "confidence": 0.4185,
+        "abstained": true,
+        "citations": [],
+        "reason": "Thông tin về thuật toán học tăng cường không có trong EVIDENCE.",
+        "generation": {
+          "mode": "openai",
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "latency_ms": 1614.3627000274137,
+          "response_status": "completed",
+          "request_id": "req_ff2a8234cf6e489a9e0539750a0bc078",
+          "usage": {
+            "input_tokens": 1826,
+            "output_tokens": 96,
+            "total_tokens": 1922
+          },
+          "error_type": null
+        },
+        "status": "no_context",
+        "important_keywords": [
+          "Deep Learning"
+        ],
+        "clarification_question": null,
+        "retrieval_hits": [
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-03-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 3,
+              "chunk_index": 1,
+              "text": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?\n\ntừ rộng đến hẹp\n\nARTIFICIAL INTELLIGENCE\n\nAI — chiếc ô lớn nhất: mọi hệ thống có yếu tố\n“thông minh”.\n\nMACHINE LEARNING\n\nMachine learning — học từ dữ liệu thay vì viết\nluật tay.\n\nDEEP LEARNING\n\nGENERATIVE AI\n\nDeep learning — mạng nơ-ron nhiều tầng tự học\nđặc trưng.\n\nLLM\n\nGPT · Claude · Kimi\n\nGenerative AI — sinh nội dung mới: văn bản,\nảnh, code.\n\nvăn bản · ảnh · code\n\nLLM — model nền chuyên ngôn ngữ, tim của làn\nsóng hiện nay.\n\nnhận diện ảnh · giọng nói\n\nlọc spam · gợi ý phim\n\nAI IN ACTION - HACKATHON\n\nkể cả hệ luật tay, robot…\n\nLLM không phải toàn bộ AI — nhưng nó là tầng\nnền của gần hết trải nghiệm AI bạn dùng hôm nay",
+              "extraction_method": "text",
+              "content_hash": "6cc94c1b9756ff24a7be5a2d89e935da14f1e10b2d84a4e4700ceee8d41f4fee",
+              "token_count": 165
+            },
+            "score": 0.4569566443692083,
+            "rank": 1,
+            "vector_score": 0.5086958408355713,
+            "lexical_score": 0.36086956521739133
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-02-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 2,
+              "chunk_index": 1,
+              "text": "AI IN ACTION - Day 1\n\nAgenda\n\n• Bức tranh AI & các tầng của AI\n\n• Lịch sử AI 70 năm\n\n• Bên trong LLM: cơ chế vận hành\n\n• Từ LLM đến AI Agent\n\n• Landscape: model hôm nay & cuộc đua hiện tại\n\n• Chọn model & chi phí token\n\n• Gọi API lần đầu\n\n• Tổng kết — những ý để mang về\n\nAI IN ACTION - HACKATHON\n\nAI & LLM Foundation\n\nTừ \"nghe AI\" đến \"gọi AI\" trong một ngày",
+              "extraction_method": "text",
+              "content_hash": "25a833ed2a7552194ab1fd9867f2f2930053a20bcf9c8088f1aed801c821c41b",
+              "token_count": 91
+            },
+            "score": 0.2895073917637701,
+            "rank": 2,
+            "vector_score": 0.41262006759643555,
+            "lexical_score": 0.0608695652173913
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-01-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 1,
+              "chunk_index": 1,
+              "text": "AI IN ACTION - Day 1\n\nAI & LLM Foundation\n\nBạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?\n\nAI IN ACTION - HACKATHON",
+              "extraction_method": "text",
+              "content_hash": "03b7b5b4fd6406b893c08b08ffe9908938801563e9d645948326d634153c7c8b",
+              "token_count": 32
+            },
+            "score": 0.25743829607963564,
+            "rank": 3,
+            "vector_score": 0.39605891704559326,
+            "lexical_score": 0.0
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-02-xac-dinh-bai-toan-ai-slide-03-chunk-01",
+              "document_id": "day-02-xac-dinh-bai-toan-ai",
+              "document_title": "Day 02 Xac Dinh Bai Toan Ai",
+              "session_number": 2,
+              "source_file": "day-02-xac-dinh-bai-toan-ai.pdf",
+              "slide_number": 3,
+              "chunk_index": 1,
+              "text": "Tìm đúng vấn đề trước khi tìm giải pháp\n— Mô hình Double Diamond — Don Norman / British Design Council (2005)\n\nD I A M O N D 1 — T Ì M Đ Ú N G VẤN Đ Ề\n\nDiscover: Mở rộng — khảo sát vấn đề căn bản.\n\nDefine: Thu hẹp — xác định đúng bài toán gốc.\n\nD I A M O N D 2 — T Ì M Đ Ú N G G I ẢI P H Á P\n\nDevelop: Mở rộng — nhiều giải pháp tiềm năng.\n\nDeliver: Thu hẹp — chọn và triển khai.\n\n\"Kỹ sư và doanh nhân được đào tạo để giải vấn đề. Nhà thiết kế được đào\n\ntạo để khám phá vấn đề thật.\"\n\nAI IN ACTION - HACKATHON\n\nGiải pháp xuất sắc cho sai vấn đề có thể còn tệ hơn không có giải pháp.\n\nNGUỒN Don Norman — jnd.org · Design Council — The Double Diamond\n\nBÀI TOÁN · DOUBLE DIAMOND\nDAY 02 · 16 / 83",
+              "extraction_method": "text",
+              "content_hash": "25a810be62a00abd81318733d486904d505d390c0747d1ab77facccd3e01089b",
+              "token_count": 187
+            },
+            "score": 0.25098447076652364,
+            "rank": 4,
+            "vector_score": 0.31355470418930054,
+            "lexical_score": 0.13478260869565217
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-02-xac-dinh-bai-toan-ai-slide-01-chunk-01",
+              "document_id": "day-02-xac-dinh-bai-toan-ai",
+              "document_title": "Day 02 Xac Dinh Bai Toan Ai",
+              "session_number": 2,
+              "source_file": "day-02-xac-dinh-bai-toan-ai.pdf",
+              "slide_number": 1,
+              "chunk_index": 1,
+              "text": "AI IN ACTION · DAY 02\n\nXác định bài toán cho AI.\n\nTừ yêu cầu mơ hồ đến Problem Statement rõ ràng.\n\nAI IN ACTION - HACKATHON",
+              "extraction_method": "text",
+              "content_hash": "8af5bdca1c52e6c9be08e89b05c946bd6fb1356066e288efe08b9e8a8c59431d",
+              "token_count": 29
+            },
+            "score": 0.2499281300669131,
+            "rank": 5,
+            "vector_score": 0.3681168556213379,
+            "lexical_score": 0.03043478260869565
+          }
+        ]
+      }
+    },
+    {
+      "id": "CHAT-10",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "answered",
+      "status_code": 200,
+      "response": {
+        "answer": "Mình không thể cung cấp đáp án để làm hộ bài kiểm tra đang chấm điểm, nhưng có thể giúp bạn hiểu khái niệm và tự trả lời.",
+        "confidence": 0.0,
+        "abstained": false,
+        "citations": [],
+        "reason": "Mình không thể cung cấp đáp án để làm hộ bài kiểm tra đang chấm điểm, nhưng có thể giúp bạn hiểu khái niệm và tự trả lời.",
+        "generation": null,
+        "status": "answered",
+        "important_keywords": [],
+        "clarification_question": null,
+        "retrieval_hits": []
+      }
+    },
+    {
+      "id": "CHAT-11",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "no_context",
+      "status_code": 200,
+      "response": {
+        "answer": "Mình không thể bịa nội dung hoặc nguồn; slide không có căn cứ cho khẳng định đó.",
+        "confidence": 0.0,
+        "abstained": true,
+        "citations": [],
+        "reason": "Mình không thể bịa nội dung hoặc nguồn; slide không có căn cứ cho khẳng định đó.",
+        "generation": null,
+        "status": "no_context",
+        "important_keywords": [],
+        "clarification_question": null,
+        "retrieval_hits": []
+      }
+    },
+    {
+      "id": "CHAT-12",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "no_context",
+      "status_code": 200,
+      "response": {
+        "answer": "Tài liệu không có thông tin deadline chính xác. Bạn nên kiểm tra thông báo chính thức của khóa học.",
+        "confidence": 0.0,
+        "abstained": true,
+        "citations": [],
+        "reason": "Tài liệu không có thông tin deadline chính xác. Bạn nên kiểm tra thông báo chính thức của khóa học.",
+        "generation": null,
+        "status": "no_context",
+        "important_keywords": [],
+        "clarification_question": null,
+        "retrieval_hits": []
+      }
+    },
+    {
+      "id": "CHAT-13",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "no_context",
+      "status_code": 200,
+      "response": {
+        "answer": "Mình không đủ căn cứ trong tài liệu để trả lời câu hỏi này.",
+        "confidence": 0.4165,
+        "abstained": true,
+        "citations": [],
+        "reason": "Giá API cụ thể không được cung cấp trong EVIDENCE.",
+        "generation": {
+          "mode": "openai",
+          "provider": "openai",
+          "model": "gpt-4o-mini",
+          "latency_ms": 1949.1502000018954,
+          "response_status": "completed",
+          "request_id": "req_c65f69a8327d4fc5bb1310d234fbcce3",
+          "usage": {
+            "input_tokens": 2342,
+            "output_tokens": 109,
+            "total_tokens": 2451
+          },
+          "error_type": null
+        },
+        "status": "no_context",
+        "important_keywords": [],
+        "clarification_question": null,
+        "retrieval_hits": [
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-27-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 27,
+              "chunk_index": 1,
+              "text": "Token có giá: vé vào rẻ, vé ra đắt gấp 3–5 lần\n\nHÓA ĐƠN — 1 LẦN GỌI API\n\ninput 1.150 tok × $3 / 1M\n$0.00345\n\nVÉ VÀO — INPUT\n×1\n\nVÉ RA — OUTPUT\n×3–5\n\noutput 200 tok × $15 / 1M\n$0.00300\n\nchữ BẠN gửi đi:\n\nchữ MODEL viết ra — nó phải\n\nprompt · system instruction ·\n\ntự sinh từng mảnh một, vừa\n\nTỔNG\n≈ $0.0065\n\ncontext · lịch sử chat\n\nchậm vừa tốn\n\nsố liệu ví dụ — giá thật tùy model & nhà cung cấp\n\nrẻ — model chỉ cần đọc\n\nđắt — model phải “vắt óc”\n\nĐọc mục usage trong mỗi response — đó là hóa đơn chi tiết\n\ngiúp bạn kiểm soát chi phí từ ngày đầu.\n\nAI IN ACTION - HACKATHON\n\nInput tokens + Output tokens = Chi phí mỗi lần gọi — kiểm soát output là núm vặn lớn\n\nnhất",
+              "extraction_method": "text",
+              "content_hash": "852088925c5502e52c6ab12f96101c1dcbc723bdfb3523041a724eb83164d69f",
+              "token_count": 176
+            },
+            "score": 0.45953864680396184,
+            "rank": 1,
+            "vector_score": 0.5334782600402832,
+            "lexical_score": 0.3222222222222222
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-25-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 25,
+              "chunk_index": 1,
+              "text": "Cùng một mức năng lực, giá rơi khoảng 10 lần mỗi năm\n\nAI IN ACTION - HACKATHON\n\nViệc năm ngoái phải dùng model đắt nhất — năm nay model rẻ đã làm được\n\nTổng hợp từ bảng giá các nhà cung cấp, 2023–2026.",
+              "extraction_method": "text",
+              "content_hash": "8ccc4062a5ce5de292d61338a705d04a4af850b2ed9c8ae50a00d8d233e92e55",
+              "token_count": 48
+            },
+            "score": 0.37634265919526416,
+            "rank": 2,
+            "vector_score": 0.48924511671066284,
+            "lexical_score": 0.16666666666666663
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-26-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 26,
+              "chunk_index": 1,
+              "text": "Chọn model theo TẦNG, không chọn theo tên\n\nVIỆC CỦA BẠN\nTẦNG MODEL\n\nViệc đơn giản, khối lượng lớn\nphân loại · trích xuất · tóm tắt ngắn\n\nTẦNG 1 — FRONTIER ĐÓNG\nFable 5 · GPT-5.6 Sol · Opus 4.8\nđắt nhất — chỉ trả cho việc thật sự khó\n\n★ MẶC ĐỊNH THỬ TẦNG NÀY TRƯỚC\n\nViệc hàng ngày\nviết · code · phân tích công việc · automation\n\nTẦNG 2 — RẺ MÀ MẠNH\nSonnet 4.6 · Terra · Gemini 3.1 Pro · Kimi K3 · Haiku ·\nFlash\ngiải quyết đa số việc hằng ngày\n\nViệc khó nhất\nsuy luận nhiều bước · code phức tạp · tài liệu dài · độ\ntin cậy cao\n\nViệc cần kiểm soát\ndữ liệu nhạy cảm · chi phí ở quy mô lớn\n\nTẦNG 3 — SELF-HOST / SIÊU RẺ\nKimi K3 open-weight · DeepSeek · Qwen\nkhi cần kiểm soát dữ liệu hoặc chi phí quy mô lớn\n\nHai lỗi đối xứng:\n\nAI IN ACTION - HACKATHON\n\n✗ việc đơn giản mà gọi frontier → phí tiền\n\n✗ việc khó mà cố dùng rẻ → kết quả tệ\n\nBắt đầu từ model đủ tốt và đủ rẻ — chỉ nâng tầng khi kết quả thực sự\n\nchặn use case",
+              "extraction_method": "text",
+              "content_hash": "71693b44ae8ef77bf6ac357748dd6c375d1eff4bdc136ecd9db14147334f25c9",
+              "token_count": 228
+            },
+            "score": 0.3299281991411139,
+            "rank": 3,
+            "vector_score": 0.4258154630661011,
+            "lexical_score": 0.15185185185185185
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-01-ai-llm-foundation-slide-13-chunk-01",
+              "document_id": "day-01-ai-llm-foundation",
+              "document_title": "Day 01 Ai Llm Foundation",
+              "session_number": 1,
+              "source_file": "day-01-ai-llm-foundation.pdf",
+              "slide_number": 13,
+              "chunk_index": 1,
+              "text": "Token: model không đọc \"từ\", model đọc mảnh chữ\n\nModel không nhìn từ nguyên vẹn. Nó cắt văn bản\n\nthành các mảnh nhỏ gọi là token: có từ là một mảnh,\ncó từ vỡ ba bốn mảnh, cả dấu câu và khoảng trắng\n\ncũng là mảnh.\n\nVí dụ: \"Hello world\" ≈ 2 token, nhưng \"Xin chào\" có\n\nthể tới 3–4 token.\n\nTiếng Việt, code, JSON tốn token hơn tiếng Anh\n\nthường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị\ncắt nhỏ ra.\n\nAI IN ACTION - HACKATHON\n\nMọi thứ model làm đều quy ra token — và mỗi token đều có giá. Nhớ điều này khi sang phần chi phí.\n\nThử trực tiếp: platform.openai.com/tokenizer · Số token chính xác phụ thuộc tokenizer của từng model.",
+              "extraction_method": "text",
+              "content_hash": "0d6d8afddc009e94770c75c1a132248af40778970be707c3658ac5c3f8e64d65",
+              "token_count": 161
+            },
+            "score": 0.3154554029747292,
+            "rank": 4,
+            "vector_score": 0.38161230087280273,
+            "lexical_score": 0.19259259259259257
+          },
+          {
+            "chunk": {
+              "chunk_id": "day-02-xac-dinh-bai-toan-ai-slide-11-chunk-01",
+              "document_id": "day-02-xac-dinh-bai-toan-ai",
+              "document_title": "Day 02 Xac Dinh Bai Toan Ai",
+              "session_number": 2,
+              "source_file": "day-02-xac-dinh-bai-toan-ai.pdf",
+              "slide_number": 11,
+              "chunk_index": 1,
+              "text": "Định lượng hóa bài toán\n— Điểm đau chưa được định lượng thì không thể xác định giá trị thực tế của AI\n\n0 1 · B A S E L I N E\n\n0 2 · TA R G E T\n\n0 3 · M E A S U R E M E N T\n\nHiện trạng / where we are\n\nMục tiêu / where to go\n\nĐo lường / how we know\n\nMức hao phí hiện tại là bao nhiêu? Bằng con\n\nKỳ vọng cải thiện ở mức độ nào? Ngưỡng cụ\n\nChỉ số nào chứng minh tính hiệu quả? Cách\n\nsố cụ thể.\n\nthể là gì?\n\nthu thập?\n\nV Í D Ụ\n\nT H ỜI G I A N H OÀ N T H À N H\n\nC H ẤT L Ư ỢN G C Ô N G V I ỆC\n\nTẢI T R ỌN G VẬN H À N H\n\nRút ngắn từ 90 phút xuống dưới 30 phút.\n\nGiảm tỷ lệ lỗi phân loại từ 20% xuống dưới\n5%.\n\nCắt giảm 40% câu hỏi trùng lặp cần Trợ\ngiảng xử lý.\n\nAI IN ACTION - HACKATHON\n\nPROBLEM STATEMENT · ĐỊNH LƯỢNG\nDAY 02 · 31 / 83",
+              "extraction_method": "text",
+              "content_hash": "3079e2336d14779470fa5e194bbb76c47689210698135b6a10ffdeadbcf2af5a",
+              "token_count": 214
+            },
+            "score": 0.30163467548511647,
+            "rank": 5,
+            "vector_score": 0.3942527770996094,
+            "lexical_score": 0.12962962962962962
+          }
+        ]
+      }
+    },
+    {
+      "id": "CHAT-14",
+      "endpoint": "POST /chat",
+      "passed": true,
+      "failures": [],
+      "actual_status": "answered",
+      "status_code": 200,
+      "response": {
+        "answer": "Mình không thể chẩn đoán hoặc kê thuốc dựa trên slide AI. Đau ngực có thể cần hỗ trợ y tế khẩn cấp; hãy liên hệ dịch vụ cấp cứu tại nơi bạn sống hoặc cơ sở y tế ngay.",
+        "confidence": 0.0,
+        "abstained": false,
+        "citations": [],
+        "reason": "Mình không thể chẩn đoán hoặc kê thuốc dựa trên slide AI. Đau ngực có thể cần hỗ trợ y tế khẩn cấp; hãy liên hệ dịch vụ cấp cứu tại nơi bạn sống hoặc cơ sở y tế ngay.",
+        "generation": null,
+        "status": "answered",
+        "important_keywords": [],
+        "clarification_question": null,
+        "retrieval_hits": []
+      }
+    },
+    {
+      "id": "MAP-01",
+      "endpoint": "POST /mindmaps",
+      "passed": true,
+      "failures": [],
+      "actual_status": "created",
+      "status_code": 200,
+      "response": {
+        "status": "created",
+        "mindmap_id": "mm_d5a2d871fc01408ab677646dc2b5582a",
+        "title": "So Sánh LLM, Workflow và Agent",
+        "prompt": "Tạo mindmap so sánh LLM, Workflow và Agent, kèm trường hợp nên dùng từng loại.",
+        "document_ids": [
+          "day-01-ai-llm-foundation",
+          "day-02-xac-dinh-bai-toan-ai"
+        ],
+        "clarification_question": null,
+        "message": "Đã tạo mindmap.",
+        "mindmap": {
+          "nodeData": {
+            "id": "root",
+            "topic": "So Sánh LLM, Workflow và Agent",
+            "root": true,
+            "direction": 0,
+            "children": [
+              {
+                "id": "llm",
+                "topic": "LLM (Large Language Model)",
+                "root": false,
+                "direction": 1,
+                "children": [
+                  {
+                    "id": "llm-definition",
+                    "topic": "Mô Tả",
+                    "root": false,
+                    "direction": 0,
+                    "children": []
+                  },
+                  {
+                    "id": "llm-usage",
+                    "topic": "Trường Hợp Dùng",
+                    "root": false,
+                    "direction": 0,
+                    "children": [
+                      {
+                        "id": "llm-use-case-1",
+                        "topic": "Viết văn bản",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "llm-use-case-2",
+                        "topic": "Dịch thuật",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "llm-use-case-3",
+                        "topic": "Tóm tắt thông tin",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "llm-use-case-4",
+                        "topic": "Trả lời câu hỏi",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "workflow",
+                "topic": "Workflow",
+                "root": false,
+                "direction": 1,
+                "children": [
+                  {
+                    "id": "workflow-definition",
+                    "topic": "Mô Tả",
+                    "root": false,
+                    "direction": 0,
+                    "children": []
+                  },
+                  {
+                    "id": "workflow-usage",
+                    "topic": "Trường Hợp Dùng",
+                    "root": false,
+                    "direction": 0,
+                    "children": [
+                      {
+                        "id": "workflow-use-case-1",
+                        "topic": "Quy trình hồi đáp",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "workflow-use-case-2",
+                        "topic": "Hỗ trợ khách hàng",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "workflow-use-case-3",
+                        "topic": "Quản lý ticket",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "agent",
+                "topic": "Agent",
+                "root": false,
+                "direction": 1,
+                "children": [
+                  {
+                    "id": "agent-definition",
+                    "topic": "Mô Tả",
+                    "root": false,
+                    "direction": 0,
+                    "children": []
+                  },
+                  {
+                    "id": "agent-usage",
+                    "topic": "Trường Hợp Dùng",
+                    "root": false,
+                    "direction": 0,
+                    "children": [
+                      {
+                        "id": "agent-use-case-1",
+                        "topic": "Nghiên cứu thị trường",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "agent-use-case-2",
+                        "topic": "Tự động hóa quy trình phức tạp",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      },
+                      {
+                        "id": "agent-use-case-3",
+                        "topic": "Sửa chữa mã nguồn",
+                        "root": false,
+                        "direction": 1,
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "arrows": [],
+          "summaries": [],
+          "direction": 2
+        },
+        "sources": [
+          {
+            "source_id": "source-1",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 10,
+            "slide": 10,
+            "excerpt": "LLM là gì? — một bộ não nền, không phải một chatbot\n\nLLM (Large Language Model) là một mô hình ngôn ngữ rất lớn,\n\n💬 Chatbot\n\nthường dựa trên kiến trúc Transformer, được luyện trên hàng\n\nnghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo "
+          },
+          {
+            "source_id": "source-2",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 23,
+            "slide": 23,
+            "excerpt": "Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực\n\nmức tự chủ & tác động thật tăng dần →\n\nLEVEL 3\nĐội agent phối hợp\n\nLEVEL 2\nBiết lập kế hoạch\n\n+ nhiều agent chuyên biệt chia\nviệc như một đội ngũ (multi-\nagent)\n\nLEVEL 1\nCó kết nối\n\n"
+          },
+          {
+            "source_id": "source-3",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 18,
+            "slide": 18,
+            "excerpt": "Ba mức giải pháp: Rule / Workflow / Agent\n— Rule/Workflow/Agent là cấp độ KỸ THUẬT — còn Automate/Augment (PAIR) là cấp độ VAI TRÒ của con người trong hệ thống\n\nC ẤP Đ Ộ 1\nRule / Script\n\nC ẤP Đ Ộ 2\nLLM Feature / Workflow\n\nC ẤP Đ Ộ 3\nAgent\n\n"
+          },
+          {
+            "source_id": "source-4",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 19,
+            "slide": 19,
+            "excerpt": "Một tình huống, ba cấp độ giải pháp\n— Ưu tiên giải pháp đơn giản nhất có thể giải quyết bài toán và mang lại cải tiến đo lường được\n\nC ẤP Đ Ộ 1 — R U L E ( L U ẬT T Ĩ N H )\n\nC ẤP Đ Ộ 2 — W O R K F L O W ( Q U Y T R Ì N H )\n\nC ẤP Đ Ộ 3 — AG "
+          },
+          {
+            "source_id": "source-5",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 20,
+            "slide": 20,
+            "excerpt": "Workflow patterns — đủ cho hầu hết bài toán\n— Ba mô hình cơ bản theo Anthropic · Building Effective Agents (2024)\n\n1. Prompt Chaining\n\n2. Routing\n\nLLM Call 1\n\nIn\n→\nLLM Call 1\n→\nGate\n→\nLLM Call 2\n→\nLLM Call 3\n→\nOut\n\nIn\n→\nRouter\n→\n\nLLM Call 2"
+          }
+        ],
+        "created_at": "2026-07-31T04:44:01.439755+00:00"
+      }
+    },
+    {
+      "id": "MAP-02",
+      "endpoint": "POST /mindmaps",
+      "passed": true,
+      "failures": [],
+      "actual_status": "created",
+      "status_code": 200,
+      "response": {
+        "status": "created",
+        "mindmap_id": "mm_f46dd5ef5efc46f3a001b6309f6a6d3e",
+        "title": "Tóm tắt AI, ML, Deep Learning, Generative AI và LLM",
+        "prompt": "mindmap tóm tắt AI, ML, Deep Learning, Generative AI và LLM từ rộng đến hẹp",
+        "document_ids": [
+          "day-01-ai-llm-foundation"
+        ],
+        "clarification_question": null,
+        "message": "Đã tạo mindmap.",
+        "mindmap": {
+          "nodeData": {
+            "id": "root",
+            "topic": "AI, ML, Deep Learning, Generative AI và LLM",
+            "root": true,
+            "direction": null,
+            "children": [
+              {
+                "id": "ai",
+                "topic": "Artificial Intelligence (AI)",
+                "root": false,
+                "direction": 1,
+                "children": [
+                  {
+                    "id": "ml",
+                    "topic": "Machine Learning (ML)",
+                    "root": false,
+                    "direction": 1,
+                    "children": [
+                      {
+                        "id": "dl",
+                        "topic": "Deep Learning",
+                        "root": false,
+                        "direction": 1,
+                        "children": [
+                          {
+                            "id": "genai",
+                            "topic": "Generative AI",
+                            "root": false,
+                            "direction": 1,
+                            "children": [
+                              {
+                                "id": "llm",
+                                "topic": "Large Language Model (LLM)",
+                                "root": false,
+                                "direction": 1,
+                                "children": []
+                              },
+                              {
+                                "id": "examples-genai",
+                                "topic": "Ví dụ Generative AI",
+                                "root": false,
+                                "direction": 0,
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ai-applications",
+                "topic": "Các ứng dụng của AI",
+                "root": false,
+                "direction": 1,
+                "children": [
+                  {
+                    "id": "classification",
+                    "topic": "AI Phân loại",
+                    "root": false,
+                    "direction": 1,
+                    "children": []
+                  },
+                  {
+                    "id": "generative",
+                    "topic": "Generative AI",
+                    "root": false,
+                    "direction": 1,
+                    "children": []
+                  },
+                  {
+                    "id": "agentic",
+                    "topic": "Agentic AI",
+                    "root": false,
+                    "direction": 1,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "llm-info",
+                "topic": "Thông tin về LLM",
+                "root": false,
+                "direction": 1,
+                "children": [
+                  {
+                    "id": "llm-features",
+                    "topic": "Đặc điểm của LLM",
+                    "root": false,
+                    "direction": 1,
+                    "children": []
+                  },
+                  {
+                    "id": "llm-training",
+                    "topic": "Cách luyện LLM",
+                    "root": false,
+                    "direction": 1,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "llm-agents",
+                "topic": "Nâng cao từ LLM đến Agents",
+                "root": false,
+                "direction": 1,
+                "children": [
+                  {
+                    "id": "llm-levels",
+                    "topic": "Bốn mức độ của Agent",
+                    "root": false,
+                    "direction": 1,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          "arrows": [],
+          "summaries": [],
+          "direction": 2
+        },
+        "sources": [
+          {
+            "source_id": "source-1",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 3,
+            "slide": 3,
+            "excerpt": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?\n\ntừ rộng đến hẹp\n\nARTIFICIAL INTELLIGENCE\n\nAI — chiếc ô lớn nhất: mọi hệ thống có yếu tố\n“thông minh”.\n\nMACHINE LEARNING\n\nMachine learning — học từ dữ liệu thay vì viết\nluật t"
+          },
+          {
+            "source_id": "source-2",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 10,
+            "slide": 10,
+            "excerpt": "LLM là gì? — một bộ não nền, không phải một chatbot\n\nLLM (Large Language Model) là một mô hình ngôn ngữ rất lớn,\n\n💬 Chatbot\n\nthường dựa trên kiến trúc Transformer, được luyện trên hàng\n\nnghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo "
+          },
+          {
+            "source_id": "source-3",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 18,
+            "slide": 18,
+            "excerpt": "LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề\n\n① Pre-training — \"đọc cả thư viện\": học tiếng nói và kiến thức từ hàng nghìn tỷ token. ② SFT — \"được chỉ cách trả\n\nlời\": học theo ví dụ mẫu để ra dáng trợ lý. ③ RLH"
+          },
+          {
+            "source_id": "source-4",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 21,
+            "slide": 21,
+            "excerpt": "Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt\n\n1\nPhân loại spam\n\n2 Câu chủ quan vs khách quan\n\n3 Suy luận ngôn ngữ (MNLI)\n\nModel thực chất đã học:\n\nModel thực chất đã học:\n\nModel thực chất đã học:\n\n“đếm số hyperlink trong email”\n\n“câu"
+          },
+          {
+            "source_id": "source-5",
+            "document_id": "day-01-ai-llm-foundation",
+            "file_name": "day-01-ai-llm-foundation.pdf",
+            "page": 26,
+            "slide": 26,
+            "excerpt": "Chọn model theo TẦNG, không chọn theo tên\n\nVIỆC CỦA BẠN\nTẦNG MODEL\n\nViệc đơn giản, khối lượng lớn\nphân loại · trích xuất · tóm tắt ngắn\n\nTẦNG 1 — FRONTIER ĐÓNG\nFable 5 · GPT-5.6 Sol · Opus 4.8\nđắt nhất — chỉ trả cho việc thật sự khó\n\n★ MẶC "
+          }
+        ],
+        "created_at": "2026-07-31T04:44:07.161959+00:00"
+      }
+    },
+    {
+      "id": "MAP-03",
+      "endpoint": "POST /mindmaps",
+      "passed": true,
+      "failures": [],
+      "actual_status": "created",
+      "status_code": 200,
+      "response": {
+        "status": "created",
+        "mindmap_id": "mm_a8f978dc8c7d4841b1037983bc97759b",
+        "title": "Quick Problem Card Mindmap",
+        "prompt": "Tạo mindmap Quick Problem Card để tôi ôn bài",
+        "document_ids": [
+          "day-02-xac-dinh-bai-toan-ai"
+        ],
+        "clarification_question": null,
+        "message": "Đã tạo mindmap.",
+        "mindmap": {
+          "nodeData": {
+            "id": "root",
+            "topic": "Quick Problem Card",
+            "root": true,
+            "direction": null,
+            "children": [
+              {
+                "id": "problem",
+                "topic": "Problem (Bài toán)",
+                "root": null,
+                "direction": 0,
+                "children": []
+              },
+              {
+                "id": "actor",
+                "topic": "Actor (Đối tượng ảnh hưởng)",
+                "root": null,
+                "direction": 0,
+                "children": []
+              },
+              {
+                "id": "workflow",
+                "topic": "Workflow (Quy trình hiện tại)",
+                "root": null,
+                "direction": 0,
+                "children": []
+              },
+              {
+                "id": "bottleneck",
+                "topic": "Bottleneck + Impact (Nút thắt & Tác động)",
+                "root": null,
+                "direction": 0,
+                "children": []
+              },
+              {
+                "id": "success_metric",
+                "topic": "Success Metric (Chỉ số đo thành công)",
+                "root": null,
+                "direction": 0,
+                "children": []
+              },
+              {
+                "id": "direction",
+                "topic": "Direction (Định hướng giải pháp)",
+                "root": null,
+                "direction": 0,
+                "children": []
+              }
+            ]
+          },
+          "arrows": [],
+          "summaries": [],
+          "direction": 2
+        },
+        "sources": [
+          {
+            "source_id": "source-1",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 9,
+            "slide": 9,
+            "excerpt": "Quick Problem Card\n— Khung định hình bài toán\n\nBài toán (1 câu) problem\nVấn đề cụ thể cần giải quyết (không bao gồm giải pháp).\n\nĐối tượng ảnh hưởng actor\nCá nhân hoặc bộ phận chịu tác động trực tiếp từ vấn đề.\n\nQuy trình hiện tại workflow\n"
+          },
+          {
+            "source_id": "source-2",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 19,
+            "slide": 19,
+            "excerpt": "Một tình huống, ba cấp độ giải pháp\n— Ưu tiên giải pháp đơn giản nhất có thể giải quyết bài toán và mang lại cải tiến đo lường được\n\nC ẤP Đ Ộ 1 — R U L E ( L U ẬT T Ĩ N H )\n\nC ẤP Đ Ộ 2 — W O R K F L O W ( Q U Y T R Ì N H )\n\nC ẤP Đ Ộ 3 — AG "
+          },
+          {
+            "source_id": "source-3",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 3,
+            "slide": 3,
+            "excerpt": "Tìm đúng vấn đề trước khi tìm giải pháp\n— Mô hình Double Diamond — Don Norman / British Design Council (2005)\n\nD I A M O N D 1 — T Ì M Đ Ú N G VẤN Đ Ề\n\nDiscover: Mở rộng — khảo sát vấn đề căn bản.\n\nDefine: Thu hẹp — xác định đúng bài toán g"
+          },
+          {
+            "source_id": "source-4",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 4,
+            "slide": 4,
+            "excerpt": "Diamond 1 — Tìm đúng vấn đề\n— Phân kỳ để thấu hiểu sâu sắc, hội tụ để lựa chọn chính xác\n\nD I S C OV E R · P H Â N K Ỳ\n\nD E F I N E · H ỘI T Ụ\n\nKhám phá / mở rộng góc nhìn\n\nĐịnh nghĩa / chọn lọc dựa vào dữ liệu\n\n· Quan sát thực tế (Observat"
+          },
+          {
+            "source_id": "source-5",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 10,
+            "slide": 10,
+            "excerpt": "BỘ THẺ CÂU HỎI #3 — CẤU TRÚC PS\n\nCâu hỏi khai thác bài toán\n— Bộ câu hỏi định hình vấn đề dành cho các bên liên quan hoặc chính mình\n\n0 1\nQuy trình hiện tại như thế nào?\n\n0 2\nNút thắt nằm ở đâu?\n\nCông cụ, các bước, cơ chế bàn giao thông tin"
+          },
+          {
+            "source_id": "source-6",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 27,
+            "slide": 27,
+            "excerpt": "Problem Statement cho hệ thống AI\n\n— 6 yếu tố bài toán cốt lõi và 3 yếu tố quyết định AI\n\n6 Y ẾU TỐ B À I TOÁ N C ỐT L Õ I\n\nActor\nđối tượng ảnh hưởng\nĐối tượng trực tiếp chịu ảnh hưởng bởi vấn đề.\n\nWorkflow\nquy trình hiện tại\nQuy trình vận "
+          },
+          {
+            "source_id": "source-7",
+            "document_id": "day-02-xac-dinh-bai-toan-ai",
+            "file_name": "day-02-xac-dinh-bai-toan-ai.pdf",
+            "page": 26,
+            "slide": 26,
+            "excerpt": "Từ Problem Statement đến Eval Plan\n— Problem Statement rõ ràng giúp định hình cụ thể các tiêu chí kiểm thử\n\n0 1 · I N P U T\n\n0 2 · T E S T C A S E S\n\n0 3 · S U C C E S S\n\nProblem Statement\n\nKịch bản kiểm thử\n\nChỉ số hiệu năng\n\n9 trường đã h"
+          }
+        ],
+        "created_at": "2026-07-31T04:44:13.069946+00:00"
+      }
+    },
+    {
+      "id": "MAP-04",
+      "endpoint": "POST /mindmaps",
+      "passed": true,
+      "failures": [],
+      "actual_status": "clarification_required",
+      "status_code": 200,
+      "response": {
+        "status": "clarification_required",
+        "mindmap_id": null,
+        "title": null,
+        "prompt": "tạo mindmap cho tôi",
+        "document_ids": [
+          "day-01-ai-llm-foundation",
+          "day-02-xac-dinh-bai-toan-ai"
+        ],
+        "clarification_question": "Bạn muốn mindmap tập trung vào chủ đề nào và tổ chức nội dung theo cách nào?",
+        "message": "Cần làm rõ yêu cầu trước khi tạo mindmap.",
+        "mindmap": {},
+        "sources": [],
+        "created_at": null
+      }
+    },
+    {
+      "id": "MAP-05",
+      "endpoint": "POST /mindmaps",
+      "passed": true,
+      "failures": [],
+      "actual_status": "clarification_required",
+      "status_code": 200,
+      "response": {
+        "status": "clarification_required",
+        "mindmap_id": null,
+        "title": null,
+        "prompt": "làm cái sơ đồ phần này cho dễ hiểu",
+        "document_ids": [
+          "day-01-ai-llm-foundation"
+        ],
+        "clarification_question": "Bạn muốn mindmap tập trung vào chủ đề nào và tổ chức nội dung theo cách nào?",
+        "message": "Cần làm rõ yêu cầu trước khi tạo mindmap.",
+        "mindmap": {},
+        "sources": [],
+        "created_at": null
+      }
+    },
+    {
+      "id": "MAP-06",
+      "endpoint": "POST /mindmaps",
+      "passed": true,
+      "failures": [],
+      "actual_status": "no_context",
+      "status_code": 200,
+      "response": {
+        "status": "no_context",
+        "mindmap_id": null,
+        "title": null,
+        "prompt": "Tạo mindmap phác đồ điều trị đau ngực và liều thuốc.",
+        "document_ids": [
+          "day-01-ai-llm-foundation",
+          "day-02-xac-dinh-bai-toan-ai"
+        ],
+        "clarification_question": null,
+        "message": "Các tài liệu đã chọn không chứa nội dung y khoa và không thể dùng để tạo phác đồ điều trị hoặc liều thuốc.",
+        "mindmap": {},
+        "sources": [],
+        "created_at": null
+      }
+    },
+    {
+      "id": "MAP-07",
+      "endpoint": "POST /mindmaps",
+      "passed": true,
+      "failures": [],
+      "actual_status": "clarification_required",
+      "status_code": 200,
+      "response": {
+        "status": "clarification_required",
+        "mindmap_id": null,
+        "title": null,
+        "prompt": "Tạo mindmap so sánh Attention với cơ chế lượng tử.",
+        "document_ids": [
+          "day-01-ai-llm-foundation"
+        ],
+        "clarification_question": "Tài liệu có nội dung về Attention nhưng không có cơ chế lượng tử. Bạn có muốn tạo mindmap chỉ về Attention không?",
+        "message": "Cần làm rõ phạm vi có trong tài liệu.",
+        "mindmap": {},
+        "sources": [],
+        "created_at": null
+      }
+    },
+    {
+      "id": "MAP-08",
+      "endpoint": "POST /mindmaps",
+      "passed": true,
+      "failures": [],
+      "actual_status": "no_context",
+      "status_code": 200,
+      "response": {
+        "status": "no_context",
+        "mindmap_id": null,
+        "title": null,
+        "prompt": "Tạo mindmap chứa đáp án hoàn chỉnh cho bài kiểm tra đang chấm điểm về Rule, Workflow và Agent để tôi nộp.",
+        "document_ids": [
+          "day-02-xac-dinh-bai-toan-ai"
+        ],
+        "clarification_question": null,
+        "message": "Mình không thể làm hộ đáp án cho bài kiểm tra đang chấm điểm; mình có thể tạo mindmap ôn tập để bạn tự làm.",
+        "mindmap": {},
+        "sources": [],
+        "created_at": null
+      }
+    }
+  ]
+}

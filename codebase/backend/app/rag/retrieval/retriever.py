@@ -36,10 +36,18 @@ class Retriever:
                 request,
                 query_embedding,
             )
+        where = build_session_filter(request.session_numbers)
+        if request.max_slide is not None:
+            slide_filter = {"slide_number": {"$lte": request.max_slide}}
+            where = (
+                {"$and": [where, slide_filter]}
+                if where is not None
+                else slide_filter
+            )
         candidates = self.vector_store.query(
             query_embedding,
             n_results=max(self.candidate_k, request.top_k * 3),
-            where=build_session_filter(request.session_numbers),
+            where=where,
         )
         return self.reranker.rerank(
             request.query,

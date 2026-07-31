@@ -20,11 +20,13 @@ class RAGService:
         query: str,
         *,
         session_numbers: list[int] | None = None,
+        max_slide: int | None = None,
         top_k: int = 5,
     ) -> ChatResponse:
         request = RetrievalRequest(
             query=query,
             session_numbers=session_numbers,
+            max_slide=max_slide,
             top_k=top_k,
         )
         hits = self.retriever.retrieve(request)
@@ -41,5 +43,6 @@ class RAGService:
         )
         return ChatResponse(
             **generated.model_dump(),
+            status="no_context" if generated.abstained else "answered",
             retrieval_hits=hits,
         )

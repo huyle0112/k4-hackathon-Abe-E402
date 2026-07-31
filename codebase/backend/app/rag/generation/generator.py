@@ -711,7 +711,7 @@ class AnswerGenerator:
     ) -> GenerationResult:
         return GenerationResult(
             answer=(
-                "Mình chưa có đủ căn cứ trong tài liệu để trả lời câu hỏi này."
+                "Mình không đủ căn cứ trong tài liệu để trả lời câu hỏi này."
             ),
             confidence=confidence,
             abstained=True,
