@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -44,6 +45,7 @@ class Settings:
     repo_root: Path
     lessons_dir: Path
     vector_store_dir: Path
+    database_path: Path = Path("data/vlearn.sqlite3")
     collection_name: str = "ai_in_action_lessons"
     embedding_provider: str = "hash"
     embedding_model: str = ""
@@ -92,11 +94,18 @@ class Settings:
                 str(repo_root / "vector-store" / "chroma"),
             )
         ).resolve()
+        database_path = Path(
+            _env_text(
+                "DATABASE_PATH",
+                str(backend_root / "data" / "vlearn.sqlite3"),
+            )
+        ).resolve()
 
         return cls(
             repo_root=repo_root,
             lessons_dir=lessons_dir,
             vector_store_dir=vector_store_dir,
+            database_path=database_path,
             collection_name=_env_text(
                 "COLLECTION_NAME", "ai_in_action_lessons"
             ),
@@ -153,3 +162,9 @@ class Settings:
             ocr_languages=_env_text("OCR_LANGUAGES", "vie+eng"),
             ocr_dpi=_env_int("OCR_DPI", 240),
         )
+
+
+@lru_cache(maxsize=1)
+def get_settings() -> Settings:
+    """Return one immutable settings instance for the application process."""
+    return Settings.from_env()
