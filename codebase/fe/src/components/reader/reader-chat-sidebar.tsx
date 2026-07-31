@@ -139,13 +139,7 @@ export function ReaderChatSidebar({ currentPage }: { currentPage: number }) {
             Trợ lý học theo ngữ cảnh
           </p>
         </div>
-        <button
-          type="button"
-          aria-label="Lịch sử hội thoại"
-          className="flex size-7 shrink-0 items-center justify-center rounded-[7px] text-ink-soft transition-colors hover:text-ink"
-        >
-          <History className="size-3.5" />
-        </button>
+
         <button
           type="button"
           onClick={() => setMessages([])}

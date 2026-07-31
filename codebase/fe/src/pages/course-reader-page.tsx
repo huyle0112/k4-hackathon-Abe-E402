@@ -15,6 +15,7 @@ import { loadPdfDocument, type PDFDocumentProxy } from "@/lib/pdf"
 const ZOOM_STEP = 0.2
 const ZOOM_MIN = 0.6
 const ZOOM_MAX = 2.4
+const ZOOM_DEFAULT = 0.8
 
 function ReaderContent({
   file,
@@ -27,7 +28,7 @@ function ReaderContent({
   numPages: number | null
   onCurrentPageChange?: (page: number) => void
 }) {
-  const [zoom, setZoom] = useState(1)
+  const [zoom, setZoom] = useState(ZOOM_DEFAULT)
   const [currentPage, setCurrentPageState] = useState(1)
   const pageListRef = useRef<PdfPageListHandle>(null)
 
@@ -37,14 +38,14 @@ function ReaderContent({
   }
 
   return (
-    <div className="relative flex min-h-0 flex-1 flex-col">
+    <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
       <ReaderToolbar
         currentPage={currentPage}
         numPages={numPages}
         zoom={zoom}
         onZoomOut={() => setZoom((z) => Math.max(ZOOM_MIN, z - ZOOM_STEP))}
         onZoomIn={() => setZoom((z) => Math.min(ZOOM_MAX, z + ZOOM_STEP))}
-        onZoomReset={() => setZoom(1)}
+        onZoomReset={() => setZoom(ZOOM_DEFAULT)}
       />
 
       <PdfPageList
