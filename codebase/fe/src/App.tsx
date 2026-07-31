@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react"
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 
 import { CourseDetailPage } from "@/pages/course-detail-page"
 import { CoursesPage } from "@/pages/courses-page"
@@ -13,7 +13,8 @@ const CourseMindmapPage = lazy(() => import("@/pages/course-mindmap-page"))
 export function App() {
   return (
     <Routes>
-      <Route path="/" element={<WelcomePage />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/welcome" element={<WelcomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/courses" element={<CoursesPage />} />

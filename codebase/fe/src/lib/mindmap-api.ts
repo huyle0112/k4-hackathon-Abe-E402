@@ -76,7 +76,7 @@ const VAGUE_PROMPTS = [
   "vẽ sơ đồ tư duy",
 ]
 
-const OUT_OF_CONTEXT_KEYWORDS = [
+export const OUT_OF_CONTEXT_KEYWORDS = [
   "bệnh tim",
   "phác đồ điều trị",
   "y tế",

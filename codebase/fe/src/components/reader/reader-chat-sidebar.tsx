@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react"
-import { Bot, ChevronRight, History, Plus, Send } from "lucide-react"
+import { Bot, ChevronRight, Plus, Send } from "lucide-react"
 
+import {
+  findChatDocumentContext,
+  sendChatMessageMock,
+  type Source,
+} from "@/lib/chat-api"
 import { cn } from "@/lib/utils"
 
 type ChatMessage = {
@@ -8,6 +13,7 @@ type ChatMessage = {
   role: "assistant" | "user"
   page: number
   text: string
+  sources?: Source[]
 }
 
 let messageSeq = 0
@@ -24,59 +30,16 @@ function seedMessages(): ChatMessage[] {
       page: 1,
       text: "Xin chào! Mình là VLearn Tutor. Bạn có thể bôi đen một đoạn trên slide để hỏi, hoặc gửi câu hỏi tự do bên dưới nhé!",
     },
-    {
-      id: nextId(),
-      role: "user",
-      page: 1,
-      text: "Slide này nói môn học sẽ làm gì vậy ạ?",
-    },
-    {
-      id: nextId(),
-      role: "assistant",
-      page: 1,
-      text: "Đây là buổi giới thiệu hackathon COMP2010 — slide nêu mục tiêu môn học, cách chia nhóm và các mốc nộp bài trong Phase 1. Bạn muốn mình liệt kê chi tiết từng mốc không?",
-    },
-    {
-      id: nextId(),
-      role: "user",
-      page: 1,
-      text: "\"Healthcare Product Value\" trong slide nghĩa là gì?",
-    },
-    {
-      id: nextId(),
-      role: "assistant",
-      page: 1,
-      text: "Đó là phần đề bài yêu cầu nhóm xây dựng sản phẩm tạo ra giá trị thực sự cho lĩnh vực y tế — ví dụ cải thiện trải nghiệm bệnh nhân, hỗ trợ bác sĩ chẩn đoán, hoặc tối ưu vận hành bệnh viện.",
-    },
   ]
 }
 
-const MOCK_REPLIES: Array<{ keywords: string[]; reply: string }> = [
-  {
-    keywords: ["healthcare", "y tế", "bệnh nhân"],
-    reply:
-      "Sản phẩm y tế tốt cần giải quyết một vấn đề thật của người dùng (bệnh nhân, bác sĩ, bệnh viện) và đo lường được giá trị mang lại, không chỉ dừng ở công nghệ.",
-  },
-  {
-    keywords: ["nhóm", "team", "hackathon"],
-    reply:
-      "Mỗi nhóm hackathon nên phân vai rõ ràng (research, dev, thuyết trình) và bám sát checklist nộp bài theo từng ngày để không bị dồn việc vào cuối kỳ.",
-  },
-  {
-    keywords: ["deadline", "nộp bài", "mốc"],
-    reply:
-      "Các mốc nộp bài thường nằm ở cuối mỗi ngày học — bạn nên xem lại phần lịch trình ở đầu slide Day tương ứng để nắm chính xác thời hạn.",
-  },
-]
-
-function mockReply(input: string): string {
-  const lower = input.toLowerCase()
-  const found = MOCK_REPLIES.find((entry) => entry.keywords.some((k) => lower.includes(k)))
-  if (found) return found.reply
-  return "AI hiện không thể trả lời câu hỏi này. Vui lòng thử diễn đạt khác hoặc thử lại sau ít phút."
-}
-
-export function ReaderChatSidebar({ currentPage }: { currentPage: number }) {
+export function ReaderChatSidebar({
+  currentPage,
+  slideFileId,
+}: {
+  currentPage: number
+  slideFileId: string
+}) {
   const [open, setOpen] = useState(true)
   const [messages, setMessages] = useState<ChatMessage[]>(() => seedMessages())
   const [input, setInput] = useState("")
@@ -87,7 +50,7 @@ export function ReaderChatSidebar({ currentPage }: { currentPage: number }) {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
   }, [messages, isTyping])
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     const text = input.trim()
     if (!text) return
 
@@ -95,13 +58,23 @@ export function ReaderChatSidebar({ currentPage }: { currentPage: number }) {
     setInput("")
     setIsTyping(true)
 
-    window.setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { id: nextId(), role: "assistant", page: currentPage, text: mockReply(text) },
-      ])
-      setIsTyping(false)
-    }, 900)
+    const context = findChatDocumentContext(slideFileId)
+    const response = await sendChatMessageMock(
+      { question: text, slide: currentPage, page: currentPage },
+      context ?? { document_id: slideFileId, file_name: slideFileId }
+    )
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: nextId(),
+        role: "assistant",
+        page: currentPage,
+        text: response.clarification_question ?? response.answer,
+        sources: response.sources,
+      },
+    ])
+    setIsTyping(false)
   }
 
   if (!open) {
@@ -160,7 +133,21 @@ export function ReaderChatSidebar({ currentPage }: { currentPage: number }) {
               Ngữ cảnh: Slide trang {msg.page}
             </span>
             {msg.role === "assistant" ? (
-              <p className="max-w-[92%] text-[13.5px] leading-relaxed text-ink">{msg.text}</p>
+              <div className="max-w-[92%]">
+                <p className="text-[13.5px] leading-relaxed text-ink">{msg.text}</p>
+                {msg.sources && msg.sources.length > 0 && (
+                  <ul className="mt-1.5 flex flex-col gap-0.5">
+                    {msg.sources.map((source) => (
+                      <li
+                        key={source.source_id}
+                        className="text-[11px] text-ink-soft/80"
+                      >
+                        Nguồn: {source.file_name} · trang {source.page}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             ) : (
               <p className="max-w-[85%] rounded-xl rounded-tr-[4px] bg-navy px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white">
                 {msg.text}
