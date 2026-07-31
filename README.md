@@ -28,6 +28,7 @@
 ├── codebase/
 │   ├── backend/                      # Backend API và pipeline RAG
 │   │   ├── README.md                 # Tài liệu backend
+│   │   ├── .env.example              # Mẫu cấu hình không chứa secret
 │   │   ├── requirements.txt          # Dependency Python
 │   │   ├── app/
 │   │   │   ├── main.py               # Điểm khởi chạy ứng dụng backend
@@ -39,6 +40,9 @@
 │   │   │       ├── models.py         # Schema dữ liệu, chunk, nguồn và response
 │   │   │       ├── embeddings.py     # Tạo embedding cho nội dung đã trích xuất
 │   │   │       ├── vector_store.py   # Giao tiếp với vector store
+│   │   │       ├── service.py        # Điều phối retrieval và generation
+│   │   │       ├── runtime.py        # Khởi tạo các dependency RAG local
+│   │   │       ├── evaluation.py     # Tính retrieval/citation/abstention metrics
 │   │   │       ├── ingestion/
 │   │   │       │   ├── pdf_loader.py # Đọc nội dung theo trang PDF
 │   │   │       │   ├── ocr.py        # OCR dự phòng cho slide dạng ảnh
@@ -54,14 +58,18 @@
 │   │   │           ├── generator.py   # Gọi LLM và sinh câu trả lời
 │   │   │           └── citations.py   # Tạo citation theo PDF/trang/slide
 │   │   ├── scripts/
-│   │   │   └── ingest.py              # Lệnh chạy ingestion/indexing
+│   │   │   ├── ingest.py              # Lệnh chạy ingestion/indexing
+│   │   │   ├── query.py               # Lệnh query RAG local
+│   │   │   └── evaluate.py            # Lệnh chạy golden-set evaluation
 │   │   └── tests/
 │   │       ├── test_api.py            # Kiểm thử API
 │   │       ├── test_ingestion.py      # Kiểm thử xử lý PDF và indexing
 │   │       ├── test_retrieval.py      # Kiểm thử retrieval
-│   │       └── test_generation.py     # Kiểm thử generation và citation
+│   │       ├── test_generation.py     # Kiểm thử generation và citation
+│   │       └── test_evaluation.py     # Kiểm thử metrics evaluation
 │   ├── data-sample/
-│   │   └── README.md                  # Quy ước PDF mẫu an toàn để commit
+│   │   ├── README.md                  # Quy ước PDF mẫu an toàn để commit
+│   │   └── lessons.example.json       # Manifest metadata hoàn toàn giả
 │   └── fe/                            # Frontend React, TypeScript và Vite
 │       ├── README.md                  # Hướng dẫn frontend
 │       ├── package.json               # Dependency và npm scripts
@@ -89,7 +97,10 @@
 │       └── day-02-xac-dinh-bai-toan-ai.pdf
 │                                      # PDF bài học
 ├── eval/                              # Golden set và kết quả đánh giá
+│   ├── README.md                      # Quy ước và quality bar đánh giá
+│   └── golden-set.schema.json         # Schema cho bộ golden set ≥20 case
 ├── validation/                        # Evidence kiểm chứng và demo
+│   └── pdf-rag-validation.md          # Kết quả audit/test RAG không chứa data
 └── reflection/                        # Reflection cá nhân của thành viên
 ```
 
