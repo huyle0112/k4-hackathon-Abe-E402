@@ -14,6 +14,7 @@ type ChatMessage = {
   role: "assistant" | "user"
   page?: number
   text: string
+  importantKeywords?: string[]
   sources?: Source[]
 }
 
@@ -31,6 +32,30 @@ function seedMessages(): ChatMessage[] {
       text: "Xin chào, mình là VLearn Tutor!",
     },
   ]
+}
+
+function highlightedText(text: string, keywords: string[] = []) {
+  const normalizedKeywords = [...new Set(keywords.map((item) => item.trim()))]
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length)
+  if (normalizedKeywords.length === 0) return text
+
+  const escaped = normalizedKeywords.map((keyword) =>
+    keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  )
+  const pattern = new RegExp(`(${escaped.join("|")})`, "gi")
+
+  return text.split(pattern).map((part, index) =>
+    normalizedKeywords.some(
+      (keyword) => keyword.toLocaleLowerCase() === part.toLocaleLowerCase()
+    ) ? (
+      <strong key={`${part}-${index}`} className="font-bold text-ink">
+        {part}
+      </strong>
+    ) : (
+      part
+    )
+  )
 }
 
 export function ReaderChatSidebar({
@@ -80,6 +105,7 @@ export function ReaderChatSidebar({
           role: "assistant",
           page: currentPage,
           text: response.clarification_question ?? response.answer,
+          importantKeywords: response.important_keywords,
           sources: response.sources,
         },
       ])
@@ -207,6 +233,25 @@ export function ReaderChatSidebar({
                   <p className="max-w-[85%] rounded-xl rounded-tr-[4px] bg-navy px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white">
                     {msg.text}
                   </p>
+      <div ref={scrollRef} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
+        {messages.map((msg) => (
+          <div key={msg.id} className={cn("flex flex-col gap-1", msg.role === "user" && "items-end")}>
+            {msg.role === "assistant" ? (
+              <div className="max-w-[92%]">
+                <p className="whitespace-pre-wrap text-[13.5px] leading-relaxed text-ink">
+                  {highlightedText(msg.text, msg.importantKeywords)}
+                </p>
+                {msg.sources && msg.sources.length > 0 && (
+                  <ul className="mt-1.5 flex flex-col gap-0.5">
+                    {msg.sources.map((source) => (
+                      <li
+                        key={source.source_id}
+                        className="text-[11px] text-ink-soft/80"
+                      >
+                        Nguồn: {source.file_name} · trang {source.page}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             ))}
@@ -234,6 +279,28 @@ export function ReaderChatSidebar({
               </p>
             )}
           </div>
+        ))}
+
+        {isTyping && (
+          <div className="flex flex-col gap-1">
+            <div className="flex w-fit gap-1 rounded-xl rounded-tl-[4px] bg-[#F1F0EC] px-3.5 py-3" aria-hidden="true">
+              {[0, 0.2, 0.4].map((delay) => (
+                <span
+                  key={delay}
+                  className="size-1.5 animate-blink rounded-full bg-ink-soft opacity-50 motion-reduce:animate-none motion-reduce:opacity-60"
+                  style={{ animationDelay: `${delay}s` }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {messages.length === 0 && !isTyping && (
+          <p className="mt-6 text-center text-[13px] text-ink-soft">
+            Bắt đầu cuộc trò chuyện mới — hãy đặt câu hỏi về slide hiện tại.
+          </p>
+        )}
+      </div>
 
           <form
             onSubmit={(e) => {
